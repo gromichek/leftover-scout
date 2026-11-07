@@ -1,14 +1,17 @@
 using System.Windows;
+using LeftoverScout.App.ViewModels;
 
 namespace LeftoverScout.App;
 
 /// <summary>
-/// Main application window. Placeholder until the shell is built in T-001.
+/// Main application window. Pure view code: all behavior lives in <see cref="MainViewModel"/>.
 /// </summary>
 public partial class MainWindow : Window
 {
-    public MainWindow()
+    /// <summary>Creates the window and binds it to its view model.</summary>
+    public MainWindow(MainViewModel viewModel)
     {
         InitializeComponent();
+        DataContext = viewModel;
     }
 }

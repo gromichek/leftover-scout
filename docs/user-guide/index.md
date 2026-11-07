@@ -1,6 +1,7 @@
 # LeftoverScout user guide
 
-> LeftoverScout is in early development. It cannot scan or clean anything yet.
+> LeftoverScout is in early development. It cannot scan or clean anything yet;
+> the application shell (navigation, settings, logs) is in place.
 > This guide grows together with the app.
 
 ## What LeftoverScout does
@@ -28,7 +29,7 @@ LeftoverScout will:
 
 ## Sections (coming later)
 
-- Getting started
+- [Getting started](getting-started.md)
 - Understanding scan results
 - Cleaning up safely
 - Restoring items from the Recycle Bin

@@ -1,6 +1,6 @@
 # Architecture
 
-Status: initial version (T-000). Sections marked *(planned)* describe agreed design that has
+Status: updated in T-001. Sections marked *(planned)* describe agreed design that has
 no code yet. Architectural changes need the owner's decision (see `docs/LEAD_HANDOVER.md`).
 
 ## Goal
@@ -85,10 +85,34 @@ A single cleanup service in `LeftoverScout.Windows` is the **only** code allowed
 4. reports per-item results (deleted / skipped / failed and why);
 5. writes a session journal (what, where from, size, result).
 
-### Settings and journals (planned)
+### Settings and journals
 Stored in a `data\` folder next to the exe (portable — deleting the app folder leaves no
 traces). If that folder is not writable, fall back to `%LOCALAPPDATA%\LeftoverScout` and tell
-the user (D-012).
+the user with an info bar (D-012).
+- `AppDataLocationResolver` (Core) picks the folder; the writability check is behind
+  `IDataFolderProbe`, implemented in `LeftoverScout.Windows` by creating and removing a uniquely
+  named probe file.
+- `settings.json`: `AppSettings` record, read/written by `JsonSettingsStore` (System.Text.Json).
+  A missing or corrupt file gives defaults and a logged warning; saves go to a temp file in the
+  same folder and replace the target.
+- Journals (Phase 2) will live in the same folder.
+
+### Composition root, logging, single instance
+- `App.OnStartup` (in `LeftoverScout.App`) is the composition root: single-instance check,
+  data folder resolution, log retention, then `ServiceRegistration` builds the
+  `Microsoft.Extensions.DependencyInjection` provider and the main window is resolved from it
+  (D-017). Views, view models and services are registered only in
+  `Composition/ServiceRegistration.cs`.
+- Logging: `Microsoft.Extensions.Logging` with `FileLoggerProvider` (Core) writing
+  `data\logs\leftoverscout-yyyyMMdd.log`, one line per entry, never throwing. At startup
+  `LogRetention` keeps the 7 newest log files of the app and ignores other files.
+- Global error handling logs unhandled exceptions (UI thread, app domain, unobserved tasks) and
+  shows a short message without a stack trace.
+- Single instance (D-019): `SingleInstanceGuard` (Windows) owns a `Local\` named mutex; a second
+  start signals a named event and exits; the first instance restores and activates its window.
+- Navigation: `MainViewModel` holds the `PageViewModel` list; views are chosen by `DataTemplate`.
+  The main window's bounds are restored by `WindowPlacementService`, validated by the pure
+  `WindowBoundsValidator` (Core).
 
 ## Safety model (summary)
 
@@ -103,6 +127,10 @@ touch a real profile.
 | xunit.v3 | Apache-2.0 | tests | Test framework (D-010) |
 | xunit.runner.visualstudio | Apache-2.0 | tests | Test adapter for `dotnet test` / Visual Studio |
 | Microsoft.NET.Test.Sdk | MIT | tests | Test host |
+| CommunityToolkit.Mvvm | MIT | App | MVVM helpers: `ObservableObject`, source-generated properties and commands (D-009) |
+| Microsoft.Extensions.DependencyInjection | MIT | App | Dependency injection container (D-017) |
+| Microsoft.Extensions.Logging | MIT | App | Logging pipeline (D-017) |
+| Microsoft.Extensions.Logging.Abstractions | MIT | Core | `ILogger` abstraction, so Core can log without a Windows dependency |
 
 ## Build and CI
 

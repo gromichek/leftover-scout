@@ -7,7 +7,14 @@
     <UseWPF>true</UseWPF>
     <RootNamespace>LeftoverScout.App</RootNamespace>
     <AssemblyName>LeftoverScout</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LeftoverScout.Core\LeftoverScout.Core.csproj" />
