@@ -2,7 +2,8 @@
 
 Owned by the lead. One task = one executor session = one PR. Large tasks are split into
 parts (`T-NNNa`, `T-NNNb`, …). A task file is written in `docs/tasks/` and merged into `main`
-**before** its session starts. Order inside a phase may change; scope changes need the owner.
+**before** its session starts. Order inside a phase may change; scope changes need the owner. Rows are listed in execution
+order; IDs are not renumbered when a task is inserted.
 
 Status: ⬜ not started · 📝 task written · 🔄 in progress · ✅ merged
 
@@ -20,6 +21,7 @@ Goal: the user sees what takes space in the profile. Nothing is deleted.
 |---|---|---|
 | T-001 | App shell: MVVM, DI + logging, light Fluent theme, manifest (`asInvoker`), portable settings, left navigation, single instance | ✅ |
 | T-002 | Scan engine (folder tree, cloud-safe, no links) + simple Scan page; includes findings #1, #2 | ✅ |
+| T-018 | In-app Help (English + Russian): Help section in navigation, help link on every page, Russian help for existing pages (D-024…D-026). **Next, before T-003** | ⬜ |
 | T-003 | Scan results UI: folder tree/list with sizes and dates, sorting, "Open in Explorer" | ⬜ |
 | T-004 | Evidence: installed programs (Uninstall keys HKCU/HKLM, 32/64-bit), Appx packages of the current user, Start menu shortcuts — read-only | ⬜ |
 
@@ -50,7 +52,7 @@ Goal: the user removes chosen items safely and can see what was done.
 | ID | Task | Status |
 |---|---|---|
 | T-013 | Export a scan/cleanup report | ⬜ |
-| T-014 | Complete user guide | ⬜ |
+| T-014 | Review the complete help (EN + RU) end to end: order of work, tips, FAQ | ⬜ |
 | T-015 | Release workflow: portable single-file x64 build on tag, checksums, GitHub Release | ⬜ |
 
 ## Phase 5 — Administrator mode

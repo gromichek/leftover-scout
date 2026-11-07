@@ -26,7 +26,7 @@ What exists already, which documents/decisions apply (e.g. D-004), links to rele
 - [ ] …
 - [ ] Build and tests pass (`dotnet build` / `dotnet test`, Release).
 - [ ] New/changed logic is covered by tests.
-- [ ] User guide updated if the user-visible behavior changed.
+- [ ] Help updated in English and Russian to match the app (or "no change needed" with reason); page help links work.
 - [ ] No new package, or each new package is permissive and listed in ARCHITECTURE.md.
 
 ## Manual test steps for the owner
