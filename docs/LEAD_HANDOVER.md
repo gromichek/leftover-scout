@@ -64,9 +64,15 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 ## Current state
 
-See `docs/PROGRESS.md`. At the time of writing: T-018 accepted by the owner; T-003 (Results
-page) task file written, waiting for the executor session. D-031…D-034 are provisional: after
-the owner tries T-003, ask whether to keep them.
+See `docs/PROGRESS.md`. At the time of writing: T-003 merged (#14). Waiting for the owner's
+manual test, the verdict on provisional D-031…D-034, and the open question below.
+
+Open question to the owner (asked 2026-11-07): after a **cancelled** scan the Results page keeps
+the previous completed result (task text said "show Go to Scan"; executor chose to keep it, help
+describes that). Keep or change?
+
+Process note: this time the executor session could open the PR itself (#14) — check for an
+existing PR before opening one.
 
 ### Reviewing help (D-026)
 
