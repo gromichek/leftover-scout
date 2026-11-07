@@ -63,9 +63,14 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 ## Current state
 
-See `docs/PROGRESS.md`. At the time of writing: T-001 merged (#4) and accepted by the owner;
-T-002 task file written (`docs/tasks/T-002-scan-engine.md`, includes collected findings #1, #2),
-waiting for the executor session.
+See `docs/PROGRESS.md`. At the time of writing: T-002 merged (#7); owner's manual test pending;
+next is T-003 (Results page), task file not written yet.
+
+### Notes for future task files
+
+- Personal marking (D-020) sets `FolderNode.IsPersonal` only on the personal folder itself, not
+  on its descendants. Protection/classification (T-006, T-009) must check ancestors.
+- The scanner keeps the last result in `IScanService.LastResult` (singleton) — T-003 reads it.
 
 ## Decision table
 

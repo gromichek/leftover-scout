@@ -19,7 +19,7 @@ Goal: the user sees what takes space in the profile. Nothing is deleted.
 | ID | Task | Status |
 |---|---|---|
 | T-001 | App shell: MVVM, DI + logging, light Fluent theme, manifest (`asInvoker`), portable settings, left navigation, single instance | ✅ |
-| T-002 | Scan engine (folder tree, cloud-safe, no links) + simple Scan page; includes findings #1, #2 | 📝 |
+| T-002 | Scan engine (folder tree, cloud-safe, no links) + simple Scan page; includes findings #1, #2 | ✅ |
 | T-003 | Scan results UI: folder tree/list with sizes and dates, sorting, "Open in Explorer" | ⬜ |
 | T-004 | Evidence: installed programs (Uninstall keys HKCU/HKLM, 32/64-bit), Appx packages of the current user, Start menu shortcuts — read-only | ⬜ |
 
