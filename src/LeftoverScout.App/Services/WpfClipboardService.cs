@@ -10,8 +10,8 @@ namespace LeftoverScout.App.Services;
 /// </summary>
 /// <remarks>
 /// The clipboard can be locked by another program for a moment; the WPF clipboard then throws a
-/// <see cref="COMException"/> (an <see cref="ExternalException"/>). <c>Clipboard.SetDataObject</c> with
-/// <c>retryTimes</c> and <c>retryDelay</c> retries briefly before it gives up
+/// <see cref="COMException"/> (an <see cref="ExternalException"/>). The WPF clipboard has no built-in
+/// retry overload (that one exists only in Windows Forms), so the service retries a few times itself
 /// (https://learn.microsoft.com/dotnet/api/system.windows.clipboard.setdataobject).
 /// </remarks>
 public sealed class WpfClipboardService : IClipboardService
@@ -30,15 +30,23 @@ public sealed class WpfClipboardService : IClipboardService
     /// <inheritdoc />
     public bool TrySetText(string text)
     {
-        try
+        for (int attempt = 1; ; attempt++)
         {
-            Clipboard.SetDataObject(text, copy: true, RetryTimes, RetryDelayMilliseconds);
-            return true;
-        }
-        catch (ExternalException ex)
-        {
-            _logger.LogWarning(ex, "The clipboard is busy; the text was not copied.");
-            return false;
+            try
+            {
+                Clipboard.SetDataObject(text, copy: true);
+                return true;
+            }
+            catch (ExternalException ex) when (attempt < RetryTimes)
+            {
+                _logger.LogDebug(ex, "The clipboard is busy; retrying.");
+                Thread.Sleep(RetryDelayMilliseconds);
+            }
+            catch (ExternalException ex)
+            {
+                _logger.LogWarning(ex, "The clipboard is busy; the text was not copied.");
+                return false;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 using LeftoverScout.Core.Scanning;
+using LeftoverScout.Core.Tests.Scanning;
 using static LeftoverScout.Core.Tests.Scanning.FakeDirectoryReader;
 
 namespace LeftoverScout.Core.Tests.Results;
