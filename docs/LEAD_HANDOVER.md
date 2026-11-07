@@ -63,8 +63,9 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 ## Current state
 
-See `docs/PROGRESS.md`. At the time of writing: T-000 merged (#1); T-001 task file written
-(`docs/tasks/T-001-app-shell.md`), waiting for the owner to start the executor session.
+See `docs/PROGRESS.md`. At the time of writing: T-001 merged (#4); owner's manual test pending;
+next is T-002 (scan engine, task file not written yet). Two review findings are collected in
+PROGRESS for the next task.
 
 ## Decision table
 
@@ -97,4 +98,11 @@ See `docs/PROGRESS.md`. At the time of writing: T-000 merged (#1); T-001 task fi
 - `gh pr create` fails (GraphQL is blocked in sessions). Use REST:
   `gh api repos/gromichek/leftover-scout/pulls -f title=… -f head=… -f base=main -F body=@file`;
   merge with `gh api -X PUT repos/gromichek/leftover-scout/pulls/N/merge -f merge_method=squash -f sha=<head sha>`.
+- Executor sessions get a branch name from the session (`claude/<random>`), not `t-NNN-…`, and
+  cannot open PRs. Expected flow: the executor pushes and reports the branch; the lead finds it
+  via `gh api repos/gromichek/leftover-scout/branches`, opens the PR (title `T-NNN: …`) and reviews.
+  Fetch such branches with an explicit refspec:
+  `git fetch origin +refs/heads/<branch>:refs/remotes/origin/<alias>`.
+- Executor sessions have no .NET SDK either, so their first CI run may fail on compile errors;
+  the lead fixes small ones directly on the branch.
 - CI job logs are readable via `gh api repos/gromichek/leftover-scout/actions/jobs/<check-run id>/logs`.
