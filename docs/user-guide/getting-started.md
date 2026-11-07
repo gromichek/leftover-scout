@@ -9,13 +9,13 @@ The window has a navigation list on the left with five sections:
 
 | Section | What it is for |
 |---|---|
-| Scan | Will scan your user profile (read-only). Available in Phase 1. |
+| Scan | Scans your user profile (read-only) and shows what takes space. See [Scanning your profile](scanning.md). |
 | Results | Will list suspected leftovers and explain why. Available in Phase 1. |
-| Cleanup | Will move selected items to the Recycle Bin. Available in Phase 2. |
-| History | Will show what earlier cleanups removed. Available in Phase 2. |
+| Cleanup | Will move selected items to the Recycle Bin. Available in Phase 3. |
+| History | Will show what earlier cleanups removed. Available in Phase 3. |
 | About | Version, license, project link and the data folder. |
 
-At the moment only **About** has content; the other pages are placeholders.
+At the moment **Scan** and **About** have content; the other pages are placeholders.
 
 ## Only one window
 

@@ -32,6 +32,17 @@ public sealed partial class MainViewModel : ObservableObject
 
         _currentPage = Pages[0];
 
+        foreach (ScanPageViewModel scanPage in Pages.OfType<ScanPageViewModel>())
+        {
+            scanPage.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(ScanPageViewModel.StatusMessage) && !string.IsNullOrEmpty(scanPage.StatusMessage))
+                {
+                    StatusText = scanPage.StatusMessage;
+                }
+            };
+        }
+
         if (dataLocation.IsFallback)
         {
             _infoBarText = $"Settings are stored in {dataLocation.Path} because the program folder is not writable.";

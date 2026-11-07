@@ -1,0 +1,68 @@
+<UserControl x:Class="LeftoverScout.App.Views.ScanView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:LeftoverScout.App.ViewModels">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel>
+      <TextBlock FontSize="24" FontWeight="SemiBold" Text="{Binding Title}" />
+      <TextBlock Margin="0,8,0,0" Text="{Binding Description}" TextWrapping="Wrap" />
+
+      <StackPanel Margin="0,16,0,0" Orientation="Horizontal">
+        <Button MinWidth="110"
+                Command="{Binding StartScanCommand}"
+                Content="Start scan" />
+        <Button MinWidth="110"
+                Margin="8,0,0,0"
+                Command="{Binding CancelScanCommand}"
+                Content="Cancel" />
+      </StackPanel>
+
+      <!-- Progress while a scan runs -->
+      <StackPanel Margin="0,16,0,0" Visibility="{Binding IsScanning, Converter={StaticResource BooleanToVisibility}}">
+        <ProgressBar Height="6" IsIndeterminate="True" />
+        <TextBlock Margin="0,8,0,0" Text="{Binding CurrentFolderText}" TextTrimming="CharacterEllipsis" />
+        <TextBlock Margin="0,4,0,0" Text="{Binding ProgressText}" TextWrapping="Wrap" />
+      </StackPanel>
+
+      <TextBlock Margin="0,16,0,0"
+                 FontSize="16"
+                 Text="{Binding ResultMessage}"
+                 TextWrapping="Wrap" />
+
+      <!-- Summary after a completed scan -->
+      <StackPanel Margin="0,16,0,0" Visibility="{Binding HasSummary, Converter={StaticResource BooleanToVisibility}}">
+        <TextBlock FontWeight="SemiBold" Text="Summary" />
+        <ItemsControl Margin="0,8,0,0" ItemsSource="{Binding SummaryItems}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type vm:SummaryItem}">
+              <Grid Margin="0,2">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="260" />
+                  <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding Label}" />
+                <TextBlock Grid.Column="1" FontWeight="SemiBold" Text="{Binding Value}" />
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <TextBlock Margin="0,20,0,0" FontWeight="SemiBold" Text="Largest top-level folders" />
+        <ItemsControl Margin="0,8,0,0" ItemsSource="{Binding LargestFolders}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type vm:SummaryItem}">
+              <Grid Margin="0,2">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="260" />
+                  <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding Label}" TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Column="1" Text="{Binding Value}" />
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
