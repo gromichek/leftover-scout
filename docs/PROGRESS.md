@@ -4,14 +4,14 @@ Owned by the lead. Updated after every merged PR.
 
 ## Current state
 
-- Phase 0 (Foundation) in progress: T-000 open as a PR.
-- Next task: T-001 (app shell).
+- Phase 0 (Foundation) done. CI `build-and-test` is a required check on `main`.
+- Next task: T-001 (app shell) — task file not written yet.
 
 ## Done
 
 | Date | ID | Summary | PR |
 |---|---|---|---|
-| — | — | — | — |
+| 2026-11-07 | T-000 | Project documents, CI (windows-latest, .NET 10), solution skeleton with 8 passing tests | #1 |
 
 ## Collected for the next session task
 
