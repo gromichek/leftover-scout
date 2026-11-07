@@ -63,9 +63,9 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 ## Current state
 
-See `docs/PROGRESS.md`. At the time of writing: T-001 merged (#4); owner's manual test pending;
-next is T-002 (scan engine, task file not written yet). Two review findings are collected in
-PROGRESS for the next task.
+See `docs/PROGRESS.md`. At the time of writing: T-001 merged (#4) and accepted by the owner;
+T-002 task file written (`docs/tasks/T-002-scan-engine.md`, includes collected findings #1, #2),
+waiting for the executor session.
 
 ## Decision table
 
@@ -90,6 +90,10 @@ PROGRESS for the next task.
 | D-017 | 2026-11-07 | **Microsoft.Extensions.DependencyInjection + Microsoft.Extensions.Logging** with a small own file logger in `data\logs` | No Generic Host |
 | D-018 | 2026-11-07 | Main window: **left navigation** (Scan / Results / Cleanup / History / About) + content area | |
 | D-019 | 2026-11-07 | **Single instance**; a second start brings the existing window to the front | |
+| D-020 | 2026-11-07 | Scan the **whole profile**; personal folders (Documents, Desktop, Pictures, Videos, Music, Downloads, OneDrive) are measured and marked personal (later protected) | |
+| D-021 | 2026-11-07 | Scan result is a **folder tree** with aggregates; files are not stored except **large files** (≥ 100 MB) | Memory: profiles can contain millions of files |
+| D-022 | 2026-11-07 | Size = **logical size**; cloud-only (online-only) files counted **separately**, not as local size | No size-on-disk calculation |
+| D-023 | 2026-11-07 | T-002 includes a simple **Scan page** (start, cancel, progress, summary) | |
 
 ## Notes for the next lead
 
