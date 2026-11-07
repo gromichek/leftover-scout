@@ -49,13 +49,13 @@ public sealed class EmbeddedHelpSource : IHelpSource
             return null;
         }
 
-        using Stream? stream = _assembly.GetManifestResourceStream(resourceName);
+        using System.IO.Stream? stream = _assembly.GetManifestResourceStream(resourceName);
         if (stream is null)
         {
             return null;
         }
 
-        using var reader = new StreamReader(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
+        using var reader = new System.IO.StreamReader(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
         return reader.ReadToEnd();
     }
 }
