@@ -64,9 +64,15 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 ## Current state
 
-See `docs/PROGRESS.md`. At the time of writing: T-002 merged (#7) and accepted by the owner.
-T-018 (in-app bilingual help, D-024…D-030) task file written, runs **before** T-003; waiting for
-the executor session. After T-018 merges: update the help paths in CLAUDE.md ("Help" section).
+See `docs/PROGRESS.md`. At the time of writing: T-018 merged (#11), owner's manual test pending;
+next is T-003 (Results page), task file not written yet.
+
+### Reviewing help (D-026)
+
+For every PR: read the changed `en/` and `ru/` topics side by side, check they say the same,
+and grep that every UI label the help names in bold exists in the code (pages, buttons, summary
+lines). Executors repeatedly forget the WPF `System.IO` implicit-using pitfall — check CI logs
+for CS0246 on `Stream`/`File`/`Path` first.
 
 ### Notes for future task files
 
