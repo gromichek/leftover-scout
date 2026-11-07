@@ -64,9 +64,9 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 ## Current state
 
-See `docs/PROGRESS.md`. At the time of writing: T-002 merged (#7); owner's manual test pending.
-New owner requirement: in-app bilingual help (D-024…D-026) → task T-018, planned **before**
-T-003. Design questions for T-018 asked the owner on 2026-11-07; task file not written yet.
+See `docs/PROGRESS.md`. At the time of writing: T-002 merged (#7) and accepted by the owner.
+T-018 (in-app bilingual help, D-024…D-030) task file written, runs **before** T-003; waiting for
+the executor session. After T-018 merges: update the help paths in CLAUDE.md ("Help" section).
 
 ### Notes for future task files
 
@@ -104,6 +104,10 @@ T-003. Design questions for T-018 asked the owner on 2026-11-07; task file not w
 | D-024 | 2026-11-07 | User help in **English and Russian**. Only exception to D-006; everything else stays English | Owner request after T-002 |
 | D-025 | 2026-11-07 | **Help** section in the left navigation, and a help link on **every page** that opens the matching help section | |
 | D-026 | 2026-11-07 | **Rule:** every change/addition to the app updates the help (both languages) in the same PR so it always matches the app | Enforced in CLAUDE.md, PR template, lead review |
+| D-027 | 2026-11-07 | Help source = Markdown in `docs/user-guide/en|ru/`, embedded in the exe; **Markdig** (BSD-2-Clause) + own FlowDocument renderer | One source for GitHub and the app |
+| D-028 | 2026-11-07 | Help language follows the Windows UI language at first open; EN / RU switch, remembered | |
+| D-029 | 2026-11-07 | **UI stays English**; Russian help names UI elements in English, bold | |
+| D-030 | 2026-11-07 | **?** button top-right on every page + **F1** open the help topic of the current page | |
 
 ## Notes for the next lead
 

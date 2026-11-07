@@ -5,9 +5,9 @@ Owned by the lead. Updated after every merged PR.
 ## Current state
 
 - Phase 0 (Foundation) done. CI `build-and-test` is a required check on `main`.
-- Phase 1: T-001 accepted by the owner; T-002 (scan engine + Scan page) merged, owner's manual
-  test pending.
-- Next task: T-003 (Results page with folder tree) — task file not written yet.
+- Phase 1: T-001 and T-002 accepted by the owner (manual tests passed 2026-11-07).
+- Next task: T-018 (in-app help EN + RU) — task file written, session not started yet.
+  Then T-003 (Results page).
 
 ## Done
 
@@ -27,5 +27,5 @@ is fixed immediately.
 |---|---|---|---|---|
 | 1 | 2026-11-07 | Lead review #4 | Placeholder pages and user guide say Cleanup/History arrive in "Phase 2"; ROADMAP puts them in Phase 3 (`ServiceRegistration.cs`, `getting-started.md`) | T-002 ✅ |
 | 2 | 2026-11-07 | Lead review #4 | `WindowPlacementService` treats the whole virtual screen as one area; with monitors of different sizes a window can be restored into an invisible gap. Use per-monitor work areas | T-002 ✅ |
-| 3 | 2026-11-07 | Lead review #7 | `MonitorWorkAreas` lives in `LeftoverScout.Windows.Scanning` but has nothing to do with scanning; move to a `UI` namespace/folder | next task |
+| 3 | 2026-11-07 | Lead review #7 | `MonitorWorkAreas` lives in `LeftoverScout.Windows.Scanning` but has nothing to do with scanning; move to a `UI` namespace/folder | T-018 |
 | 4 | 2026-11-07 | Lead review #7 | Monitor work areas are converted from pixels to DIPs with one (system) DPI scale; on mixed-DPI setups the visibility check is approximate. Low priority | later |
