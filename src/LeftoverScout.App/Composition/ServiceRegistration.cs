@@ -1,5 +1,7 @@
+using LeftoverScout.App.Help;
 using LeftoverScout.App.Startup;
 using LeftoverScout.App.ViewModels;
+using LeftoverScout.Core.Help;
 using LeftoverScout.Core.Logging;
 using LeftoverScout.Core.Scanning;
 using LeftoverScout.Core.Settings;
@@ -50,16 +52,20 @@ public static class ServiceRegistration
         services.AddSingleton<IDirectoryReader, Win32DirectoryReader>();
         services.AddSingleton<IPersonalFolderProvider, PersonalFolderProvider>();
         services.AddSingleton<IScanService, ScanService>();
+        services.AddSingleton<IHelpSource, EmbeddedHelpSource>();
+        services.AddSingleton<HelpCatalog>();
 
         // Pages, in navigation order.
         services.AddSingleton<ScanPageViewModel>();
         services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<ScanPageViewModel>());
         services.AddSingleton<PageViewModel>(new PlaceholderPageViewModel(
-            "Results", 1, "Lists the folders that look like leftovers and explains why each one is suspected."));
+            "Results", HelpTopics.Results, 1, "Lists the folders that look like leftovers and explains why each one is suspected."));
         services.AddSingleton<PageViewModel>(new PlaceholderPageViewModel(
-            "Cleanup", 3, "Moves the items you select to the Recycle Bin after you confirm."));
+            "Cleanup", HelpTopics.Cleanup, 3, "Moves the items you select to the Recycle Bin after you confirm."));
         services.AddSingleton<PageViewModel>(new PlaceholderPageViewModel(
-            "History", 3, "Shows what earlier cleanups removed and where it came from."));
+            "History", HelpTopics.History, 3, "Shows what earlier cleanups removed and where it came from."));
+        services.AddSingleton<HelpPageViewModel>();
+        services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<HelpPageViewModel>());
         services.AddSingleton<PageViewModel>(provider => new AboutViewModel(
             AppInfo.GetVersion(), provider.GetRequiredService<AppDataLocation>(), provider.GetRequiredService<IShellLauncher>()));
 

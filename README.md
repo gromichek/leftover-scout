@@ -27,7 +27,8 @@ dotnet test LeftoverScout.slnx --configuration Release
 
 ## Documentation
 
-- [User guide](docs/user-guide/index.md)
+- [User guide](docs/user-guide/en/index.md) (English)
+- [Руководство пользователя](docs/user-guide/ru/index.md) (русский)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Contributor and session rules](CLAUDE.md)

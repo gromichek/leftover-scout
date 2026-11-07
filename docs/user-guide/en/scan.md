@@ -1,12 +1,16 @@
-# Scanning your profile
+# Scan
 
 Open the **Scan** page and press **Start scan**. LeftoverScout walks through your user profile
 (`C:\Users\<you>`) and measures what takes space.
 
 **Nothing is changed.** The scan only reads folder listings: it does not open your files, does not
-delete, move or rename anything, and does not change dates. You can press **Cancel** at any time;
-the scan then stops within about a second and shows "Scan cancelled." (a cancelled scan has no totals).
-The window stays usable while the scan runs.
+delete, move or rename anything, and does not change dates. The window stays usable while the scan runs.
+
+## Buttons
+
+- **Start scan**: starts a scan. It is disabled while a scan is running.
+- **Cancel**: stops the scan, usually within about a second. A cancelled scan shows "Scan cancelled."
+  and has no totals. It is disabled when no scan is running.
 
 ## While the scan runs
 
@@ -29,10 +33,12 @@ The status bar at the bottom shows "Scanning…", then "Scan completed in 42 s" 
 Below the summary, **Largest top-level folders** lists the ten biggest folders directly inside your
 profile (by local size). `AppData` is often among them.
 
-## Why the size differs from Explorer
+## Tips
 
-Explorer's *Properties* dialog also counts cloud files, follows some links and cannot read some folders.
-Expect a difference; the scan is meant to show where the space goes, not to match Explorer to the byte.
-Files of 100 MB or more are remembered as "large files" for later versions.
+- Explorer's *Properties* dialog also counts cloud files, follows some links and cannot read some folders.
+  Expect a difference: the scan shows where the space goes, it does not match Explorer to the byte.
+- A scan of a large profile can take a while. You can keep using the window or press **Cancel**.
+- Files of 100 MB or more are remembered as "large files" for later versions.
+- The last completed result stays in memory while the program runs. Starting a new scan replaces it.
 
-The last completed result stays in memory while the program runs.
+Next: [Results](results.md) (planned).

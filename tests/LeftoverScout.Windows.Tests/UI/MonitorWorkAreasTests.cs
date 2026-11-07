@@ -1,6 +1,6 @@
-using LeftoverScout.Windows.Scanning;
+using LeftoverScout.Windows.UI;
 
-namespace LeftoverScout.Windows.Tests.Scanning;
+namespace LeftoverScout.Windows.Tests.UI;
 
 public class MonitorWorkAreasTests
 {

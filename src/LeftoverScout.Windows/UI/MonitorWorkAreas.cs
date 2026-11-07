@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 using LeftoverScout.Core.UI;
 using LeftoverScout.Windows.Interop;
 
-namespace LeftoverScout.Windows.Scanning;
+namespace LeftoverScout.Windows.UI;
 
 /// <summary>
 /// Lists the work area (screen minus taskbar) of every monitor, so a window position can be checked against

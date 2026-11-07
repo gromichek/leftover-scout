@@ -12,8 +12,14 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Markdig" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Extensions.Logging" />
+  </ItemGroup>
+
+  <!-- The help files are the single source for GitHub and for the in-app Help (decision D-027). They are linked, not copied. -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\docs\user-guide\**\*.md" LogicalName="Help/%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>
