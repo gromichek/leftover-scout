@@ -111,8 +111,13 @@ The help must always describe the app exactly as it works (decision D-026).
   section and a working help link.
 - If a PR has no user-visible effect, write "Help: no change needed" in the PR and say why.
 - A PR that changes user-visible behavior without updating both help languages is not merged.
-- Help files: `docs/user-guide/` (English). The Russian help and the in-app Help page are added
-  by task T-018; until it is merged, update the English files only.
+- Help files: `docs/user-guide/en/*.md` and `docs/user-guide/ru/*.md` — same file names, one
+  topic per file, embedded into the app (decision D-027). Use only the Markdown subset listed in
+  `docs/ARCHITECTURE.md` (help system section).
+- A new page: add a topic id, `en/<topic>.md` and `ru/<topic>.md`, set the page's `HelpTopicId`,
+  and link the topic from `index.md` in both languages. The help tests fail if anything is missing.
+- The UI is English only (D-029). In the Russian help, name UI elements exactly as in the app,
+  in bold (e.g. «нажмите **Start scan**»).
 
 ## Commits
 
