@@ -10,7 +10,7 @@ Status: ⬜ not started · 📝 task written · 🔄 in progress · ✅ merged
 
 | ID | Task | Status |
 |---|---|---|
-| T-000 | Project documents, CI, solution skeleton (done by the lead) | 🔄 |
+| T-000 | Project documents, CI, solution skeleton (done by the lead) | ✅ |
 
 ## Phase 1 — Read-only scan
 

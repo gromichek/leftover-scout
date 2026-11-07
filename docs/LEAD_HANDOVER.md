@@ -49,11 +49,12 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 - Merging: squash only (title = PR title); merge commits and rebase disabled;
   head branches deleted automatically.
 - Ruleset `protect-main` (active, no bypass, default branch): restrict deletions, block force
-  pushes, require PR (0 approvals, squash only, extra approval for unattributed changes **off**).
+  pushes, require PR (0 approvals, squash only, extra approval for unattributed changes **off**),
+  required status check `build-and-test` (GitHub Actions; added 2026-11-07).
   Note: GitHub defaults `require_extra_approval_for_unattributed_changes` to true; keep it false,
   otherwise agent PRs may be blocked.
-- **To do after the first green CI on `main`:** add "Require status checks to pass" with check
-  `build-and-test` to `protect-main`.
+- If the CI job is renamed, update the required check in the ruleset at the same time,
+  otherwise every PR is blocked.
 - Actions: only actions created by GitHub (and the owner's own); workflow token read-only;
   Actions may not create/approve PRs.
 - The Claude GitHub App is installed for this repository only.
@@ -62,7 +63,8 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 ## Current state
 
-See `docs/PROGRESS.md`. At the time of writing: T-000 open; next is T-001.
+See `docs/PROGRESS.md`. At the time of writing: T-000 merged (#1); next is T-001 (task file
+not written yet — open questions for the owner first).
 
 ## Decision table
 
@@ -88,3 +90,7 @@ See `docs/PROGRESS.md`. At the time of writing: T-000 open; next is T-001.
 
 - The session environment has no .NET SDK and cannot reach nuget.org; builds are verified by CI only.
 - `actions/checkout@v6` and `actions/setup-dotnet@v5` are used (Node 24 based).
+- `gh pr create` fails (GraphQL is blocked in sessions). Use REST:
+  `gh api repos/gromichek/leftover-scout/pulls -f title=… -f head=… -f base=main -F body=@file`;
+  merge with `gh api -X PUT repos/gromichek/leftover-scout/pulls/N/merge -f merge_method=squash -f sha=<head sha>`.
+- CI job logs are readable via `gh api repos/gromichek/leftover-scout/actions/jobs/<check-run id>/logs`.
