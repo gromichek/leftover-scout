@@ -71,6 +71,20 @@ Pieces:
 - `ScanService` (Core, singleton, `IScanService`) runs the scanner, logs start and end (totals and
   duration, never paths) and keeps `LastResult` (last *completed* scan) for the Results page.
 - `ScanPageViewModel` (App) binds the Scan page; `ScanSummary` (Core) computes the numbers it shows.
+- `IScanService.LastResultChanged` is raised after every scan that ends (possibly on a background thread);
+  a completed result carries `CompletedAt`. A cancelled scan keeps the previous `LastResult`.
+
+### Results page (T-003)
+Read-only browsing of the last completed scan (D-031 … D-034). Logic without WPF types lives in
+`LeftoverScout.Core.Results`: `FolderRowBuilder` (rows of one folder, percent of parent, the
+"(files in this folder)" row, openability), `FolderNavigator` (current folder, breadcrumb, Up),
+`FolderTagText` (Notes tags and tooltips), `LargeFileRowBuilder` (relative paths). `ResultsPageViewModel`
+(App) holds the state, refreshes on `LastResultChanged` through the UI synchronization context, and exposes
+the commands; `FolderRowViewModel` / `LargeFileRowViewModel` expose raw values for `DataGrid` sorting
+(`SortMemberPath`) next to formatted texts. `ResultsView` only binds and forwards Enter, Ctrl+C and
+double-click to commands. Actions go through `IShellLauncher` (`OpenFolder`, `SelectFile` →
+`explorer.exe /select,"<path>"`) and `IClipboardService` (`WpfClipboardService`, `Clipboard.SetDataObject`
+with retries). None of them writes or deletes anything.
 
 Rules (task T-002 section 2; constants from Microsoft Learn, "File Attribute Constants" and
 "Reparse Point Tags"):

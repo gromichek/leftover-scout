@@ -38,7 +38,7 @@ profile (by local size). `AppData` is often among them.
 - Explorer's *Properties* dialog also counts cloud files, follows some links and cannot read some folders.
   Expect a difference: the scan shows where the space goes, it does not match Explorer to the byte.
 - A scan of a large profile can take a while. You can keep using the window or press **Cancel**.
-- Files of 100 MB or more are remembered as "large files" for later versions.
+- Files of 100 MB or more are remembered as "large files" and listed on the **Results** page.
 - The last completed result stays in memory while the program runs. Starting a new scan replaces it.
 
-Next: [Results](results.md) (planned).
+Next: [Results](results.md) shows where the space goes.

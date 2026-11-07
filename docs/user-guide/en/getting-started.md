@@ -10,13 +10,13 @@ The window has a navigation list on the left:
 | Section | What it is for |
 |---|---|
 | **Scan** | Scans your user profile (read-only) and shows what takes space. See [Scan](scan.md). |
-| **Results** | Will list suspected leftovers and explain why. Planned. See [Results](results.md). |
+| **Results** | Shows where the space goes: browse folders by size and list large files. See [Results](results.md). |
 | **Cleanup** | Will move selected items to the Recycle Bin. Planned. See [Cleanup](cleanup.md). |
 | **History** | Will show what earlier cleanups removed. Planned. See [History](history.md). |
 | **Help** | This help. See [Using this help](help.md). |
 | **About** | Version, license, project link and the data folder. See [About](about.md). |
 
-At the moment **Scan**, **Help** and **About** have content; **Results**, **Cleanup** and **History**
+At the moment **Scan**, **Results**, **Help** and **About** have content; **Cleanup** and **History**
 show a short note about what they will do.
 
 ## Only one window

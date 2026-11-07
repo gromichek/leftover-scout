@@ -11,6 +11,7 @@ public sealed class ScanService : IScanService
     private readonly ProfileScanner _scanner;
     private readonly IPersonalFolderProvider _personalFolders;
     private readonly ILogger<ScanService> _logger;
+    private readonly TimeProvider _timeProvider;
     private int _running;
 
     /// <summary>Creates the service.</summary>
@@ -24,11 +25,15 @@ public sealed class ScanService : IScanService
         _target = target;
         _personalFolders = personalFolders;
         _logger = logger;
+        _timeProvider = timeProvider;
         _scanner = new ProfileScanner(reader, timeProvider);
     }
 
     /// <inheritdoc />
     public ScanResult? LastResult { get; private set; }
+
+    /// <inheritdoc />
+    public event EventHandler? LastResultChanged;
 
     /// <inheritdoc />
     public async Task<ScanResult> RunAsync(IProgress<ScanProgress>? progress, CancellationToken cancellationToken)
@@ -47,6 +52,7 @@ public sealed class ScanService : IScanService
 
             if (result.Root is { } root)
             {
+                result = result with { CompletedAt = _timeProvider.GetUtcNow() };
                 LastResult = result;
                 _logger.LogInformation(
                     "Scan completed in {DurationMs} ms: {Folders} folders, {Files} files, {LocalBytes} local bytes, {CloudBytes} cloud-only bytes, {Errors} errors.",
@@ -62,6 +68,7 @@ public sealed class ScanService : IScanService
                 _logger.LogInformation("Scan cancelled after {DurationMs} ms.", (long)result.Duration.TotalMilliseconds);
             }
 
+            LastResultChanged?.Invoke(this, EventArgs.Empty);
             return result;
         }
         finally

@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using LeftoverScout.Core.Shell;
+using Microsoft.Extensions.Logging;
 
 namespace LeftoverScout.Windows.Shell;
 
@@ -9,6 +10,14 @@ namespace LeftoverScout.Windows.Shell;
 /// </summary>
 public sealed class ShellLauncher : IShellLauncher
 {
+    private readonly ILogger<ShellLauncher> _logger;
+
+    /// <summary>Creates the launcher.</summary>
+    public ShellLauncher(ILogger<ShellLauncher> logger)
+    {
+        _logger = logger;
+    }
+
     /// <inheritdoc />
     public void OpenFolder(string folderPath)
     {
@@ -17,6 +26,41 @@ public sealed class ShellLauncher : IShellLauncher
         {
             Start(folderPath);
         }
+    }
+
+    /// <inheritdoc />
+    public void SelectFile(string filePath)
+    {
+        string? arguments = BuildSelectArguments(filePath);
+        if (arguments is null || !File.Exists(filePath))
+        {
+            _logger.LogWarning("Cannot show the file in Explorer: the path is invalid or the file no longer exists.");
+            return;
+        }
+
+        try
+        {
+            // explorer.exe /select,"<path>" opens the folder with the file selected.
+            // The path is quoted as a whole; Windows file names cannot contain a double quote.
+            using Process? process = Process.Start(new ProcessStartInfo("explorer.exe", arguments) { UseShellExecute = false });
+        }
+        catch (Exception ex) when (ex is Win32Exception or InvalidOperationException or FileNotFoundException)
+        {
+            _logger.LogWarning(ex, "Explorer could not be started to show a file.");
+        }
+    }
+
+    /// <summary>
+    /// Builds the argument string <c>/select,"path"</c> for explorer.exe; null for an empty path or one with a double quote.
+    /// </summary>
+    internal static string? BuildSelectArguments(string filePath)
+    {
+        if (string.IsNullOrWhiteSpace(filePath) || filePath.Contains('"'))
+        {
+            return null;
+        }
+
+        return $"/select,\"{filePath}\"";
     }
 
     /// <inheritdoc />
@@ -29,7 +73,7 @@ public sealed class ShellLauncher : IShellLauncher
         }
     }
 
-    private static void Start(string target)
+    private void Start(string target)
     {
         try
         {
@@ -38,6 +82,7 @@ public sealed class ShellLauncher : IShellLauncher
         catch (Exception ex) when (ex is Win32Exception or InvalidOperationException or FileNotFoundException)
         {
             // Nothing sensible to do if the shell cannot open it; the app keeps working.
+            _logger.LogWarning(ex, "The shell could not open the requested target.");
         }
     }
 }

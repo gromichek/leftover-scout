@@ -27,6 +27,35 @@ public class ScanServiceTests
     }
 
     [Fact]
+    public async Task RunAsync_Completed_RaisesLastResultChangedWithNewResultAndStampsTime()
+    {
+        ScanService service = Create(new FakeDirectoryReader().Folder(Root, FileEntry("a.txt", 3)));
+        ScanResult? seenInEvent = null;
+        service.LastResultChanged += (_, _) => seenInEvent = service.LastResult;
+
+        ScanResult result = await service.RunAsync(null, TestContext.Current.CancellationToken);
+
+        Assert.Same(result, seenInEvent);
+        Assert.NotNull(result.CompletedAt);
+    }
+
+    [Fact]
+    public async Task RunAsync_Cancelled_RaisesLastResultChangedButKeepsPreviousResult()
+    {
+        ScanService service = Create(new FakeDirectoryReader().Folder(Root, FileEntry("a.txt", 3)));
+        ScanResult first = await service.RunAsync(null, TestContext.Current.CancellationToken);
+        int raised = 0;
+        service.LastResultChanged += (_, _) => raised++;
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await service.RunAsync(null, cts.Token);
+
+        Assert.Equal(1, raised);
+        Assert.Same(first, service.LastResult);
+    }
+
+    [Fact]
     public async Task RunAsync_Cancelled_KeepsPreviousResult()
     {
         ScanService service = Create(new FakeDirectoryReader().Folder(Root, FileEntry("a.txt", 3)));

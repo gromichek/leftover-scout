@@ -41,6 +41,10 @@ public class HelpPageViewModelTests
         {
         }
 
+        public void SelectFile(string filePath)
+        {
+        }
+
         public void OpenUrl(string url) => OpenedUrls.Add(url);
     }
 
