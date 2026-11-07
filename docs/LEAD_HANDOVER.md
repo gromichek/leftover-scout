@@ -63,8 +63,8 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 ## Current state
 
-See `docs/PROGRESS.md`. At the time of writing: T-000 merged (#1); next is T-001 (task file
-not written yet — open questions for the owner first).
+See `docs/PROGRESS.md`. At the time of writing: T-000 merged (#1); T-001 task file written
+(`docs/tasks/T-001-app-shell.md`), waiting for the owner to start the executor session.
 
 ## Decision table
 
@@ -80,11 +80,15 @@ not written yet — open questions for the owner first).
 | D-008 | 2026-11-07 | Name **LeftoverScout** / repo `leftover-scout`; **public**; **MIT** | |
 | D-009 | 2026-11-07 | MVVM with **CommunityToolkit.Mvvm** | MIT |
 | D-010 | 2026-11-07 | Tests with **xUnit v3** | Apache-2.0 |
-| D-011 | 2026-11-07 | **Built-in WPF Fluent theme**, follows system light/dark | Verify API status in .NET 10 docs in T-001 |
+| D-011 | 2026-11-07 | **Built-in WPF Fluent theme** | Light only — see D-016 |
 | D-012 | 2026-11-07 | Settings and journals in **`data\` next to the exe**; fallback `%LOCALAPPDATA%\LeftoverScout` with a warning to the user | Portable: no traces when the app folder is deleted |
 | D-013 | 2026-11-07 | Solution layout: `Core` (net10.0) / `Windows` / `App` + two test projects; `rules/` for JSON | See ARCHITECTURE.md |
 | D-014 | 2026-11-07 | Only free permissive packages (MIT, Apache-2.0, BSD); no GPL, no commercial | |
 | D-015 | 2026-11-07 | T-000 includes a buildable solution skeleton so CI can become a required check | |
+| D-016 | 2026-11-07 | Theme: built-in Fluent, **light only** (refines D-011; no dark mode, no system following) | Use the `Fluent.Light.xaml` dictionary; `ThemeMode` is experimental (WPF0001) |
+| D-017 | 2026-11-07 | **Microsoft.Extensions.DependencyInjection + Microsoft.Extensions.Logging** with a small own file logger in `data\logs` | No Generic Host |
+| D-018 | 2026-11-07 | Main window: **left navigation** (Scan / Results / Cleanup / History / About) + content area | |
+| D-019 | 2026-11-07 | **Single instance**; a second start brings the existing window to the front | |
 
 ## Notes for the next lead
 

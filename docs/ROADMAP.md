@@ -18,7 +18,7 @@ Goal: the user sees what takes space in the profile. Nothing is deleted.
 
 | ID | Task | Status |
 |---|---|---|
-| T-001 | App shell: MVVM (CommunityToolkit.Mvvm), DI composition root, Fluent theme, app manifest (`asInvoker`), settings storage per D-012 | ⬜ |
+| T-001 | App shell: MVVM, DI + logging, light Fluent theme, manifest (`asInvoker`), portable settings, left navigation, single instance | 📝 |
 | T-002 | Scan engine: file system abstraction in Core, recursive size scan, progress + cancellation, no reparse points, no cloud hydration, access-denied tolerance | ⬜ |
 | T-003 | Scan results UI: folder tree/list with sizes and dates, sorting, "Open in Explorer" | ⬜ |
 | T-004 | Evidence: installed programs (Uninstall keys HKCU/HKLM, 32/64-bit), Appx packages of the current user, Start menu shortcuts — read-only | ⬜ |
