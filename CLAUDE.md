@@ -37,8 +37,9 @@ Read this file completely before you start. Then read, in this order:
 ## Language
 
 - Everything in the repository is in **English**: code, identifiers, comments, XML docs,
-  UI texts, log messages, commit messages, PR texts, documents, user guide.
-- There are no exceptions (decision D-006).
+  UI texts, log messages, commit messages, PR texts, documents (decision D-006).
+- **The only exception:** the user help exists in **English and Russian** (decision D-024).
+  Russian text is allowed only in the Russian help files.
 
 ## Safety rules (non-negotiable)
 
@@ -98,9 +99,20 @@ This app deletes user files. A bug can destroy someone's data.
 - Core logic is tested without the real file system (use abstractions or temp folders).
 - Name tests `Method_Condition_ExpectedResult` or a clear sentence-like name.
 
-## User guide
+## Help (user guide) — mandatory
 
-- If your change alters what the user sees or does, update `docs/user-guide/` in the same PR.
+The help must always describe the app exactly as it works (decision D-026).
+
+- **Every PR** that adds or changes anything the user sees or does (a page, button, message,
+  setting, behavior, order of steps) **must update the help in the same PR — in both English
+  and Russian**. The two languages must say the same thing.
+- The help briefly describes every action, the order of work, and practical tips.
+- Every page of the app links to its help section (decision D-025). A new page needs a new help
+  section and a working help link.
+- If a PR has no user-visible effect, write "Help: no change needed" in the PR and say why.
+- A PR that changes user-visible behavior without updating both help languages is not merged.
+- Help files: `docs/user-guide/` (English). The Russian help and the in-app Help page are added
+  by task T-018; until it is merged, update the English files only.
 
 ## Commits
 

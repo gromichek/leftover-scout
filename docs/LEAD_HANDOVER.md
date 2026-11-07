@@ -19,15 +19,16 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 ## Communication
 
 - With the owner: **Russian** in chat.
-- In the repository: **English** only, no exceptions (D-006).
+- In the repository: **English** (D-006); only the user help is also in Russian (D-024).
 
 ## Lead workflow
 
 1. **Task** = `docs/tasks/T-NNN-short-name.md` from `docs/tasks/_TEMPLATE.md`. Merge it into
    `main` (via PR) **before** the owner starts the session. One task, one session; split big
-   work into `a/b/c`.
+   work into `a/b/c`. Every task lists the help sections (EN + RU) it must add or change (D-026).
 2. **Review a PR** against the task and `CLAUDE.md`: scope, safety rules, licenses of new
-   packages, tests, user guide, no personal data. Wait for green CI.
+   packages, tests, **help matches the app in both languages** (D-026), no personal data.
+   Wait for green CI.
    Fix small build errors and conflicts yourself; everything else goes to a follow-up task.
    Merge with **squash**.
 3. **After merge**: small PR with document updates (PROGRESS, this file, ARCHITECTURE if needed,
@@ -63,8 +64,9 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 ## Current state
 
-See `docs/PROGRESS.md`. At the time of writing: T-002 merged (#7); owner's manual test pending;
-next is T-003 (Results page), task file not written yet.
+See `docs/PROGRESS.md`. At the time of writing: T-002 merged (#7); owner's manual test pending.
+New owner requirement: in-app bilingual help (D-024…D-026) → task T-018, planned **before**
+T-003. Design questions for T-018 asked the owner on 2026-11-07; task file not written yet.
 
 ### Notes for future task files
 
@@ -99,6 +101,9 @@ next is T-003 (Results page), task file not written yet.
 | D-021 | 2026-11-07 | Scan result is a **folder tree** with aggregates; files are not stored except **large files** (≥ 100 MB) | Memory: profiles can contain millions of files |
 | D-022 | 2026-11-07 | Size = **logical size**; cloud-only (online-only) files counted **separately**, not as local size | No size-on-disk calculation |
 | D-023 | 2026-11-07 | T-002 includes a simple **Scan page** (start, cancel, progress, summary) | |
+| D-024 | 2026-11-07 | User help in **English and Russian**. Only exception to D-006; everything else stays English | Owner request after T-002 |
+| D-025 | 2026-11-07 | **Help** section in the left navigation, and a help link on **every page** that opens the matching help section | |
+| D-026 | 2026-11-07 | **Rule:** every change/addition to the app updates the help (both languages) in the same PR so it always matches the app | Enforced in CLAUDE.md, PR template, lead review |
 
 ## Notes for the next lead
 

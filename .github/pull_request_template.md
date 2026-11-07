@@ -14,7 +14,7 @@ T-NNN: <!-- link to docs/tasks/T-NNN-*.md -->
 - [ ] Safety rules from CLAUDE.md respected (scan read-only, deletion only via the cleanup service, no reparse points, no cloud hydration).
 - [ ] No personal data, real paths, secrets or tokens in code, tests, docs or screenshots.
 - [ ] New packages: none / listed below with license (MIT, Apache-2.0 or BSD only) and added to ARCHITECTURE.md.
-- [ ] User guide (`docs/user-guide/`) updated if user-visible behavior changed.
+- [ ] Help updated in **English and Russian** for every user-visible change, and every page links to its help section — or "Help: no change needed" with the reason below.
 - [ ] Everything is in English.
 
 ## New packages
