@@ -35,11 +35,11 @@ public partial class App : Application
             return;
         }
 
-        string programFolder = Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
+        string programFolder = System.IO.Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
         string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         AppDataLocation dataLocation = new AppDataLocationResolver(new WritableFolderProbe()).Resolve(programFolder, localAppData);
 
-        LogRetention.Apply(Path.Combine(dataLocation.Path, "logs"));
+        LogRetention.Apply(System.IO.Path.Combine(dataLocation.Path, "logs"));
 
         _services = ServiceRegistration.Build(dataLocation);
         _logger = _services.GetRequiredService<ILogger<App>>();

@@ -47,7 +47,7 @@ public class SingleInstanceGuardTests
         Assert.False(second.TryAcquire());
 
         Assert.True(second.SignalFirstInstance());
-        Assert.True(signaled.Wait(TimeSpan.FromSeconds(10)));
+        Assert.True(signaled.Wait(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken));
     }
 
     [Fact]

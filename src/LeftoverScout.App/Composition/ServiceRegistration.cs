@@ -28,7 +28,7 @@ public static class ServiceRegistration
     /// <summary>Registers all application services.</summary>
     public static void Register(IServiceCollection services, AppDataLocation dataLocation)
     {
-        string logsFolder = Path.Combine(dataLocation.Path, "logs");
+        string logsFolder = System.IO.Path.Combine(dataLocation.Path, "logs");
 
         services.AddSingleton(dataLocation);
 
