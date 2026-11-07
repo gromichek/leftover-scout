@@ -5,7 +5,7 @@ Owned by the lead. Updated after every merged PR.
 ## Current state
 
 - Phase 0 (Foundation) done. CI `build-and-test` is a required check on `main`.
-- Next task: T-001 (app shell) — task file not written yet.
+- Next task: T-001 (app shell) — task file written, session not started yet.
 
 ## Done
 

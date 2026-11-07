@@ -14,7 +14,8 @@ remove the chosen items safely.
 | Item | Choice | Decision |
 |---|---|---|
 | Runtime | .NET 10 (LTS, supported until Nov 2028) | D-001 |
-| UI | WPF, built-in Fluent theme, MVVM with CommunityToolkit.Mvvm | D-009, D-011 |
+| UI | WPF, built-in Fluent theme (light only), left navigation, single instance, MVVM with CommunityToolkit.Mvvm | D-009, D-011, D-016, D-018, D-019 |
+| Infrastructure | Microsoft.Extensions.DependencyInjection + Logging, own file logger | D-017 |
 | OS | Windows 10 22H2 (build 19045) and later, Windows 11; x64 | D-007 |
 | Privileges | Runs as the current user (`asInvoker`), no elevation in Phase 1 | D-003 |
 | Distribution | Portable self-contained single-file exe | D-007 |
