@@ -2,7 +2,7 @@ using System.Windows;
 using System.Windows.Media;
 using LeftoverScout.Core.Settings;
 using LeftoverScout.Core.UI;
-using LeftoverScout.Windows.Scanning;
+using LeftoverScout.Windows.UI;
 
 namespace LeftoverScout.App.Startup;
 
@@ -92,7 +92,8 @@ public sealed class WindowPlacementService
             return;
         }
 
-        _settings = _settings with
+        // Reload first: other parts of the app (for example the Help page) save their own settings in the same file.
+        _settings = _settingsStore.Load() with
         {
             MainWindow = new WindowPlacement(bounds.Left, bounds.Top, bounds.Width, bounds.Height, window.WindowState == WindowState.Maximized),
         };

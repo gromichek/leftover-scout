@@ -5,17 +5,19 @@
 LeftoverScout is portable. There is nothing to install: start `LeftoverScout.exe` from any
 folder. It runs as your normal user and never asks for administrator rights.
 
-The window has a navigation list on the left with five sections:
+The window has a navigation list on the left:
 
 | Section | What it is for |
 |---|---|
-| Scan | Scans your user profile (read-only) and shows what takes space. See [Scanning your profile](scanning.md). |
-| Results | Will list suspected leftovers and explain why. Available in Phase 1. |
-| Cleanup | Will move selected items to the Recycle Bin. Available in Phase 3. |
-| History | Will show what earlier cleanups removed. Available in Phase 3. |
-| About | Version, license, project link and the data folder. |
+| **Scan** | Scans your user profile (read-only) and shows what takes space. See [Scan](scan.md). |
+| **Results** | Will list suspected leftovers and explain why. Planned. See [Results](results.md). |
+| **Cleanup** | Will move selected items to the Recycle Bin. Planned. See [Cleanup](cleanup.md). |
+| **History** | Will show what earlier cleanups removed. Planned. See [History](history.md). |
+| **Help** | This help. See [Using this help](help.md). |
+| **About** | Version, license, project link and the data folder. See [About](about.md). |
 
-At the moment **Scan** and **About** have content; the other pages are placeholders.
+At the moment **Scan**, **Help** and **About** have content; **Results**, **Cleanup** and **History**
+show a short note about what they will do.
 
 ## Only one window
 
@@ -27,8 +29,8 @@ ends quietly.
 
 LeftoverScout keeps its own files in a `data` folder **next to the program**:
 
-- `data\settings.json` — window size and position.
-- `data\logs\leftoverscout-<date>.log` — a diagnostic log. The seven newest files are kept.
+- `data\settings.json`: window size and position, and the help language you chose.
+- `data\logs\leftoverscout-<date>.log`: a diagnostic log. The seven newest files are kept.
 
 Deleting the program folder removes all of it. Nothing is written to the registry.
 The **About** page shows the exact folder and has an **Open data folder** button.

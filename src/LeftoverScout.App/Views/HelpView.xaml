@@ -1,0 +1,52 @@
+<UserControl x:Class="LeftoverScout.App.Views.HelpView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:help="clr-namespace:LeftoverScout.Core.Help;assembly=LeftoverScout.Core">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <DockPanel Grid.Row="0" Margin="0,0,0,12">
+      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+        <RadioButton MinWidth="48"
+                     Margin="0,0,4,0"
+                     GroupName="HelpLanguage"
+                     IsChecked="{Binding IsEnglish, Mode=TwoWay}"
+                     Content="EN"
+                     ToolTip="Show the help in English" />
+        <RadioButton MinWidth="48"
+                     GroupName="HelpLanguage"
+                     IsChecked="{Binding IsRussian, Mode=TwoWay}"
+                     Content="RU"
+                     ToolTip="Show the help in Russian" />
+      </StackPanel>
+      <TextBlock FontSize="24" FontWeight="SemiBold" Text="{Binding Title}" />
+    </DockPanel>
+
+    <Grid Grid.Row="1">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="170" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+
+      <ListBox Grid.Column="0"
+               ItemsSource="{Binding Topics}"
+               SelectedItem="{Binding SelectedTopic, Mode=TwoWay}">
+        <ListBox.ItemTemplate>
+          <DataTemplate DataType="{x:Type help:HelpTopic}">
+            <TextBlock Margin="4,2" Text="{Binding Title}" />
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+
+      <FlowDocumentScrollViewer x:Name="Viewer"
+                                Grid.Column="1"
+                                Margin="12,0,0,0"
+                                IsToolBarVisible="False"
+                                VerticalScrollBarVisibility="Auto"
+                                BorderThickness="0" />
+    </Grid>
+  </Grid>
+</UserControl>

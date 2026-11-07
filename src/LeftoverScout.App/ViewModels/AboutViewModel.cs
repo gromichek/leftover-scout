@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.Input;
+using LeftoverScout.Core.Help;
 using LeftoverScout.Core.Shell;
 using LeftoverScout.Core.Storage;
 
@@ -19,7 +20,7 @@ public sealed partial class AboutViewModel : PageViewModel
     /// <param name="dataLocation">Where settings and logs are stored.</param>
     /// <param name="shell">Used to open Explorer and the browser.</param>
     public AboutViewModel(string version, AppDataLocation dataLocation, IShellLauncher shell)
-        : base("About")
+        : base("About", HelpTopics.About)
     {
         Version = version;
         DataFolderPath = dataLocation.Path;

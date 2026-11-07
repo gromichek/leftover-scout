@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LeftoverScout.Core.Help;
 using LeftoverScout.Core.Storage;
 
 namespace LeftoverScout.App.ViewModels;
@@ -60,6 +61,23 @@ public sealed partial class MainViewModel : ObservableObject
 
     [RelayCommand]
     private void Navigate(PageViewModel page) => CurrentPage = page;
+
+    /// <summary>
+    /// Opens the Help page at the topic of the current page (the ? button and F1, decision D-030).
+    /// On the Help page itself it opens the topic about Help.
+    /// </summary>
+    [RelayCommand]
+    private void OpenHelp()
+    {
+        HelpPageViewModel? help = Pages.OfType<HelpPageViewModel>().FirstOrDefault();
+        if (help is null)
+        {
+            return;
+        }
+
+        help.ShowTopic(CurrentPage is HelpPageViewModel ? HelpTopics.Help : CurrentPage.HelpTopicId);
+        CurrentPage = help;
+    }
 
     [RelayCommand]
     private void DismissInfoBar() => InfoBarText = string.Empty;

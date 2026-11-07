@@ -20,7 +20,7 @@ remove the chosen items safely.
 | Privileges | Runs as the current user (`asInvoker`), no elevation in Phase 1 | D-003 |
 | Distribution | Portable self-contained single-file exe | D-007 |
 | Network | None. Fully offline, no telemetry | D-005 |
-| Language | English only (UI, help, repository) | D-006 |
+| Language | English only (UI, repository); the user help is also in Russian | D-006, D-024, D-029 |
 
 ## Solution layout
 
@@ -89,7 +89,7 @@ Known limitations: size is the **logical** size (D-022), no size on disk; **hard
 per link**, so files with several links are over-counted; folders that cannot be read are recorded and
 skipped, so totals may be slightly low.
 
-The monitor-aware window placement check uses `MonitorWorkAreas` (Windows, `EnumDisplayMonitors`) and the
+The monitor-aware window placement check uses `MonitorWorkAreas` (Windows, `UI` folder, `EnumDisplayMonitors`) and the
 pure `WindowBoundsValidator` (Core).
 
 ### Evidence (planned)
@@ -149,6 +149,39 @@ the user with an info bar (D-012).
   The main window's bounds are restored by `WindowPlacementService`, validated by the pure
   `WindowBoundsValidator` (Core).
 
+## Help system (D-024 … D-030)
+
+The user help is Markdown, one topic per file, and the **same files** are read on GitHub and inside the app.
+
+- **Files:** `docs/user-guide/en/*.md` and `docs/user-guide/ru/*.md`, identical file names. Russian text is
+  allowed only here. The UI stays English; Russian help names pages and buttons in English, in bold (D-029).
+- **Topics:** `HelpTopics.All` (Core) lists the topic ids and file names: `overview` (`index.md`),
+  `getting-started`, `scan`, `results`, `cleanup`, `history`, `about`, `help`.
+- **Embedding:** `LeftoverScout.App.csproj` links every `docs/user-guide/**/*.md` as an embedded resource with the
+  logical name `Help/<language>/<file>` (not copied). `EmbeddedHelpSource` (App, `IHelpSource`) reads them and
+  normalizes the backslashes that `%(RecursiveDir)` produces.
+- **Catalog:** `HelpCatalog` (Core) returns the Markdown for (topic id, language); a missing Russian topic falls back
+  to English and logs a warning. `HelpLanguages.Resolve` picks the language: saved `AppSettings.HelpLanguage`
+  (`en` / `ru`) wins, otherwise the Windows UI language (`ru` gives Russian, anything else English) (D-028).
+  `HelpLink.Resolve` classifies links: a relative `*.md` topic file opens inside Help, `https://` opens the browser
+  through `IShellLauncher`, everything else is ignored.
+- **Renderer:** Markdig parses the text; `HelpDocumentBuilder` (App) converts the AST into a WPF `FlowDocument`.
+  Unknown elements become plain text; the builder never throws. Colors come from the Fluent light theme.
+- **Page:** `HelpPageViewModel` holds the topic list, the selected topic, the EN / RU switch and the current Markdown;
+  `HelpView` only builds the document and forwards link clicks to the view model.
+- **Context help (D-030):** every `PageViewModel` has a `HelpTopicId`. `MainWindow` has a shared header with a **?**
+  button and an **F1** key binding, both bound to `MainViewModel.OpenHelpCommand`, which opens Help at the topic of the
+  current page (on the Help page: the `help` topic).
+
+Allowed Markdown subset: headings `#` to `###`, paragraphs, **bold**, *italic*, `inline code`, bullet and numbered
+lists (one nesting level), pipe tables, block quotes, links. No images, no raw HTML.
+
+**Adding a topic for a new page:**
+1. Add a `HelpTopics` constant and entry (id, file name, title).
+2. Add the Markdown file in `docs/user-guide/en/` and `docs/user-guide/ru/` with the same name (tests check this).
+3. Pass the topic id to the page's `PageViewModel` constructor.
+4. Link the new topic from the overview and, where useful, from related topics.
+
 ## Safety model (summary)
 
 See `CLAUDE.md` → "Safety rules". In short: scanning is read-only, one service deletes,
@@ -165,6 +198,7 @@ touch a real profile.
 | CommunityToolkit.Mvvm | MIT | App | MVVM helpers: `ObservableObject`, source-generated properties and commands (D-009) |
 | Microsoft.Extensions.DependencyInjection | MIT | App | Dependency injection container (D-017) |
 | Microsoft.Extensions.Logging | MIT | App | Logging pipeline (D-017) |
+| Markdig | BSD-2-Clause | App | Markdown parser for the in-app help (D-027) |
 | Microsoft.Extensions.Logging.Abstractions | MIT | Core | `ILogger` abstraction, so Core can log without a Windows dependency |
 
 ## Build and CI

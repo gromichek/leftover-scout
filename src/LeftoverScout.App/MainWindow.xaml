@@ -19,10 +19,18 @@
     <DataTemplate DataType="{x:Type vm:ScanPageViewModel}">
       <views:ScanView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:HelpPageViewModel}">
+      <views:HelpView />
+    </DataTemplate>
     <DataTemplate DataType="{x:Type vm:AboutViewModel}">
       <views:AboutView />
     </DataTemplate>
   </Window.Resources>
+
+  <Window.InputBindings>
+    <!-- F1 opens the help topic of the current page (decision D-030). -->
+    <KeyBinding Key="F1" Command="{Binding OpenHelpCommand}" />
+  </Window.InputBindings>
 
   <DockPanel>
     <!-- Status bar -->
@@ -66,6 +74,27 @@
     </ListBox>
 
     <!-- Content area -->
-    <ContentControl Margin="24" Content="{Binding CurrentPage}" />
+    <Grid Margin="24">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+
+      <!-- Shared page header: every page gets the ? button automatically (decision D-030). -->
+      <Button Grid.Row="0"
+              Width="32"
+              Height="32"
+              Margin="0,0,0,8"
+              Padding="0"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Top"
+              AutomationProperties.Name="Help for this page"
+              Command="{Binding OpenHelpCommand}"
+              Content="?"
+              FontWeight="SemiBold"
+              ToolTip="Help for this page (F1)" />
+
+      <ContentControl Grid.Row="1" Content="{Binding CurrentPage}" />
+    </Grid>
   </DockPanel>
 </Window>

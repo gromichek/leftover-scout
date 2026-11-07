@@ -2,6 +2,7 @@ using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LeftoverScout.Core.Formatting;
+using LeftoverScout.Core.Help;
 using LeftoverScout.Core.Scanning;
 
 namespace LeftoverScout.App.ViewModels;
@@ -43,7 +44,7 @@ public sealed partial class ScanPageViewModel : PageViewModel
 
     /// <summary>Creates the Scan page.</summary>
     public ScanPageViewModel(IScanService scanService)
-        : base("Scan")
+        : base("Scan", HelpTopics.Scan)
     {
         _scanService = scanService;
     }
