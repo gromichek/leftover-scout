@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Windows-specific implementations: file system scan, registry/Appx evidence, Recycle Bin deletion. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RootNamespace>LeftoverScout.Windows</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LeftoverScout.Core\LeftoverScout.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="LeftoverScout.Windows.Tests" />
+  </ItemGroup>
+
+</Project>

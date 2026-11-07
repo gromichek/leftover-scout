@@ -1,0 +1,15 @@
+<Project>
+  <!--
+    Central Package Management: every NuGet version lives here.
+    Allowed licenses: MIT, Apache-2.0, BSD only. Record each package in docs/ARCHITECTURE.md ("Third-party packages").
+  -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Tests -->
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageVersion Include="xunit.v3" Version="3.2.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
+  </ItemGroup>
+</Project>
