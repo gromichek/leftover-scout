@@ -35,6 +35,7 @@ src/
 tests/
   LeftoverScout.Core.Tests/
   LeftoverScout.Windows.Tests/
+  LeftoverScout.App.Tests/      View model tests (added in T-001).
 rules/                      (planned) JSON knowledge base shipped with the app.
 docs/                       Project documents, tasks, user guide.
 ```

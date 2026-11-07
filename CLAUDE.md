@@ -16,7 +16,8 @@ Read this file completely before you start. Then read, in this order:
 
 ## Workflow for an executor session
 
-1. Start from the latest `main`. Create a branch named `t-NNN-short-name` (same as the task file name).
+1. Start from the latest `main`. Use a branch named `t-NNN-short-name` (same as the task file name).
+   If the session environment already assigned a branch (e.g. `claude/…`), keep that branch.
 2. Implement only what the task asks. Anything else you notice goes into the PR section
    "Follow-ups" — do not fix it in this PR.
 3. If the task is unclear or contradicts this file or ARCHITECTURE.md: **do not guess**.
@@ -28,6 +29,8 @@ Read this file completely before you start. Then read, in this order:
    ```
    If you cannot run them (e.g. no Windows/.NET in your environment), say so in the PR.
 5. Open one PR titled `T-NNN: <short summary>` and fill in `.github/pull_request_template.md`.
+   If you cannot open a PR from your environment, push the branch and finish with a message
+   that contains the branch name and the filled-in PR template text; the lead opens the PR.
 6. Do not merge your own PR. Do not edit `docs/PROGRESS.md`, `docs/LEAD_HANDOVER.md` or
    `docs/ROADMAP.md` — the lead owns them.
 
@@ -81,6 +84,11 @@ This app deletes user files. A bug can destroy someone's data.
 - Long-running work is async, cancellable (`CancellationToken`) and reports progress.
   The UI thread must never block.
 - Public types and members get XML doc comments.
+- WPF projects do not get `System.IO` as an implicit using (`Path` would clash with
+  `System.Windows.Shapes.Path`). In `LeftoverScout.App` write `System.IO.Path`, `System.IO.File`, …
+- xUnit analyzers are errors too: pass `TestContext.Current.CancellationToken` to methods that
+  accept a `CancellationToken` (rule xUnit1051).
+- If you cannot build locally, read your code twice for compile errors before pushing.
 - Before relying on assumed framework behavior (WPF, file system, Shell APIs), check the
   official documentation or the framework source code, and mention the source in the PR.
 
