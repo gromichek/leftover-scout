@@ -1,6 +1,6 @@
 # LeftoverScout user guide
 
-> LeftoverScout is in early development. Today it can scan your profile and show what takes
+> LeftoverScout is in early development. Today it can scan your profile and let you browse what takes
 > space. Explaining and cleaning up are planned. This guide always describes what the app does now.
 
 ## What LeftoverScout does
@@ -16,11 +16,11 @@ LeftoverScout is built to:
 ## Order of work
 
 1. Open **Scan** and press **Start scan**. See [Scan](scan.md).
-2. **Results** will list suspected leftovers. See [Results](results.md). *(planned)*
+2. Open **Results** to browse folders by size, see large files and open them in Explorer. See [Results](results.md).
 3. **Cleanup** will remove the items you select. See [Cleanup](cleanup.md). *(planned)*
 4. **History** will show what was removed. See [History](history.md). *(planned)*
 
-At the moment only **Scan**, **Help** and **About** have content.
+At the moment **Scan**, **Results**, **Help** and **About** have content.
 
 ## What is safe
 

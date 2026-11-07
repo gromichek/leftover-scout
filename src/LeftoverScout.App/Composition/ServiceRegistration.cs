@@ -1,4 +1,5 @@
 using LeftoverScout.App.Help;
+using LeftoverScout.App.Services;
 using LeftoverScout.App.Startup;
 using LeftoverScout.App.ViewModels;
 using LeftoverScout.Core.Help;
@@ -46,6 +47,7 @@ public static class ServiceRegistration
         services.AddSingleton<ISettingsStore>(provider =>
             new JsonSettingsStore(dataLocation.Path, provider.GetRequiredService<ILogger<JsonSettingsStore>>()));
         services.AddSingleton<IShellLauncher, ShellLauncher>();
+        services.AddSingleton<IClipboardService, WpfClipboardService>();
         services.AddSingleton<WindowPlacementService>();
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton(ScanTarget.ForCurrentUser());
@@ -58,8 +60,8 @@ public static class ServiceRegistration
         // Pages, in navigation order.
         services.AddSingleton<ScanPageViewModel>();
         services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<ScanPageViewModel>());
-        services.AddSingleton<PageViewModel>(new PlaceholderPageViewModel(
-            "Results", HelpTopics.Results, 1, "Lists the folders that look like leftovers and explains why each one is suspected."));
+        services.AddSingleton<ResultsPageViewModel>();
+        services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<ResultsPageViewModel>());
         services.AddSingleton<PageViewModel>(new PlaceholderPageViewModel(
             "Cleanup", HelpTopics.Cleanup, 3, "Moves the items you select to the Recycle Bin after you confirm."));
         services.AddSingleton<PageViewModel>(new PlaceholderPageViewModel(

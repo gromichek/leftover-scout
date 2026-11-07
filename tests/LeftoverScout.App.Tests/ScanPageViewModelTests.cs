@@ -11,6 +11,12 @@ public class ScanPageViewModelTests
     {
         public ScanResult? LastResult { get; private set; }
 
+        public event EventHandler? LastResultChanged
+        {
+            add { }
+            remove { }
+        }
+
         public async Task<ScanResult> RunAsync(IProgress<ScanProgress>? progress, CancellationToken cancellationToken)
         {
             ScanResult result = await run(progress, cancellationToken);

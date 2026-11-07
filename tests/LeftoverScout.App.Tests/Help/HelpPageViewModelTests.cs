@@ -41,6 +41,10 @@ public class HelpPageViewModelTests
         {
         }
 
+        public void SelectFile(string filePath)
+        {
+        }
+
         public void OpenUrl(string url) => OpenedUrls.Add(url);
     }
 
@@ -202,6 +206,13 @@ public class HelpPageViewModelTests
     private sealed class NoScanService : IScanService
     {
         public ScanResult? LastResult => null;
+
+        // Never raised: this fake never produces a result. Empty accessors avoid CS0067.
+        public event EventHandler? LastResultChanged
+        {
+            add { }
+            remove { }
+        }
 
         public Task<ScanResult> RunAsync(IProgress<ScanProgress>? progress, CancellationToken cancellationToken) =>
             throw new NotSupportedException();

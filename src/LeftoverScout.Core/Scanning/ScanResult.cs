@@ -23,4 +23,7 @@ public sealed record ScanResult(
 {
     /// <summary>True when the scan ran to the end.</summary>
     public bool IsCompleted => Completion == ScanCompletion.Completed;
+
+    /// <summary>When the scan finished (set by the scan service for completed scans); null otherwise.</summary>
+    public DateTimeOffset? CompletedAt { get; init; }
 }
