@@ -50,13 +50,47 @@ and evidence code takes a `ScanTarget` and never reads the current user's paths 
 Phase 1 only creates `ScanTarget.ForCurrentUser()`. Administrator mode (Phase 5) will add
 other profiles without rewriting the scanner (D-003).
 
-### Scan (planned)
-A read-only walk over the target profile producing **items** (folders/files) with size,
-dates and attributes.
-- Never follows reparse points (junctions, symlinks).
-- Never hydrates cloud placeholder files (OneDrive): sizes and dates come from metadata only.
-- Tolerates access-denied and locked entries (recorded, not fatal).
-- Async, cancellable, reports progress.
+### Scan
+A read-only walk over the target profile that builds a **folder tree** with aggregated values.
+Individual files are not kept, except **large files** (>= 100 MB, `ScanOptions.LargeFileThresholdBytes`) (D-021).
+
+Pieces:
+- `IDirectoryReader` (Core) lists one folder: name, is-directory, logical length, last write (UTC), raw
+  attributes, reparse tag. Errors come back as data (`DirectoryListing.ErrorReason`). The Windows
+  implementation `Win32DirectoryReader` uses `FindFirstFileExW` (`FindExInfoBasic`, large fetch) and the
+  `\\?\` prefix for long paths. It only enumerates; it never opens files.
+- `EntryClassifier` (Core, pure) holds **all** link and cloud rules (below).
+- `ProfileScanner` (Core) walks the tree with an explicit stack (no recursion), checks the cancellation
+  token before every folder (a cancelled scan returns `ScanCompletion.Cancelled` without totals), throttles
+  progress reports (default 100 ms) and aggregates totals bottom-up. Children are sorted by name
+  (ordinal, ignore case), so results are deterministic. The walk is single-threaded.
+- `PersonalFolderMatcher` (Core) marks the personal folders (D-020). `PersonalFolderProvider` (Windows)
+  supplies them: `SHGetKnownFolderPath` for Documents, Desktop, Pictures, Videos, Music, Downloads plus the
+  environment variables `OneDrive`, `OneDriveConsumer`, `OneDriveCommercial`. Folders outside the profile
+  are ignored.
+- `ScanService` (Core, singleton, `IScanService`) runs the scanner, logs start and end (totals and
+  duration, never paths) and keeps `LastResult` (last *completed* scan) for the Results page.
+- `ScanPageViewModel` (App) binds the Scan page; `ScanSummary` (Core) computes the numbers it shows.
+
+Rules (task T-002 section 2; constants from Microsoft Learn, "File Attribute Constants" and
+"Reparse Point Tags"):
+1. Name-surrogate reparse point (tag & `0x20000000`, e.g. junction, symlink): not followed, not counted;
+   recorded as skipped link.
+2. Cloud placeholder tags (`(tag & 0xFFFF0FFF) == 0x9000001A`) and other non-surrogate tags: treated as a
+   normal file or folder, using metadata only.
+3. File with `RECALL_ON_DATA_ACCESS` (`0x00400000`) or `OFFLINE` (`0x1000`): cloud-only. Its length goes
+   to the cloud-only total, not to the local size.
+4. Folder with `RECALL_ON_OPEN` (`0x00040000`): not enumerated (that would make OneDrive download the
+   listing); recorded as cloud folder not scanned.
+5. Other non-surrogate reparse files (for example `APPEXECLINK`): counted with their reported length,
+   never followed.
+
+Known limitations: size is the **logical** size (D-022), no size on disk; **hard links are counted once
+per link**, so files with several links are over-counted; folders that cannot be read are recorded and
+skipped, so totals may be slightly low.
+
+The monitor-aware window placement check uses `MonitorWorkAreas` (Windows, `EnumDisplayMonitors`) and the
+pure `WindowBoundsValidator` (Core).
 
 ### Evidence (planned)
 Facts collected read-only from the system that help decide whether an item is still used:
@@ -96,7 +130,7 @@ the user with an info bar (D-012).
 - `settings.json`: `AppSettings` record, read/written by `JsonSettingsStore` (System.Text.Json).
   A missing or corrupt file gives defaults and a logged warning; saves go to a temp file in the
   same folder and replace the target.
-- Journals (Phase 2) will live in the same folder.
+- Journals (Phase 3) will live in the same folder.
 
 ### Composition root, logging, single instance
 - `App.OnStartup` (in `LeftoverScout.App`) is the composition root: single-instance check,

@@ -1,9 +1,11 @@
 using LeftoverScout.App.Startup;
 using LeftoverScout.App.ViewModels;
 using LeftoverScout.Core.Logging;
+using LeftoverScout.Core.Scanning;
 using LeftoverScout.Core.Settings;
 using LeftoverScout.Core.Shell;
 using LeftoverScout.Core.Storage;
+using LeftoverScout.Windows.Scanning;
 using LeftoverScout.Windows.Shell;
 using LeftoverScout.Windows.Storage;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,16 +45,21 @@ public static class ServiceRegistration
             new JsonSettingsStore(dataLocation.Path, provider.GetRequiredService<ILogger<JsonSettingsStore>>()));
         services.AddSingleton<IShellLauncher, ShellLauncher>();
         services.AddSingleton<WindowPlacementService>();
+        services.AddSingleton(TimeProvider.System);
+        services.AddSingleton(ScanTarget.ForCurrentUser());
+        services.AddSingleton<IDirectoryReader, Win32DirectoryReader>();
+        services.AddSingleton<IPersonalFolderProvider, PersonalFolderProvider>();
+        services.AddSingleton<IScanService, ScanService>();
 
         // Pages, in navigation order.
-        services.AddSingleton<PageViewModel>(new PlaceholderPageViewModel(
-            "Scan", 1, "Scans your user profile (read-only) and measures what takes space."));
+        services.AddSingleton<ScanPageViewModel>();
+        services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<ScanPageViewModel>());
         services.AddSingleton<PageViewModel>(new PlaceholderPageViewModel(
             "Results", 1, "Lists the folders that look like leftovers and explains why each one is suspected."));
         services.AddSingleton<PageViewModel>(new PlaceholderPageViewModel(
-            "Cleanup", 2, "Moves the items you select to the Recycle Bin after you confirm."));
+            "Cleanup", 3, "Moves the items you select to the Recycle Bin after you confirm."));
         services.AddSingleton<PageViewModel>(new PlaceholderPageViewModel(
-            "History", 2, "Shows what earlier cleanups removed and where it came from."));
+            "History", 3, "Shows what earlier cleanups removed and where it came from."));
         services.AddSingleton<PageViewModel>(provider => new AboutViewModel(
             AppInfo.GetVersion(), provider.GetRequiredService<AppDataLocation>(), provider.GetRequiredService<IShellLauncher>()));
 

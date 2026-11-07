@@ -1,6 +1,8 @@
 using System.Windows;
+using System.Windows.Media;
 using LeftoverScout.Core.Settings;
 using LeftoverScout.Core.UI;
+using LeftoverScout.Windows.Scanning;
 
 namespace LeftoverScout.App.Startup;
 
@@ -27,14 +29,7 @@ public sealed class WindowPlacementService
     public void Restore(Window window)
     {
         WindowPlacement? saved = _settings.MainWindow;
-        var screens = new[]
-        {
-            new ScreenArea(
-                SystemParameters.VirtualScreenLeft,
-                SystemParameters.VirtualScreenTop,
-                SystemParameters.VirtualScreenWidth,
-                SystemParameters.VirtualScreenHeight),
-        };
+        IReadOnlyList<ScreenArea> screens = GetScreenAreas(window);
 
         if (saved is not null && WindowBoundsValidator.IsVisible(saved, screens))
         {
@@ -54,6 +49,34 @@ public sealed class WindowPlacementService
         }
 
         _settingsStore.Save(_settings);
+    }
+
+    /// <summary>
+    /// Returns the work area of every monitor in device-independent units, so that a window is never restored
+    /// into a gap between monitors of different sizes. The pixel areas are converted with the DPI scale of the
+    /// window (the system scale before the window is shown). Falls back to the virtual screen if no monitor is reported.
+    /// </summary>
+    private static IReadOnlyList<ScreenArea> GetScreenAreas(Window window)
+    {
+        IReadOnlyList<ScreenArea> pixelAreas = MonitorWorkAreas.GetPixelAreas();
+        if (pixelAreas.Count == 0)
+        {
+            return
+            [
+                new ScreenArea(
+                    SystemParameters.VirtualScreenLeft,
+                    SystemParameters.VirtualScreenTop,
+                    SystemParameters.VirtualScreenWidth,
+                    SystemParameters.VirtualScreenHeight),
+            ];
+        }
+
+        DpiScale dpi = VisualTreeHelper.GetDpi(window);
+        double scaleX = dpi.DpiScaleX > 0 ? dpi.DpiScaleX : 1;
+        double scaleY = dpi.DpiScaleY > 0 ? dpi.DpiScaleY : 1;
+        return pixelAreas
+            .Select(area => new ScreenArea(area.Left / scaleX, area.Top / scaleY, area.Width / scaleX, area.Height / scaleY))
+            .ToList();
     }
 
     /// <summary>Saves the bounds of <paramref name="window"/>. Call when the window closes.</summary>

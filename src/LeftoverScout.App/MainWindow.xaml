@@ -16,6 +16,9 @@
     <DataTemplate DataType="{x:Type vm:PlaceholderPageViewModel}">
       <views:PlaceholderPageView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:ScanPageViewModel}">
+      <views:ScanView />
+    </DataTemplate>
     <DataTemplate DataType="{x:Type vm:AboutViewModel}">
       <views:AboutView />
     </DataTemplate>

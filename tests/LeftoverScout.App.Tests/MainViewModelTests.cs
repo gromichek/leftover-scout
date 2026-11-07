@@ -11,7 +11,7 @@ public class MainViewModelTests
     [
         new("Scan", 1, "Scan description."),
         new("Results", 1, "Results description."),
-        new("Cleanup", 2, "Cleanup description."),
+        new("Cleanup", 3, "Cleanup description."),
     ];
 
     [Fact]
