@@ -64,8 +64,9 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 ## Current state
 
-See `docs/PROGRESS.md`. At the time of writing: T-018 merged (#11), owner's manual test pending;
-next is T-003 (Results page), task file not written yet.
+See `docs/PROGRESS.md`. At the time of writing: T-018 accepted by the owner; T-003 (Results
+page) task file written, waiting for the executor session. D-031…D-034 are provisional: after
+the owner tries T-003, ask whether to keep them.
 
 ### Reviewing help (D-026)
 
@@ -114,6 +115,10 @@ for CS0246 on `Stream`/`File`/`Path` first.
 | D-028 | 2026-11-07 | Help language follows the Windows UI language at first open; EN / RU switch, remembered | |
 | D-029 | 2026-11-07 | **UI stays English**; Russian help names UI elements in English, bold | |
 | D-030 | 2026-11-07 | **?** button top-right on every page + **F1** open the help topic of the current page | |
+| D-031 | 2026-11-07 | Results: **one folder at a time** + breadcrumb + Up (not a multi-level tree) | **Provisional** — owner re-evaluates usability after T-003 |
+| D-032 | 2026-11-07 | Results columns: Name, Size, % of parent (bar), Files, Last modified, Notes (Personal / Link / Cloud / Inaccessible); no treemap | **Provisional** |
+| D-033 | 2026-11-07 | Results has a **Large files** tab | **Provisional** |
+| D-034 | 2026-11-07 | Row actions: **Open in Explorer** (file selected) and **Copy path** | **Provisional** |
 
 ## Notes for the next lead
 

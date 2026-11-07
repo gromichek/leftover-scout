@@ -22,7 +22,7 @@ Goal: the user sees what takes space in the profile. Nothing is deleted.
 | T-001 | App shell: MVVM, DI + logging, light Fluent theme, manifest (`asInvoker`), portable settings, left navigation, single instance | ✅ |
 | T-002 | Scan engine (folder tree, cloud-safe, no links) + simple Scan page; includes findings #1, #2 | ✅ |
 | T-018 | In-app Help (English + Russian): Help section in navigation, help link on every page, Russian help for existing pages (D-024…D-030) | ✅ |
-| T-003 | Scan results UI: folder tree/list with sizes and dates, sorting, "Open in Explorer" | ⬜ |
+| T-003 | Results page: folder browser (breadcrumb, sortable columns, notes), Large files tab, Open in Explorer / Copy path | 📝 |
 | T-004 | Evidence: installed programs (Uninstall keys HKCU/HKLM, 32/64-bit), Appx packages of the current user, Start menu shortcuts — read-only | ⬜ |
 
 ## Phase 2 — Classification

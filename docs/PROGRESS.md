@@ -6,8 +6,8 @@ Owned by the lead. Updated after every merged PR.
 
 - Phase 0 (Foundation) done. CI `build-and-test` is a required check on `main`.
 - Phase 1: T-001 and T-002 accepted by the owner (manual tests passed 2026-11-07).
-- T-018 (in-app help EN + RU) merged; owner's manual test pending.
-- Next task: T-003 (Results page with folder tree) — task file not written yet.
+- T-018 (in-app help EN + RU) accepted by the owner (2026-11-07).
+- Next task: T-003 (Results page) — task file written, session not started yet.
 
 ## Done
 
