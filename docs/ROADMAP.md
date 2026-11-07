@@ -1,0 +1,63 @@
+# Roadmap
+
+Owned by the lead. One task = one executor session = one PR. Large tasks are split into
+parts (`T-NNNa`, `T-NNNb`, …). A task file is written in `docs/tasks/` and merged into `main`
+**before** its session starts. Order inside a phase may change; scope changes need the owner.
+
+Status: ⬜ not started · 📝 task written · 🔄 in progress · ✅ merged
+
+## Phase 0 — Foundation
+
+| ID | Task | Status |
+|---|---|---|
+| T-000 | Project documents, CI, solution skeleton (done by the lead) | 🔄 |
+
+## Phase 1 — Read-only scan
+
+Goal: the user sees what takes space in the profile. Nothing is deleted.
+
+| ID | Task | Status |
+|---|---|---|
+| T-001 | App shell: MVVM (CommunityToolkit.Mvvm), DI composition root, Fluent theme, app manifest (`asInvoker`), settings storage per D-012 | ⬜ |
+| T-002 | Scan engine: file system abstraction in Core, recursive size scan, progress + cancellation, no reparse points, no cloud hydration, access-denied tolerance | ⬜ |
+| T-003 | Scan results UI: folder tree/list with sizes and dates, sorting, "Open in Explorer" | ⬜ |
+| T-004 | Evidence: installed programs (Uninstall keys HKCU/HKLM, 32/64-bit), Appx packages of the current user, Start menu shortcuts — read-only | ⬜ |
+
+## Phase 2 — Classification
+
+Goal: each suspicious item gets a category, a confidence level and an explanation.
+
+| ID | Task | Status |
+|---|---|---|
+| T-005 | Rules: JSON schema, loader, validation, first rule set for well-known locations | ⬜ |
+| T-006 | Orphan detection: match items to evidence, confidence levels, explanation texts | ⬜ |
+| T-007 | Known caches and temp locations (categories that are safe to clear) | ⬜ |
+| T-008 | Classification UI: filters by category/confidence, details panel with evidence | ⬜ |
+
+## Phase 3 — Safe cleanup
+
+Goal: the user removes chosen items safely and can see what was done.
+
+| ID | Task | Status |
+|---|---|---|
+| T-009 | Protected list and pre-deletion safety checks | ⬜ |
+| T-010 | Cleanup service: Recycle Bin deletion via Shell API, locked/in-use files, per-item results | ⬜ |
+| T-011 | Cleanup UI: review list, confirmation, explicit "delete permanently" with double confirmation | ⬜ |
+| T-012 | Session journal and history view | ⬜ |
+
+## Phase 4 — Polish and release
+
+| ID | Task | Status |
+|---|---|---|
+| T-013 | Export a scan/cleanup report | ⬜ |
+| T-014 | Complete user guide | ⬜ |
+| T-015 | Release workflow: portable single-file x64 build on tag, checksums, GitHub Release | ⬜ |
+
+## Phase 5 — Administrator mode
+
+Needs a design discussion with the owner before tasks are written (see D-003).
+
+| ID | Task | Status |
+|---|---|---|
+| T-016 | Relaunch elevated on request; choose another profile (`ScanTarget`) | ⬜ |
+| T-017 | Evidence for profiles that are not logged on (offline registry hive) — design first | ⬜ |

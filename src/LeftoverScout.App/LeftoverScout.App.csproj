@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- WPF user interface (MVVM). Contains no scanning or deletion logic itself. -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>LeftoverScout.App</RootNamespace>
+    <AssemblyName>LeftoverScout</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LeftoverScout.Core\LeftoverScout.Core.csproj" />
+    <ProjectReference Include="..\LeftoverScout.Windows\LeftoverScout.Windows.csproj" />
+  </ItemGroup>
+
+</Project>

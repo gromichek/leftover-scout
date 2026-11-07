@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LeftoverScout.Core/LeftoverScout.Core.csproj" />
+    <Project Path="src/LeftoverScout.Windows/LeftoverScout.Windows.csproj" />
+    <Project Path="src/LeftoverScout.App/LeftoverScout.App.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LeftoverScout.Core.Tests/LeftoverScout.Core.Tests.csproj" />
+    <Project Path="tests/LeftoverScout.Windows.Tests/LeftoverScout.Windows.Tests.csproj" />
+  </Folder>
+</Solution>

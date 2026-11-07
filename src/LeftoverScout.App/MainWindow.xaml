@@ -1,0 +1,14 @@
+<Window x:Class="LeftoverScout.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="LeftoverScout"
+        Width="1000"
+        Height="650"
+        WindowStartupLocation="CenterScreen">
+  <Grid Margin="24">
+    <TextBlock HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               FontSize="20"
+               Text="LeftoverScout — project skeleton. Scanning arrives in Phase 1." />
+  </Grid>
+</Window>
