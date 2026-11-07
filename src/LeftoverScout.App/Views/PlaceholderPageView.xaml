@@ -1,0 +1,9 @@
+<UserControl x:Class="LeftoverScout.App.Views.PlaceholderPageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <StackPanel>
+    <TextBlock FontSize="24" FontWeight="SemiBold" Text="{Binding Title}" />
+    <TextBlock Margin="0,12,0,0" FontSize="16" Text="{Binding Availability}" />
+    <TextBlock Margin="0,8,0,0" Text="{Binding Description}" TextWrapping="Wrap" />
+  </StackPanel>
+</UserControl>

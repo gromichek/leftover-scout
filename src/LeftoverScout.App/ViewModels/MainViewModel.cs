@@ -1,0 +1,55 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using LeftoverScout.Core.Storage;
+
+namespace LeftoverScout.App.ViewModels;
+
+/// <summary>
+/// View model of the main window: left navigation, current page, status bar and info bar.
+/// </summary>
+public sealed partial class MainViewModel : ObservableObject
+{
+    [ObservableProperty]
+    private PageViewModel _currentPage;
+
+    [ObservableProperty]
+    private string _statusText = "Ready";
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsInfoBarVisible))]
+    private string _infoBarText = string.Empty;
+
+    /// <summary>Creates the main view model.</summary>
+    /// <param name="pages">All pages in navigation order; the first one is shown initially.</param>
+    /// <param name="dataLocation">Used to explain when the fallback data folder is in use.</param>
+    public MainViewModel(IEnumerable<PageViewModel> pages, AppDataLocation dataLocation)
+    {
+        Pages = pages.ToList();
+        if (Pages.Count == 0)
+        {
+            throw new ArgumentException("At least one page is required.", nameof(pages));
+        }
+
+        _currentPage = Pages[0];
+
+        if (dataLocation.IsFallback)
+        {
+            _infoBarText = $"Settings are stored in {dataLocation.Path} because the program folder is not writable.";
+        }
+    }
+
+    /// <summary>Window title.</summary>
+    public string Title => "LeftoverScout";
+
+    /// <summary>All pages in navigation order.</summary>
+    public IReadOnlyList<PageViewModel> Pages { get; }
+
+    /// <summary>True when the info bar has a message to show.</summary>
+    public bool IsInfoBarVisible => !string.IsNullOrEmpty(InfoBarText);
+
+    [RelayCommand]
+    private void Navigate(PageViewModel page) => CurrentPage = page;
+
+    [RelayCommand]
+    private void DismissInfoBar() => InfoBarText = string.Empty;
+}

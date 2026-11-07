@@ -7,5 +7,6 @@
   <Folder Name="/tests/">
     <Project Path="tests/LeftoverScout.Core.Tests/LeftoverScout.Core.Tests.csproj" />
     <Project Path="tests/LeftoverScout.Windows.Tests/LeftoverScout.Windows.Tests.csproj" />
+    <Project Path="tests/LeftoverScout.App.Tests/LeftoverScout.App.Tests.csproj" />
   </Folder>
 </Solution>
