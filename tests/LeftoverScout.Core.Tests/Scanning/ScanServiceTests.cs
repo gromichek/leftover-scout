@@ -1,3 +1,4 @@
+using LeftoverScout.Core.Evidence;
 using LeftoverScout.Core.Scanning;
 using Microsoft.Extensions.Logging.Abstractions;
 using static LeftoverScout.Core.Tests.Scanning.FakeDirectoryReader;
@@ -11,8 +12,100 @@ public class ScanServiceTests
         public IReadOnlyList<string> GetPersonalFolderPaths() => [];
     }
 
-    private static ScanService Create(FakeDirectoryReader reader) =>
-        new(new ScanTarget(Root, true), reader, new NoPersonalFolders(), NullLogger<ScanService>.Instance, TimeProvider.System);
+    private sealed class FakeProgramSource(Func<CancellationToken, IReadOnlyList<InstalledProgram>> collect) : IInstalledProgramSource
+    {
+        public ProgramSource Source => ProgramSource.Registry;
+
+        public IReadOnlyList<InstalledProgram> Collect(CancellationToken cancellationToken) => collect(cancellationToken);
+    }
+
+    private static readonly InstalledProgram SampleProgram = new("Sample App", ProgramSource.Registry, "sample key");
+
+    private static ScanService Create(FakeDirectoryReader reader, Func<CancellationToken, IReadOnlyList<InstalledProgram>>? collect = null)
+    {
+        var collector = new EvidenceCollector(
+            [new FakeProgramSource(collect ?? (_ => [SampleProgram]))],
+            NullLogger<EvidenceCollector>.Instance,
+            TimeProvider.System);
+        return new ScanService(new ScanTarget(Root, true), reader, new NoPersonalFolders(), collector, NullLogger<ScanService>.Instance, TimeProvider.System);
+    }
+
+    [Fact]
+    public async Task RunAsync_Completed_StoresEvidenceWithTheResult()
+    {
+        ScanService service = Create(new FakeDirectoryReader().Folder(Root, FileEntry("a.txt", 3)));
+
+        ScanResult result = await service.RunAsync(null, TestContext.Current.CancellationToken);
+
+        Assert.NotNull(result.Evidence);
+        Assert.Equal([SampleProgram], result.Evidence.Programs);
+        Assert.Same(result.Evidence, service.LastResult!.Evidence);
+    }
+
+    [Fact]
+    public async Task RunAsync_EvidenceSourceFails_ScanStillCompletesWithErrorRecorded()
+    {
+        ScanService service = Create(
+            new FakeDirectoryReader().Folder(Root, FileEntry("a.txt", 3)),
+            _ => throw new InvalidOperationException("sample failure"));
+
+        ScanResult result = await service.RunAsync(null, TestContext.Current.CancellationToken);
+
+        Assert.True(result.IsCompleted);
+        Assert.Empty(result.Evidence!.Programs);
+        Assert.Single(result.Evidence.Errors);
+    }
+
+    [Fact]
+    public async Task RunAsync_Cancelled_KeepsPreviousResultAndItsEvidence()
+    {
+        ScanService service = Create(new FakeDirectoryReader().Folder(Root, FileEntry("a.txt", 3)));
+        ScanResult first = await service.RunAsync(null, TestContext.Current.CancellationToken);
+        EvidenceSnapshot? firstEvidence = first.Evidence;
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        ScanResult second = await service.RunAsync(null, cts.Token);
+
+        Assert.Equal(ScanCompletion.Cancelled, second.Completion);
+        Assert.Null(second.Evidence);
+        Assert.Same(first, service.LastResult);
+        Assert.Same(firstEvidence, service.LastResult!.Evidence);
+    }
+
+    [Fact]
+    public async Task RunAsync_EvidenceFinishesAfterScan_ReportsCollectingPrograms()
+    {
+        using var release = new ManualResetEventSlim();
+        ScanService service = Create(
+            new FakeDirectoryReader().Folder(Root, FileEntry("a.txt", 3)),
+            _ =>
+            {
+                WaitFor(release);
+                return [SampleProgram];
+            });
+        var seen = new List<string>();
+        var progress = new SyncProgress(report =>
+        {
+            seen.Add(report.CurrentFolder);
+            if (report.CurrentFolder == ScanService.CollectingProgramsText)
+            {
+                release.Set();
+            }
+        });
+
+        ScanResult result = await service.RunAsync(progress, TestContext.Current.CancellationToken);
+
+        Assert.Contains(ScanService.CollectingProgramsText, seen);
+        Assert.Equal([SampleProgram], result.Evidence!.Programs);
+    }
+
+    private static bool WaitFor(ManualResetEventSlim signal) => signal.Wait(TimeSpan.FromSeconds(10));
+
+    private sealed class SyncProgress(Action<ScanProgress> report) : IProgress<ScanProgress>
+    {
+        public void Report(ScanProgress value) => report(value);
+    }
 
     [Fact]
     public async Task RunAsync_Completed_StoresLastResult()

@@ -1,7 +1,7 @@
 # LeftoverScout user guide
 
-> LeftoverScout is in early development. Today it can scan your profile and let you browse what takes
-> space. Explaining and cleaning up are planned. This guide always describes what the app does now.
+> LeftoverScout is in early development. Today it can scan your profile, let you browse what takes
+> space and show the programs installed on this computer. Explaining and cleaning up are planned. This guide always describes what the app does now.
 
 ## What LeftoverScout does
 
@@ -17,14 +17,16 @@ LeftoverScout is built to:
 
 1. Open **Scan** and press **Start scan**. See [Scan](scan.md).
 2. Open **Results** to browse folders by size, see large files and open them in Explorer. See [Results](results.md).
+   Open **Programs** to see which programs are installed on this computer. See [Programs](programs.md).
 3. **Cleanup** will remove the items you select. See [Cleanup](cleanup.md). *(planned)*
 4. **History** will show what was removed. See [History](history.md). *(planned)*
 
-At the moment **Scan**, **Results**, **Help** and **About** have content.
+At the moment **Scan**, **Results**, **Programs**, **Help** and **About** have content.
 
 ## What is safe
 
 - Scanning only reads folder listings. It does not open, change, move or delete your files.
+- Collecting the installed programs only reads: the registry is never written to, and shortcut files are never opened.
 - Nothing will be deleted without your explicit confirmation.
 - Important system and personal locations will be protected and never offered for deletion.
 
@@ -39,6 +41,7 @@ At the moment **Scan**, **Results**, **Help** and **About** have content.
 - [Getting started](getting-started.md)
 - [Scan](scan.md)
 - [Results](results.md)
+- [Programs](programs.md)
 - [Cleanup](cleanup.md)
 - [History](history.md)
 - [About](about.md)

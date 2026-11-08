@@ -1,0 +1,114 @@
+<UserControl x:Class="LeftoverScout.App.Views.ProgramsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:LeftoverScout.App.ViewModels">
+  <Grid>
+    <!-- No scan yet -->
+    <StackPanel Visibility="{Binding HasNoResult, Converter={StaticResource BooleanToVisibility}}">
+      <TextBlock FontSize="24" FontWeight="SemiBold" Text="{Binding Title}" />
+      <TextBlock Margin="0,12,0,0" Text="{Binding NoResultMessage}" TextWrapping="Wrap" />
+      <Button MinWidth="110"
+              Margin="0,16,0,0"
+              HorizontalAlignment="Left"
+              Command="{Binding GoToScanCommand}"
+              Content="Go to Scan" />
+    </StackPanel>
+
+    <!-- Result available -->
+    <Grid Visibility="{Binding HasResult, Converter={StaticResource BooleanToVisibility}}">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+
+      <TextBlock Grid.Row="0" FontSize="24" FontWeight="SemiBold" Text="{Binding Title}" />
+      <TextBlock Grid.Row="1" Margin="0,4,0,4" Text="{Binding HeaderText}" TextWrapping="Wrap" />
+      <TextBlock Grid.Row="2"
+                 Margin="0,0,0,4"
+                 Text="{Binding ErrorText}"
+                 TextWrapping="Wrap"
+                 Visibility="{Binding HasErrors, Converter={StaticResource BooleanToVisibility}}" />
+
+      <!-- Search, filters and actions -->
+      <DockPanel Grid.Row="3" Margin="0,4,0,8" LastChildFill="False">
+        <TextBlock VerticalAlignment="Center" Text="Search" />
+        <TextBox Width="220"
+                 Margin="8,0,0,0"
+                 AutomationProperties.Name="Search"
+                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBlock Margin="16,0,0,0" VerticalAlignment="Center" Text="Source" />
+        <ComboBox Width="130"
+                  Margin="8,0,0,0"
+                  AutomationProperties.Name="Source"
+                  DisplayMemberPath="Label"
+                  ItemsSource="{Binding SourceOptions}"
+                  SelectedItem="{Binding SelectedSource, Mode=TwoWay}" />
+        <CheckBox Margin="16,0,0,0"
+                  VerticalAlignment="Center"
+                  Content="Show system components and frameworks"
+                  IsChecked="{Binding ShowSystemComponents, Mode=TwoWay}" />
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+          <Button Margin="8,0,0,0"
+                  Command="{Binding OpenInstallLocationCommand}"
+                  Content="Open install location" />
+          <Button Margin="8,0,0,0"
+                  Command="{Binding CopyNameCommand}"
+                  Content="Copy name" />
+        </StackPanel>
+      </DockPanel>
+
+      <Grid Grid.Row="4">
+        <DataGrid x:Name="ProgramGrid"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserResizeRows="False"
+                  EnableRowVirtualization="True"
+                  HeadersVisibility="Column"
+                  IsReadOnly="True"
+                  ItemsSource="{Binding Rows}"
+                  PreviewKeyDown="ProgramGrid_PreviewKeyDown"
+                  PreviewMouseRightButtonDown="ProgramGrid_PreviewMouseRightButtonDown"
+                  SelectedItem="{Binding SelectedRow, Mode=TwoWay}"
+                  SelectionMode="Single"
+                  SelectionUnit="FullRow"
+                  VirtualizingPanel.IsVirtualizing="True"
+                  VirtualizingPanel.VirtualizationMode="Recycling">
+          <DataGrid.ContextMenu>
+            <ContextMenu>
+              <MenuItem Header="Open install location"
+                        Command="{Binding PlacementTarget.DataContext.OpenInstallLocationCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+              <MenuItem Header="Copy name"
+                        Command="{Binding PlacementTarget.DataContext.CopyNameCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                        InputGestureText="Ctrl+C" />
+            </ContextMenu>
+          </DataGrid.ContextMenu>
+          <DataGrid.Columns>
+            <DataGridTextColumn Width="2*" Header="Name" SortMemberPath="Name"
+                                Binding="{Binding Name, Mode=OneWay}" />
+            <DataGridTextColumn Width="*" Header="Publisher" SortMemberPath="Publisher"
+                                Binding="{Binding Publisher, Mode=OneWay}" />
+            <DataGridTextColumn Width="100" Header="Version" SortMemberPath="Version"
+                                Binding="{Binding Version, Mode=OneWay}" />
+            <DataGridTextColumn Width="110" Header="Source" SortMemberPath="SourceText"
+                                Binding="{Binding SourceText, Mode=OneWay}" />
+            <DataGridTextColumn Width="2*" Header="Install location" SortMemberPath="InstallLocation"
+                                Binding="{Binding InstallLocation, Mode=OneWay}" />
+            <DataGridTextColumn Width="100" Header="Installed" SortMemberPath="Installed"
+                                Binding="{Binding InstalledText, Mode=OneWay}" />
+          </DataGrid.Columns>
+        </DataGrid>
+
+        <TextBlock Margin="4,36,0,0"
+                   VerticalAlignment="Top"
+                   Text="{Binding EmptyMessage}" />
+      </Grid>
+
+      <TextBlock Grid.Row="5" Margin="0,8,0,0" Text="{Binding CountText}" />
+    </Grid>
+  </Grid>
+</UserControl>

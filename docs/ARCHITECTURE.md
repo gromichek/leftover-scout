@@ -29,9 +29,9 @@ LeftoverScout.slnx
 src/
   LeftoverScout.Core/       net10.0          Domain models, rules engine, classification, interfaces.
                                              No Windows-only APIs → fully unit-testable.
-  LeftoverScout.Windows/    net10.0-windows  Implementations of Core interfaces: file system scan,
+  LeftoverScout.Windows/    net10.0-windows10.0.19041.0  Implementations of Core interfaces: file system scan,
                                              registry/Appx evidence, Recycle Bin deletion.
-  LeftoverScout.App/        net10.0-windows  WPF views and view models; composition root (DI).
+  LeftoverScout.App/        net10.0-windows10.0.19041.0  WPF views and view models; composition root (DI).
 tests/
   LeftoverScout.Core.Tests/
   LeftoverScout.Windows.Tests/
@@ -39,6 +39,13 @@ tests/
 rules/                      (planned) JSON knowledge base shipped with the app.
 docs/                       Project documents, tasks, user guide.
 ```
+
+The Windows, App and both Windows test projects target `net10.0-windows10.0.19041.0` (D-036). The version
+suffix makes the SDK add the Windows SDK projection (`Microsoft.Windows.SDK.NET.dll` and `WinRT.Runtime.dll`),
+which is needed for the WinRT `PackageManager`. It adds those assemblies to the output (their size was not measured
+in the environment that wrote T-004; check the published exe size on Windows). The default
+`SupportedOSPlatformVersion` becomes 10.0.19041.0, which is below the minimum build 19045 (D-007), so nothing
+changes for supported systems. Core stays `net10.0`.
 
 Dependency direction: `App → Windows → Core`, `App → Core`. Core depends on nothing.
 
@@ -106,12 +113,39 @@ skipped, so totals may be slightly low.
 The monitor-aware window placement check uses `MonitorWorkAreas` (Windows, `UI` folder, `EnumDisplayMonitors`) and the
 pure `WindowBoundsValidator` (Core).
 
-### Evidence (planned)
-Facts collected read-only from the system that help decide whether an item is still used:
-- installed programs: `Uninstall` keys in HKCU and HKLM (both 32- and 64-bit views);
-- installed Appx/MSIX packages of the current user;
-- Start menu shortcuts and other hints.
+### Evidence (T-004)
+Facts collected read-only from the system that help decide whether an item is still used. Code lives in
+`LeftoverScout.Core.Evidence`; only the thin Windows adapters are in `LeftoverScout.Windows.Evidence`.
 The registry is **only read** — LeftoverScout never cleans the registry (D-002).
+
+- `InstalledProgram` (record: name, publisher, version, install location, install date, `Source`, `SourceDetail`,
+  `IsSystemComponent`, `IsFramework`, `SubfolderNames`) and the `IInstalledProgramSource` interface, one
+  implementation per source (D-035):
+  1. `RegistryProgramSource` reads the `Uninstall` keys of HKLM and HKCU in the 64-bit and 32-bit view through
+     `IUninstallRegistry` (Windows: `WindowsUninstallRegistry`, keys opened with `writable: false`).
+     `UninstallEntryParser` (pure) applies the rules: skip entries without `DisplayName`; skip updates
+     (`ParentKeyName` set, `ReleaseType` Update / Hotfix / Security Update); `SystemComponent = 1` marks a system
+     component; `InstallDate` only as `yyyyMMdd`; empty `InstallLocation` falls back to the folder of `DisplayIcon`;
+     the same key name and display name in both views of one hive is listed once.
+  2. `StoreProgramSource` maps `IStorePackage` objects from `IStorePackageProvider` (Windows:
+     `WinRtStorePackageProvider`, `PackageManager.FindPackagesForUser(string.Empty)` = current user, no admin, D-036).
+     Each property is read separately; one that throws is left empty.
+  3. `ProgramFolderSource` lists the top-level folders of Program Files, Program Files (x86) and
+     `%LOCALAPPDATA%\Programs` (plus names of the direct subfolders for later matching).
+  4. `StartMenuSource` lists shortcut names (`.lnk`, `.url`, without extension) and folders under the user and
+     all-users `Start Menu\Programs`. Shortcut files are never opened.
+  The two folder sources use `IDirectoryReader` and `EntryClassifier`, so reparse points and cloud folders are not
+  entered. The folders come from `IEvidenceLocations` (Windows: `WindowsEvidenceLocations`).
+- `EvidenceCollector` runs all sources in parallel, catches a failure per source (only the exception type is
+  logged; the user sees a short message such as "Store apps could not be read."), honours cancellation and returns an
+  `EvidenceSnapshot` (programs, per-source counts, errors, collected-at time, duration).
+- `ScanService.RunAsync` starts the collector together with the profile scan (same token, D-038) and stores the
+  snapshot in `ScanResult.Evidence` of a completed scan. A cancelled scan stores nothing, so `LastResult` and its
+  evidence stay as they were (D-039).
+- Programs page (D-037): `ProgramsPageViewModel` reads `LastResult.Evidence`; filtering and sorting of entries is the
+  pure `ProgramFilter`. The only actions are "Open install location" (`IShellLauncher.OpenFolder`, enabled when
+  `IFolderExistence` says the folder exists) and "Copy name". The view applies the default sort and its header arrow
+  with `DataGridSorting` (also used for the Size column of Results).
 
 ### Rules (planned)
 An offline JSON knowledge base in `rules/` (D-005), validated at load time:
@@ -170,7 +204,7 @@ The user help is Markdown, one topic per file, and the **same files** are read o
 - **Files:** `docs/user-guide/en/*.md` and `docs/user-guide/ru/*.md`, identical file names. Russian text is
   allowed only here. The UI stays English; Russian help names pages and buttons in English, in bold (D-029).
 - **Topics:** `HelpTopics.All` (Core) lists the topic ids and file names: `overview` (`index.md`),
-  `getting-started`, `scan`, `results`, `cleanup`, `history`, `about`, `help`.
+  `getting-started`, `scan`, `results`, `programs`, `cleanup`, `history`, `about`, `help`.
 - **Embedding:** `LeftoverScout.App.csproj` links every `docs/user-guide/**/*.md` as an embedded resource with the
   logical name `Help/<language>/<file>` (not copied). `EmbeddedHelpSource` (App, `IHelpSource`) reads them and
   normalizes the backslashes that `%(RecursiveDir)` produces.
@@ -214,6 +248,9 @@ touch a real profile.
 | Microsoft.Extensions.Logging | MIT | App | Logging pipeline (D-017) |
 | Markdig | BSD-2-Clause | App | Markdown parser for the in-app help (D-027) |
 | Microsoft.Extensions.Logging.Abstractions | MIT | Core | `ILogger` abstraction, so Core can log without a Windows dependency |
+
+No NuGet package was added in T-004. The Windows SDK projection that comes with the `net10.0-windows10.0.19041.0`
+target framework is part of the .NET SDK (see "Solution layout").
 
 ## Build and CI
 
