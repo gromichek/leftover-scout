@@ -64,12 +64,8 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 ## Current state
 
-See `docs/PROGRESS.md`. At the time of writing: T-003 merged (#14). Waiting for the owner's
-manual test, the verdict on provisional D-031…D-034, and the open question below.
-
-Open question to the owner (asked 2026-11-07): after a **cancelled** scan the Results page keeps
-the previous completed result (task text said "show Go to Scan"; executor chose to keep it, help
-describes that). Keep or change?
+See `docs/PROGRESS.md`. At the time of writing: T-003 accepted by the owner; T-004 (installed
+programs + Programs page) task file written, waiting for the executor session.
 
 Process note: this time the executor session could open the PR itself (#14) — check for an
 existing PR before opening one.
@@ -121,10 +117,15 @@ for CS0246 on `Stream`/`File`/`Path` first.
 | D-028 | 2026-11-07 | Help language follows the Windows UI language at first open; EN / RU switch, remembered | |
 | D-029 | 2026-11-07 | **UI stays English**; Russian help names UI elements in English, bold | |
 | D-030 | 2026-11-07 | **?** button top-right on every page + **F1** open the help topic of the current page | |
-| D-031 | 2026-11-07 | Results: **one folder at a time** + breadcrumb + Up (not a multi-level tree) | **Provisional** — owner re-evaluates usability after T-003 |
-| D-032 | 2026-11-07 | Results columns: Name, Size, % of parent (bar), Files, Last modified, Notes (Personal / Link / Cloud / Inaccessible); no treemap | **Provisional** |
-| D-033 | 2026-11-07 | Results has a **Large files** tab | **Provisional** |
-| D-034 | 2026-11-07 | Row actions: **Open in Explorer** (file selected) and **Copy path** | **Provisional** |
+| D-031 | 2026-11-07 | Results: **one folder at a time** + breadcrumb + Up (not a multi-level tree) | Accepted 2026-11-08 |
+| D-032 | 2026-11-07 | Results columns: Name, Size, % of parent (bar), Files, Last modified, Notes (Personal / Link / Cloud / Inaccessible); no treemap | Accepted 2026-11-08 |
+| D-033 | 2026-11-07 | Results has a **Large files** tab | Accepted 2026-11-08 |
+| D-034 | 2026-11-07 | Row actions: **Open in Explorer** (file selected) and **Copy path** | Accepted 2026-11-08 together with D-031…D-033 ("convenient for now") |
+| D-035 | 2026-11-08 | Evidence sources: Uninstall registry (HKLM + HKCU, 64/32-bit), Store packages, Program folders names, Start menu shortcut names (never opened) | |
+| D-036 | 2026-11-08 | Store packages via `PackageManager`; Windows/App (+ tests) target `net10.0-windows10.0.19041.0` | Current user needs no admin (MS docs) |
+| D-037 | 2026-11-08 | New **Programs** page between Results and Cleanup | |
+| D-038 | 2026-11-08 | Evidence collected automatically as part of every scan; failing source never fails the scan | |
+| D-039 | 2026-11-08 | After a **cancelled** scan, pages keep showing the previous completed result | |
 
 ## Notes for the next lead
 

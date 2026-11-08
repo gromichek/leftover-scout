@@ -7,8 +7,8 @@ Owned by the lead. Updated after every merged PR.
 - Phase 0 (Foundation) done. CI `build-and-test` is a required check on `main`.
 - Phase 1: T-001 and T-002 accepted by the owner (manual tests passed 2026-11-07).
 - T-018 (in-app help EN + RU) accepted by the owner (2026-11-07).
-- T-003 (Results page) merged; owner's manual test and usability verdict on D-031…D-034 pending.
-- Next task: T-004 (evidence: installed programs) — task file not written yet.
+- T-003 (Results page) accepted by the owner (2026-11-08); D-031…D-034 accepted.
+- Next task: T-004 (installed programs + Programs page) — task file written, session not started yet.
 
 ## Done
 
@@ -32,4 +32,4 @@ is fixed immediately.
 | 2 | 2026-11-07 | Lead review #4 | `WindowPlacementService` treats the whole virtual screen as one area; with monitors of different sizes a window can be restored into an invisible gap. Use per-monitor work areas | T-002 ✅ |
 | 3 | 2026-11-07 | Lead review #7 | `MonitorWorkAreas` lives in `LeftoverScout.Windows.Scanning` but has nothing to do with scanning; move to a `UI` namespace/folder | T-018 ✅ |
 | 4 | 2026-11-07 | Lead review #7 | Monitor work areas are converted from pixels to DIPs with one (system) DPI scale; on mixed-DPI setups the visibility check is approximate. Low priority | later |
-| 5 | 2026-11-07 | Executor note #14 | Results: the default sort (Size descending) is applied by pre-sorting; the Size column header shows no sort arrow until the user clicks a header | next task |
+| 5 | 2026-11-07 | Executor note #14 | Results: the default sort (Size descending) is applied by pre-sorting; the Size column header shows no sort arrow until the user clicks a header | T-004 |
