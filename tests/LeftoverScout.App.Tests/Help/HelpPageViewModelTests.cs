@@ -194,7 +194,7 @@ public class HelpPageViewModelTests
             List<PageViewModel> pages = provider.GetServices<PageViewModel>().ToList();
 
             Assert.All(pages, page => Assert.NotNull(HelpTopics.FindById(page.HelpTopicId)));
-            Assert.Equal(["Scan", "Results", "Cleanup", "History", "Help", "About"], pages.Select(p => p.Title));
+            Assert.Equal(["Scan", "Results", "Programs", "Cleanup", "History", "Help", "About"], pages.Select(p => p.Title));
         }
         finally
         {

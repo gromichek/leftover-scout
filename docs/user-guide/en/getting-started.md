@@ -11,12 +11,13 @@ The window has a navigation list on the left:
 |---|---|
 | **Scan** | Scans your user profile (read-only) and shows what takes space. See [Scan](scan.md). |
 | **Results** | Shows where the space goes: browse folders by size and list large files. See [Results](results.md). |
+| **Programs** | Lists the programs installed on this computer, collected by every scan. See [Programs](programs.md). |
 | **Cleanup** | Will move selected items to the Recycle Bin. Planned. See [Cleanup](cleanup.md). |
 | **History** | Will show what earlier cleanups removed. Planned. See [History](history.md). |
 | **Help** | This help. See [Using this help](help.md). |
 | **About** | Version, license, project link and the data folder. See [About](about.md). |
 
-At the moment **Scan**, **Results**, **Help** and **About** have content; **Cleanup** and **History**
+At the moment **Scan**, **Results**, **Programs**, **Help** and **About** have content; **Cleanup** and **History**
 show a short note about what they will do.
 
 ## Only one window

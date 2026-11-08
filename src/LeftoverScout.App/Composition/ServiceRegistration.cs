@@ -2,12 +2,14 @@ using LeftoverScout.App.Help;
 using LeftoverScout.App.Services;
 using LeftoverScout.App.Startup;
 using LeftoverScout.App.ViewModels;
+using LeftoverScout.Core.Evidence;
 using LeftoverScout.Core.Help;
 using LeftoverScout.Core.Logging;
 using LeftoverScout.Core.Scanning;
 using LeftoverScout.Core.Settings;
 using LeftoverScout.Core.Shell;
 using LeftoverScout.Core.Storage;
+using LeftoverScout.Windows.Evidence;
 using LeftoverScout.Windows.Scanning;
 using LeftoverScout.Windows.Shell;
 using LeftoverScout.Windows.Storage;
@@ -53,6 +55,18 @@ public static class ServiceRegistration
         services.AddSingleton(ScanTarget.ForCurrentUser());
         services.AddSingleton<IDirectoryReader, Win32DirectoryReader>();
         services.AddSingleton<IPersonalFolderProvider, PersonalFolderProvider>();
+        services.AddSingleton<IFolderExistence, FileSystemFolderExistence>();
+
+        // Evidence: installed programs (read-only), collected as part of every scan.
+        services.AddSingleton<IEvidenceLocations, WindowsEvidenceLocations>();
+        services.AddSingleton<IUninstallRegistry, WindowsUninstallRegistry>();
+        services.AddSingleton<IStorePackageProvider, WinRtStorePackageProvider>();
+        services.AddSingleton<IInstalledProgramSource, RegistryProgramSource>();
+        services.AddSingleton<IInstalledProgramSource, StoreProgramSource>();
+        services.AddSingleton<IInstalledProgramSource, ProgramFolderSource>();
+        services.AddSingleton<IInstalledProgramSource, StartMenuSource>();
+        services.AddSingleton<EvidenceCollector>();
+
         services.AddSingleton<IScanService, ScanService>();
         services.AddSingleton<IHelpSource, EmbeddedHelpSource>();
         services.AddSingleton<HelpCatalog>();
@@ -62,6 +76,8 @@ public static class ServiceRegistration
         services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<ScanPageViewModel>());
         services.AddSingleton<ResultsPageViewModel>();
         services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<ResultsPageViewModel>());
+        services.AddSingleton<ProgramsPageViewModel>();
+        services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<ProgramsPageViewModel>());
         services.AddSingleton<PageViewModel>(new PlaceholderPageViewModel(
             "Cleanup", HelpTopics.Cleanup, 3, "Moves the items you select to the Recycle Bin after you confirm."));
         services.AddSingleton<PageViewModel>(new PlaceholderPageViewModel(

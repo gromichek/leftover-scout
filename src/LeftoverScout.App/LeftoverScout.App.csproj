@@ -3,7 +3,7 @@
   <!-- WPF user interface (MVVM). Contains no scanning or deletion logic itself. -->
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>LeftoverScout.App</RootNamespace>
     <AssemblyName>LeftoverScout</AssemblyName>

@@ -1,3 +1,5 @@
+using LeftoverScout.Core.Evidence;
+
 namespace LeftoverScout.Core.Scanning;
 
 /// <summary>
@@ -26,4 +28,7 @@ public sealed record ScanResult(
 
     /// <summary>When the scan finished (set by the scan service for completed scans); null otherwise.</summary>
     public DateTimeOffset? CompletedAt { get; init; }
+
+    /// <summary>Installed programs collected together with this scan (set by the scan service for completed scans).</summary>
+    public EvidenceSnapshot? Evidence { get; init; }
 }

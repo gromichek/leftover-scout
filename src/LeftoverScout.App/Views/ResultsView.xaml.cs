@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,7 +15,33 @@ public partial class ResultsView : UserControl
     public ResultsView()
     {
         InitializeComponent();
+        DataContextChanged += (_, e) =>
+        {
+            if (e.OldValue is ResultsPageViewModel oldModel)
+            {
+                oldModel.PropertyChanged -= OnViewModelPropertyChanged;
+            }
+
+            if (e.NewValue is ResultsPageViewModel newModel)
+            {
+                newModel.PropertyChanged += OnViewModelPropertyChanged;
+            }
+        };
+        FolderGrid.Loaded += (_, _) => ApplyDefaultSort();
     }
+
+    // The rows come sorted by size, largest first. Declare the same sort on the grid so that the arrow on the
+    // Size header shows it from the start and agrees with the real order (task T-004, section 6).
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ResultsPageViewModel.Rows))
+        {
+            Dispatcher.BeginInvoke(new Action(ApplyDefaultSort));
+        }
+    }
+
+    private void ApplyDefaultSort() =>
+        DataGridSorting.ApplyDefault(FolderGrid, ResultsPageViewModel.DefaultSortMember, ResultsPageViewModel.DefaultSortDirection);
 
     private ResultsPageViewModel? ViewModel => DataContext as ResultsPageViewModel;
 

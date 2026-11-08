@@ -76,6 +76,12 @@ public sealed partial class ResultsPageViewModel : PageViewModel
     /// <summary>Raised when the user presses "Go to Scan"; the main window then switches to the Scan page.</summary>
     public event EventHandler? GoToScanRequested;
 
+    /// <summary>Sort member of the folder table when it is first shown (the Size column).</summary>
+    public const string DefaultSortMember = "Size";
+
+    /// <summary>Sort direction of the folder table when it is first shown: largest first.</summary>
+    public const System.ComponentModel.ListSortDirection DefaultSortDirection = System.ComponentModel.ListSortDirection.Descending;
+
     /// <summary>Message shown before the first completed scan.</summary>
     public string NoResultMessage => "There is no scan result yet. Run a scan first, then come back here to see where the space goes.";
 

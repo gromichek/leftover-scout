@@ -2,7 +2,7 @@
 
   <!-- Windows-specific implementations: file system scan, registry/Appx evidence, Recycle Bin deletion. -->
   <PropertyGroup>
-    <TargetFramework>net10.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     <RootNamespace>LeftoverScout.Windows</RootNamespace>
     <!-- Required by the source-generated P/Invoke code (LibraryImport) and fixed-size buffers in native structs. -->
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

@@ -3,6 +3,9 @@
 Open the **Scan** page and press **Start scan**. LeftoverScout walks through your user profile
 (`C:\Users\<you>`) and measures what takes space.
 
+Every scan also collects the list of installed programs (see [Programs](programs.md)). It runs at the same time
+and is fast.
+
 **Nothing is changed.** The scan only reads folder listings: it does not open your files, does not
 delete, move or rename anything, and does not change dates. The window stays usable while the scan runs.
 
@@ -15,6 +18,7 @@ delete, move or rename anything, and does not change dates. The window stays usa
 ## While the scan runs
 
 You see the folder being read, how many folders and files were found, the size so far and the elapsed time.
+If the programs are still being collected when the folders are done, the line shows "Collecting installed programs…".
 The status bar at the bottom shows "Scanning…", then "Scan completed in 42 s" or "Scan cancelled".
 
 ## The summary
@@ -37,8 +41,10 @@ profile (by local size). `AppData` is often among them.
 
 - Explorer's *Properties* dialog also counts cloud files, follows some links and cannot read some folders.
   Expect a difference: the scan shows where the space goes, it does not match Explorer to the byte.
+- If a source of installed programs cannot be read, the scan still completes; the [Programs](programs.md) page says which source failed.
 - A scan of a large profile can take a while. You can keep using the window or press **Cancel**.
 - Files of 100 MB or more are remembered as "large files" and listed on the **Results** page.
-- The last completed result stays in memory while the program runs. Starting a new scan replaces it.
+- The last completed result (folders, large files and installed programs) stays in memory while the program runs.
+  A new completed scan replaces it. A cancelled scan keeps the previous result.
 
-Next: [Results](results.md) shows where the space goes.
+Next: [Results](results.md) shows where the space goes, [Programs](programs.md) lists what is installed.

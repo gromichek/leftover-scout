@@ -25,7 +25,7 @@ The table shows the contents of **one folder at a time**, starting with your pro
 - **Open a folder**: double-click it, or select it and press **Enter**.
 - **Sorting**: click a column header. Click again to reverse the order. Sizes, counts, percentages and
   dates sort by their real value, so 900 MB comes before 1.2 GB when sorting by **Size**. The first
-  view is sorted by **Size**, largest first.
+  view is sorted by **Size**, largest first, and the arrow on the **Size** header shows it.
 - Below the table: "<n> folders · <size> in this folder".
 
 ### Columns
