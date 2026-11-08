@@ -64,8 +64,8 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 ## Current state
 
-See `docs/PROGRESS.md`. At the time of writing: T-003 accepted by the owner; T-004 (installed
-programs + Programs page) task file written, waiting for the executor session.
+See `docs/PROGRESS.md`. At the time of writing: T-004 merged (#17), owner's manual test pending.
+Next: T-005 (rules) — design questions for the owner before writing the task.
 
 Process note: this time the executor session could open the PR itself (#14) — check for an
 existing PR before opening one.
