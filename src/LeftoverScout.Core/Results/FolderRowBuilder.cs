@@ -1,3 +1,4 @@
+using LeftoverScout.Core.Rules;
 using LeftoverScout.Core.Scanning;
 
 namespace LeftoverScout.Core.Results;
@@ -14,7 +15,9 @@ public static class FolderRowBuilder
     /// Builds the rows for the subfolders of <paramref name="folder"/>, plus the files row when the folder
     /// holds files directly. Rows are sorted by size, largest first, then by name.
     /// </summary>
-    public static IReadOnlyList<FolderRow> Build(FolderNode folder)
+    /// <param name="folder">The folder to show.</param>
+    /// <param name="ruleMatches">The rules matched for the scan (decision D-043); null shows no rule labels.</param>
+    public static IReadOnlyList<FolderRow> Build(FolderNode folder, RuleMatchMap? ruleMatches = null)
     {
         ArgumentNullException.ThrowIfNull(folder);
 
@@ -36,7 +39,10 @@ public static class FolderRowBuilder
                 PercentOf(child.LocalSize, folder.LocalSize),
                 child.NewestWriteTimeUtc,
                 FolderTagText.FromNode(child),
-                CanOpen(child)));
+                CanOpen(child))
+            {
+                RuleMatch = ruleMatches?.Get(child),
+            });
         }
 
         long directFiles = Math.Max(0, folder.FileCount - childFiles);

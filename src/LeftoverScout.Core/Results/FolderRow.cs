@@ -1,3 +1,4 @@
+using LeftoverScout.Core.Rules;
 using LeftoverScout.Core.Scanning;
 
 namespace LeftoverScout.Core.Results;
@@ -25,4 +26,8 @@ public sealed record FolderRow(
     double PercentOfParent,
     DateTime? NewestWriteTimeUtc,
     FolderTags Tags,
-    bool CanOpen);
+    bool CanOpen)
+{
+    /// <summary>The rules that apply to the folder (ownership, cache, protected); null when none apply.</summary>
+    public FolderRuleMatch? RuleMatch { get; init; }
+}

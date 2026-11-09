@@ -207,6 +207,7 @@
 
             <TextBlock Grid.Row="1"
                        Margin="4,8,0,0"
+                       IsHitTestVisible="False"
                        Text="{Binding NoLargeFilesMessage}"
                        Visibility="{Binding HasNoLargeFiles, Converter={StaticResource BooleanToVisibility}}" />
           </Grid>

@@ -38,6 +38,7 @@ public sealed partial class ProgramsPageViewModel : PageViewModel
     private string _countText = string.Empty;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasEmptyMessage))]
     private string _emptyMessage = string.Empty;
 
     [ObservableProperty]
@@ -83,6 +84,12 @@ public sealed partial class ProgramsPageViewModel : PageViewModel
 
     /// <summary>True when there is nothing to show yet.</summary>
     public bool HasNoResult => !HasResult;
+
+    /// <summary>
+    /// True when the empty-state message is shown. The message sits over the grid, so the view collapses it when there is
+    /// nothing to say and never lets it take mouse clicks.
+    /// </summary>
+    public bool HasEmptyMessage => EmptyMessage.Length > 0;
 
     /// <summary>True when at least one source could not be read.</summary>
     public bool HasErrors => ErrorText.Length > 0;

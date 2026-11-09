@@ -240,7 +240,7 @@ public sealed partial class ResultsPageViewModel : PageViewModel
         FolderNode current = navigator.Current;
         SelectedRow = null;
         Breadcrumb = navigator.Breadcrumb;
-        Rows = FolderRowBuilder.Build(current).Select(row => new FolderRowViewModel(row)).ToList();
+        Rows = FolderRowBuilder.Build(current, _shownResult?.RuleMatches).Select(row => new FolderRowViewModel(row)).ToList();
 
         int folderCount = current.Children.Count;
         FolderSummaryText = $"{folderCount:N0} {(folderCount == 1 ? "folder" : "folders")} · {SizeFormatter.Format(current.LocalSize)} in this folder";

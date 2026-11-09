@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    {
+      "id": "protected-appdata-root",
+      "kind": "protected",
+      "paths": [
+        "{Profile}\\AppData"
+      ],
+      "scope": "folder",
+      "description": "The AppData folder holds the settings and data of all your programs; the folder itself is never offered for deletion.",
+      "source": "Well-known Windows profile layout"
+    },
+    {
+      "id": "protected-roaming-root",
+      "kind": "protected",
+      "paths": [
+        "{RoamingAppData}"
+      ],
+      "scope": "folder",
+      "description": "The Roaming folder holds settings that follow your account; the folder itself is never offered for deletion.",
+      "source": "Well-known Windows profile layout"
+    },
+    {
+      "id": "protected-local-root",
+      "kind": "protected",
+      "paths": [
+        "{LocalAppData}"
+      ],
+      "scope": "folder",
+      "description": "The Local folder holds program data for this computer; the folder itself is never offered for deletion.",
+      "source": "Well-known Windows profile layout"
+    },
+    {
+      "id": "protected-locallow-root",
+      "kind": "protected",
+      "paths": [
+        "{LocalLow}"
+      ],
+      "scope": "folder",
+      "description": "The LocalLow folder holds data of low-integrity programs; the folder itself is never offered for deletion.",
+      "source": "Well-known Windows profile layout"
+    },
+    {
+      "id": "protected-roaming-microsoft",
+      "kind": "protected",
+      "paths": [
+        "{RoamingAppData}\\Microsoft"
+      ],
+      "scope": "folder",
+      "description": "The Microsoft folder in Roaming holds data of Windows and Microsoft programs; the folder itself is never offered for deletion.",
+      "source": "Well-known Windows profile layout"
+    },
+    {
+      "id": "protected-local-microsoft",
+      "kind": "protected",
+      "paths": [
+        "{LocalAppData}\\Microsoft"
+      ],
+      "scope": "folder",
+      "description": "The Microsoft folder in Local holds data of Windows and Microsoft programs; the folder itself is never offered for deletion.",
+      "source": "Well-known Windows profile layout"
+    },
+    {
+      "id": "protected-local-packages",
+      "kind": "protected",
+      "paths": [
+        "{LocalAppData}\\Packages"
+      ],
+      "scope": "folder",
+      "description": "The Packages folder holds the data of your Microsoft Store apps; the folder itself is never offered for deletion.",
+      "source": "Well-known Windows profile layout"
+    },
+    {
+      "id": "protected-local-programs",
+      "kind": "protected",
+      "paths": [
+        "{LocalAppData}\\Programs"
+      ],
+      "scope": "folder",
+      "description": "The Programs folder holds programs installed for your account only; the folder itself is never offered for deletion.",
+      "source": "Well-known Windows profile layout"
+    },
+    {
+      "id": "protected-dpapi-keys",
+      "kind": "protected",
+      "paths": [
+        "{RoamingAppData}\\Microsoft\\Protect"
+      ],
+      "scope": "subtree",
+      "description": "Windows keys that protect your saved passwords and encrypted data. Deleting them makes that data unreadable.",
+      "source": "Windows Data Protection API (DPAPI) master key location"
+    },
+    {
+      "id": "protected-roaming-credentials",
+      "kind": "protected",
+      "paths": [
+        "{RoamingAppData}\\Microsoft\\Credentials"
+      ],
+      "scope": "subtree",
+      "description": "Credentials stored by Windows for your account.",
+      "source": "Windows Credential Manager storage location"
+    },
+    {
+      "id": "protected-local-credentials",
+      "kind": "protected",
+      "paths": [
+        "{LocalAppData}\\Microsoft\\Credentials"
+      ],
+      "scope": "subtree",
+      "description": "Credentials stored by Windows for your account on this computer.",
+      "source": "Windows Credential Manager storage location"
+    },
+    {
+      "id": "protected-system-certificates",
+      "kind": "protected",
+      "paths": [
+        "{RoamingAppData}\\Microsoft\\SystemCertificates"
+      ],
+      "scope": "subtree",
+      "description": "Your certificates and trust settings.",
+      "source": "Windows certificate store location in the user profile"
+    },
+    {
+      "id": "protected-crypto",
+      "kind": "protected",
+      "paths": [
+        "{RoamingAppData}\\Microsoft\\Crypto"
+      ],
+      "scope": "subtree",
+      "description": "Your cryptographic keys.",
+      "source": "Windows cryptography key storage location in the user profile"
+    },
+    {
+      "id": "protected-vault",
+      "kind": "protected",
+      "paths": [
+        "{LocalAppData}\\Microsoft\\Vault"
+      ],
+      "scope": "subtree",
+      "description": "The Windows password vault.",
+      "source": "Windows Credential Manager storage location"
+    },
+    {
+      "id": "protected-start-menu",
+      "kind": "protected",
+      "paths": [
+        "{RoamingAppData}\\Microsoft\\Windows\\Start Menu"
+      ],
+      "scope": "subtree",
+      "description": "Your Start menu shortcuts and folders.",
+      "source": "Well-known Windows profile layout"
+    },
+    {
+      "id": "protected-windowsapps",
+      "kind": "protected",
+      "paths": [
+        "{LocalAppData}\\Microsoft\\WindowsApps"
+      ],
+      "scope": "subtree",
+      "description": "App execution aliases and links of Microsoft Store apps.",
+      "source": "Well-known Windows profile layout"
+    }
+  ]
+}

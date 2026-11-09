@@ -1,4 +1,5 @@
 using LeftoverScout.Core.Results;
+using LeftoverScout.Core.Rules;
 using LeftoverScout.Core.Scanning;
 using LeftoverScout.Core.Tests.Scanning;
 using static LeftoverScout.Core.Tests.Scanning.FakeDirectoryReader;
@@ -155,5 +156,28 @@ public class FolderRowBuilderTests
         Assert.Equal(FolderTags.Inaccessible, rows.Single(row => row.Name == "Locked").Tags);
         Assert.False(rows.Single(row => row.Name == "Locked").CanOpen);
         Assert.True(rows.Single(row => row.Name == "Big").CanOpen);
+    }
+
+    [Fact]
+    public void Build_WithRuleMatches_AttachesTheMatchToTheRow()
+    {
+        ScanResult result = ResultsTestTree.Sample();
+        RuleLoadResult rules = Rules.RuleTestHelper.Load(Rules.RuleTestHelper.Protected("protect-big", @"{Profile}\Big", "folder"));
+        RuleMatchMap map = new RuleMatcher(rules.RuleSet).Match(result.Root!, TestContext.Current.CancellationToken);
+
+        IReadOnlyList<FolderRow> rows = FolderRowBuilder.Build(result.Root!, map);
+
+        Assert.True(rows.Single(row => row.Name == "Big").RuleMatch!.IsProtected);
+        // Only the personal folder (always protected) has a match besides Big.
+        Assert.Equal(["Big", "Documents"], rows.Where(row => row.RuleMatch is not null).Select(row => row.Name).Order());
+        Assert.True(rows.Single(row => row.Name == "Documents").RuleMatch!.Primary.IsPersonalFolder);
+    }
+
+    [Fact]
+    public void Build_WithoutRuleMatches_LeavesRuleMatchEmpty()
+    {
+        ScanResult result = ResultsTestTree.Sample();
+
+        Assert.All(FolderRowBuilder.Build(result.Root!), row => Assert.Null(row.RuleMatch));
     }
 }

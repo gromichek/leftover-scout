@@ -1,4 +1,5 @@
 using LeftoverScout.Core.Evidence;
+using LeftoverScout.Core.Rules;
 
 namespace LeftoverScout.Core.Scanning;
 
@@ -31,4 +32,10 @@ public sealed record ScanResult(
 
     /// <summary>Installed programs collected together with this scan (set by the scan service for completed scans).</summary>
     public EvidenceSnapshot? Evidence { get; init; }
+
+    /// <summary>
+    /// The rules that matched the folders of this scan (ownership, caches, protected locations). Computed once by the
+    /// scan service after the scan; null when matching was not done or failed.
+    /// </summary>
+    public RuleMatchMap? RuleMatches { get; init; }
 }
