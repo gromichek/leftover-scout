@@ -264,13 +264,11 @@ public class FindingsPageViewModelTests
     }
 
     [Fact]
-    public void Result_WithoutFindings_ShowsNothingFoundMessage()
+    public async Task Result_WithoutFindings_ShowsNothingFoundMessage()
     {
         var reader = new MapReader().Folder(Root, File("a.txt", 5, Old));
-        ScanResult scan = new ProfileScanner(reader)
-            .ScanAsync(new ScanTarget(Root, true), new ScanOptions(), null, CancellationToken.None)
-            .GetAwaiter()
-            .GetResult();
+        ScanResult scan = await new ProfileScanner(reader)
+            .ScanAsync(new ScanTarget(Root, true), new ScanOptions(), null, TestContext.Current.CancellationToken);
 
         var (viewModel, _, _, _) = Create(scan);
 
