@@ -84,6 +84,35 @@ public sealed partial class MainViewModel : ObservableObject
             };
         }
 
+        foreach (FindingsPageViewModel findingsPage in Pages.OfType<FindingsPageViewModel>())
+        {
+            findingsPage.GoToScanRequested += (_, _) =>
+            {
+                ScanPageViewModel? scanPage = Pages.OfType<ScanPageViewModel>().FirstOrDefault();
+                if (scanPage is not null)
+                {
+                    CurrentPage = scanPage;
+                }
+            };
+
+            findingsPage.ShowInResultsRequested += (_, node) =>
+            {
+                ResultsPageViewModel? resultsPage = Pages.OfType<ResultsPageViewModel>().FirstOrDefault();
+                if (resultsPage is not null && resultsPage.ShowFolder(node))
+                {
+                    CurrentPage = resultsPage;
+                }
+            };
+
+            findingsPage.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(FindingsPageViewModel.StatusMessage) && !string.IsNullOrEmpty(findingsPage.StatusMessage))
+                {
+                    StatusText = findingsPage.StatusMessage;
+                }
+            };
+        }
+
         if (dataLocation.IsFallback)
         {
             _infoBarText = $"Settings are stored in {dataLocation.Path} because the program folder is not writable.";

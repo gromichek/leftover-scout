@@ -47,4 +47,4 @@ profile (by local size). `AppData` is often among them.
 - The last completed result (folders, large files and installed programs) stays in memory while the program runs.
   A new completed scan replaces it. A cancelled scan keeps the previous result.
 
-Next: [Results](results.md) shows where the space goes, [Programs](programs.md) lists what is installed.
+Next: [Findings](findings.md) lists what you could remove, [Results](results.md) shows where the space goes, [Programs](programs.md) lists what is installed.

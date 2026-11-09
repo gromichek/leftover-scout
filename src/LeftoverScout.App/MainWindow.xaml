@@ -25,6 +25,9 @@
     <DataTemplate DataType="{x:Type vm:ProgramsPageViewModel}">
       <views:ProgramsView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:FindingsPageViewModel}">
+      <views:FindingsView />
+    </DataTemplate>
     <DataTemplate DataType="{x:Type vm:HelpPageViewModel}">
       <views:HelpView />
     </DataTemplate>

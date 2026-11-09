@@ -85,6 +85,8 @@ public static class ServiceRegistration
         services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<ResultsPageViewModel>());
         services.AddSingleton<ProgramsPageViewModel>();
         services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<ProgramsPageViewModel>());
+        services.AddSingleton<FindingsPageViewModel>();
+        services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<FindingsPageViewModel>());
         services.AddSingleton<PageViewModel>(new PlaceholderPageViewModel(
             "Cleanup", HelpTopics.Cleanup, 3, "Moves the items you select to the Recycle Bin after you confirm."));
         services.AddSingleton<PageViewModel>(new PlaceholderPageViewModel(

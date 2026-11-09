@@ -160,4 +160,4 @@ select a row.
 - **Cache**, **Temp**, **Logs** and **Crash dumps** labels show where space is spent on data that can be recreated. This version does not delete anything.
 - Sizes are logical file sizes and do not match Explorer to the byte, see [Scan](scan.md).
 
-Next: [Cleanup](cleanup.md) (planned).
+Next: [Findings](findings.md) collects the leftovers and caches in one list; use **Show in Results** there to come back to a folder. [Cleanup](cleanup.md) is planned.

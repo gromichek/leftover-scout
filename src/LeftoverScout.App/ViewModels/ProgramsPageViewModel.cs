@@ -182,7 +182,12 @@ public sealed partial class ProgramsPageViewModel : PageViewModel
         IReadOnlyList<InstalledProgram> shown = ProgramFilter.Apply(snapshot.Programs, SearchText, SelectedSource.Source, ShowSystemComponents);
         SelectedRow = null;
         Rows = shown.Select(program => new ProgramRowViewModel(program)).ToList();
-        CountText = $"{shown.Count:N0} of {snapshot.Programs.Count:N0} programs";
+        int hidden = ShowSystemComponents
+            ? 0
+            : ProgramFilter.Apply(snapshot.Programs, SearchText, SelectedSource.Source, includeSystemComponents: true).Count - shown.Count;
+        CountText = hidden > 0
+            ? $"{shown.Count:N0} of {snapshot.Programs.Count:N0} programs · {hidden:N0} hidden (system components and frameworks)"
+            : $"{shown.Count:N0} of {snapshot.Programs.Count:N0} programs";
         EmptyMessage = shown.Count > 0
             ? string.Empty
             : snapshot.Programs.Count == 0

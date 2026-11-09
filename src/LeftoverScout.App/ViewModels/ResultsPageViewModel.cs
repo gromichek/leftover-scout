@@ -171,6 +171,24 @@ public sealed partial class ResultsPageViewModel : PageViewModel
         }
     }
 
+    /// <summary>
+    /// Opens the parent folder of <paramref name="node"/> and selects its row ("Show in Results", decision D-055).
+    /// Returns false when the folder does not belong to the result that is shown.
+    /// </summary>
+    public bool ShowFolder(FolderNode node)
+    {
+        ArgumentNullException.ThrowIfNull(node);
+
+        if (_navigator is not { } navigator || !navigator.GoTo(node.Parent ?? node))
+        {
+            return false;
+        }
+
+        ShowCurrentFolder();
+        SelectedRow = Rows.FirstOrDefault(row => ReferenceEquals(row.Row.Node, node));
+        return true;
+    }
+
     private void CopyPath(string path) =>
         StatusMessage = _clipboard.TrySetText(path) ? "Path copied to the clipboard" : "The path could not be copied because the clipboard is busy";
 

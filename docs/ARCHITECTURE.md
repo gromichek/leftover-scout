@@ -212,13 +212,31 @@ Offline, explainable and pure (no file system, no registry; injected `TimeProvid
   dot-folder without an ownership rule is rated Low at most (`.ssh`, `.docker`, ... are tool settings).
 - `ScanService` runs the classifier once after rule matching and stores the map in `ScanResult.Leftovers`. Results
   (D-047): `FolderRow.Leftover` feeds `FolderTagText` (`Leftover: High|Medium|Low`, `In use: <program>`; the tooltip
-  holds the explanation; Unknown shows nothing). The dedicated findings page follows in T-008.
+  holds the explanation; Unknown shows nothing). The findings page (T-008) is described below.
 
-### Classification (planned)
-The findings page (T-008) will combine items, evidence, rules and the leftover verdicts into **findings**. Each finding has:
-- a category (e.g. orphaned program data, cache, temp, unknown);
-- a confidence level (High / Medium / Low / Unknown);
-- a human-readable explanation of the evidence ("why we think so").
+### Findings page (T-008)
+The Findings page (decisions D-052 … D-055) combines the scan tree, the rule matches and the leftover verdicts into
+**findings**. Logic without WPF types lives in `LeftoverScout.Core.Findings`:
+- `Finding` (record): folder node, path relative to the profile root, `FindingKind` (`Leftover`, `Cache`, `Temp`, `Logs`,
+  `CrashDumps`), confidence (leftovers only), size, files, last modified (read from the node), program name, explanation
+  lines, matched rule id and description.
+- `FindingBuilder.Build(ScanResult)`: every `LeftoverMap` entry with verdict `Leftover`, plus the **top-most** folder whose
+  primary rule match is a cache rule (a cache folder inside another listed cache folder, or inside a folder that is listed
+  as a leftover *and* is a cache, is not listed separately). The builder re-checks safety itself and does not rely on the
+  classifier: personal folders, folders with a protected primary match, folders below a personal or **subtree**-protected
+  ancestor, skipped links, unread cloud folders and folders without size and files are never listed. Folder-scope protection
+  of an ancestor (for example `AppData\Local` itself) does not block its children, otherwise nothing under `AppData` could be
+  listed. The program name comes from the ownership or cache rule (the leftover verdict does not carry one).
+- `FindingFilter` (record: High / Medium / Low / Cache / Temp / Logs / Crash dumps flags and a search text; `Default` hides
+  Low) and `Apply(...)`, which returns a `FindingList`: the visible `FindingEntry` items and the total size. An item that lies
+  inside another **visible** item gets `InsideOf` set, stays in the list and is left out of the total (no double counting).
+- `FindingsPageViewModel` (App) builds the findings once per completed scan (on `LastResultChanged`, like the other pages),
+  keeps the filter state while the app runs, sorts the rows by size and exposes the three commands. `FindingRowViewModel` exposes
+  raw values for `DataGrid` sorting. "Show in Results" raises `ShowInResultsRequested`; `MainViewModel` then calls
+  `ResultsPageViewModel.ShowFolder(node)` (`FolderNavigator.GoTo` + row selection) and switches the page.
+  Actions use `IShellLauncher.OpenFolder` and `IClipboardService`; none of them writes or deletes anything.
+
+Selection for cleanup will be added to the Findings page later (*planned*); the Cleanup page will then show confirmation and progress.
 
 ### Cleanup (planned)
 A single cleanup service in `LeftoverScout.Windows` is the **only** code allowed to delete:
@@ -264,7 +282,7 @@ The user help is Markdown, one topic per file, and the **same files** are read o
 - **Files:** `docs/user-guide/en/*.md` and `docs/user-guide/ru/*.md`, identical file names. Russian text is
   allowed only here. The UI stays English; Russian help names pages and buttons in English, in bold (D-029).
 - **Topics:** `HelpTopics.All` (Core) lists the topic ids and file names: `overview` (`index.md`),
-  `getting-started`, `scan`, `results`, `programs`, `cleanup`, `history`, `about`, `help`.
+  `getting-started`, `scan`, `results`, `programs`, `findings`, `cleanup`, `history`, `about`, `help`.
 - **Embedding:** `LeftoverScout.App.csproj` links every `docs/user-guide/**/*.md` as an embedded resource with the
   logical name `Help/<language>/<file>` (not copied). `EmbeddedHelpSource` (App, `IHelpSource`) reads them and
   normalizes the backslashes that `%(RecursiveDir)` produces.
