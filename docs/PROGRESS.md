@@ -12,7 +12,7 @@ Owned by the lead. Updated after every merged PR.
 - T-005 (rules knowledge base) accepted by the owner (2026-11-09) with finding #9.
 - T-006 (leftover detection) accepted by the owner (2026-11-09) with finding #10.
 - T-006b (package verdicts, finding #10) accepted by the owner (2026-11-09) with finding #11.
-- Next: T-008 (findings page) — questions for the owner first.
+- Next task: T-008 (findings page) — task file written, session not started yet.
 
 ## Done
 
