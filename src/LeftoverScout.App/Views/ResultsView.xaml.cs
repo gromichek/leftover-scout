@@ -38,6 +38,11 @@ public partial class ResultsView : UserControl
         {
             Dispatcher.BeginInvoke(new Action(ApplyDefaultSort));
         }
+        else if (e.PropertyName == nameof(ResultsPageViewModel.SelectedRow) && ViewModel?.SelectedRow is { } selected)
+        {
+            // "Show in Results" selects a row that may be out of view.
+            Dispatcher.BeginInvoke(new Action(() => FolderGrid.ScrollIntoView(selected)));
+        }
     }
 
     private void ApplyDefaultSort() =>

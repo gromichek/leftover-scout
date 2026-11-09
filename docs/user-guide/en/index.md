@@ -1,7 +1,7 @@
 # LeftoverScout user guide
 
 > LeftoverScout is in early development. Today it can scan your profile, let you browse what takes
-> space, show the programs installed on this computer and mark folders that probably belong to uninstalled programs. Cleaning up is planned. This guide always describes what the app does now.
+> space, show the programs installed on this computer, mark folders that probably belong to uninstalled programs and list what you could remove. Cleaning up is planned. This guide always describes what the app does now.
 
 ## What LeftoverScout does
 
@@ -10,19 +10,19 @@ settings, caches and logs that often stay behind even after the program is unins
 LeftoverScout is built to:
 
 1. **Scan** your profile and show what takes space. Scanning never changes anything.
-2. **Explain** which folders probably belong to programs that are no longer installed, and why. The **Results** page already shows this as **Leftover** labels.
+2. **Explain** which folders probably belong to programs that are no longer installed, and why. The **Results** page shows this as **Leftover** labels, and the **Findings** page collects them in one list.
 3. **Clean up** only the items you select, by default into the **Recycle Bin**, so you can restore them.
 
 ## Order of work
 
 1. Open **Scan** and press **Start scan**. See [Scan](scan.md).
-2. Open **Results** to browse folders by size, see large files and open them in Explorer. See [Results](results.md).
-   Look for **Leftover** and **In use** labels in the **Notes** column.
-   Open **Programs** to see which programs are installed on this computer. See [Programs](programs.md).
-3. **Cleanup** will remove the items you select. See [Cleanup](cleanup.md). *(planned)*
+2. Open **Findings** to see what you could remove: leftovers and caches, biggest first, each with its reason. See [Findings](findings.md).
+   To check an item, open **Results** (browse folders by size, see large files; look for **Leftover** and **In use** labels in the **Notes** column, see [Results](results.md)) or **Programs** (which programs are installed on this computer, see [Programs](programs.md)).
+3. **Cleanup** will remove the items you select on **Findings**. See [Cleanup](cleanup.md). *(planned)*
 4. **History** will show what was removed. See [History](history.md). *(planned)*
 
-At the moment **Scan**, **Results**, **Programs**, **Help** and **About** have content.
+The navigation order is **Scan**, **Results**, **Programs**, **Findings**, **Cleanup**, **History**, **Help**, **About**.
+At the moment **Scan**, **Results**, **Programs**, **Findings**, **Help** and **About** have content.
 
 ## What is safe
 
@@ -43,6 +43,7 @@ At the moment **Scan**, **Results**, **Programs**, **Help** and **About** have c
 - [Scan](scan.md)
 - [Results](results.md)
 - [Programs](programs.md)
+- [Findings](findings.md)
 - [Cleanup](cleanup.md)
 - [History](history.md)
 - [About](about.md)

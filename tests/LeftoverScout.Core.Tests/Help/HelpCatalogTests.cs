@@ -61,7 +61,7 @@ public class HelpCatalogTests
         Assert.Equal(HelpTopics.All.Count, HelpTopics.All.Select(t => t.Id).Distinct().Count());
         Assert.Equal(HelpTopics.All.Count, HelpTopics.All.Select(t => t.FileName).Distinct(StringComparer.OrdinalIgnoreCase).Count());
         Assert.Equal(
-            ["overview", "getting-started", "scan", "results", "programs", "cleanup", "history", "about", "help"],
+            ["overview", "getting-started", "scan", "results", "programs", "findings", "cleanup", "history", "about", "help"],
             HelpTopics.All.Select(t => t.Id));
     }
 }

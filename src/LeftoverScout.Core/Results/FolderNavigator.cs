@@ -85,6 +85,26 @@ public sealed class FolderNavigator
         return false;
     }
 
+    /// <summary>
+    /// Makes <paramref name="node"/> the current folder, wherever it is in the tree (used by "Show in Results").
+    /// Returns false (and stays) when the folder does not belong to this tree.
+    /// </summary>
+    public bool GoTo(FolderNode node)
+    {
+        ArgumentNullException.ThrowIfNull(node);
+
+        for (FolderNode? candidate = node; candidate is not null; candidate = candidate.Parent)
+        {
+            if (ReferenceEquals(candidate, Root))
+            {
+                Current = node;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private static string LabelOf(FolderNode node)
     {
         if (node.Parent is not null)

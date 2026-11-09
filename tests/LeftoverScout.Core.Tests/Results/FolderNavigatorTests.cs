@@ -79,6 +79,29 @@ public class FolderNavigatorTests
     }
 
     [Fact]
+    public void GoTo_AnyFolderOfTheTree_MakesItCurrent()
+    {
+        FolderNode root = ResultsTestTree.Sample().Root!;
+        var navigator = new FolderNavigator(root);
+        FolderNode deep = root.Children.Single(child => child.Name == "Big").Children.Single();
+
+        Assert.True(navigator.GoTo(deep));
+
+        Assert.Same(deep, navigator.Current);
+        Assert.Equal(new[] { "SampleUser", "Big", "Deep" }, navigator.Breadcrumb.Select(item => item.Label));
+    }
+
+    [Fact]
+    public void GoTo_FolderOfAnotherTree_IsRejected()
+    {
+        var navigator = new FolderNavigator(ResultsTestTree.Sample().Root!);
+        FolderNode other = ResultsTestTree.Sample().Root!.Children[0];
+
+        Assert.False(navigator.GoTo(other));
+        Assert.Same(navigator.Root, navigator.Current);
+    }
+
+    [Fact]
     public void NavigateTo_FolderOutsideBreadcrumb_IsRejected()
     {
         var navigator = new FolderNavigator(ResultsTestTree.Sample().Root!);

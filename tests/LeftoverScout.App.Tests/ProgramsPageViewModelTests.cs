@@ -126,7 +126,7 @@ public class ProgramsPageViewModelTests
 
         Assert.True(viewModel.HasResult);
         Assert.Equal(["Sample Editor", "Sample Editor", "Sample Photos"], viewModel.Rows.Select(r => r.Name));
-        Assert.Equal("3 of 5 programs", viewModel.CountText);
+        Assert.Equal("3 of 5 programs · 2 hidden (system components and frameworks)", viewModel.CountText);
         Assert.Contains("5 programs", viewModel.HeaderText, StringComparison.Ordinal);
         Assert.StartsWith("Collected ", viewModel.HeaderText, StringComparison.Ordinal);
         Assert.False(viewModel.HasErrors);
@@ -140,6 +140,24 @@ public class ProgramsPageViewModelTests
         var (viewModel, _, _, _) = Create(Snapshot([DefaultPrograms[0]]));
 
         Assert.EndsWith("1 program", viewModel.HeaderText, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void CountText_NothingHidden_UsesShortForm()
+    {
+        var (viewModel, _, _, _) = Create(Snapshot([new InstalledProgram("Sample Editor", ProgramSource.Registry, "k1")]));
+
+        Assert.Equal("1 of 1 programs", viewModel.CountText);
+    }
+
+    [Fact]
+    public void CountText_SearchNarrowsHiddenCount()
+    {
+        var (viewModel, _, _, _) = Create(Snapshot());
+
+        viewModel.SearchText = "Runtime";
+
+        Assert.Equal("0 of 5 programs · 1 hidden (system components and frameworks)", viewModel.CountText);
     }
 
     [Fact]
@@ -181,7 +199,7 @@ public class ProgramsPageViewModelTests
         viewModel.SelectedSource = viewModel.SourceOptions.Single(o => o.Source == ProgramSource.Store);
 
         Assert.Equal(["Sample Photos"], viewModel.Rows.Select(r => r.Name));
-        Assert.Equal("1 of 5 programs", viewModel.CountText);
+        Assert.Equal("1 of 5 programs · 1 hidden (system components and frameworks)", viewModel.CountText);
     }
 
     [Fact]

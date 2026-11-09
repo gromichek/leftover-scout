@@ -21,6 +21,9 @@ public static class HelpTopics
     /// <summary>Id of the Programs page topic.</summary>
     public const string Programs = "programs";
 
+    /// <summary>Id of the Findings page topic.</summary>
+    public const string Findings = "findings";
+
     /// <summary>Id of the Cleanup page topic.</summary>
     public const string Cleanup = "cleanup";
 
@@ -41,6 +44,7 @@ public static class HelpTopics
         new(Scan, "scan.md", "Scan"),
         new(Results, "results.md", "Results"),
         new(Programs, "programs.md", "Programs"),
+        new(Findings, "findings.md", "Findings"),
         new(Cleanup, "cleanup.md", "Cleanup"),
         new(History, "history.md", "History"),
         new(About, "about.md", "About"),

@@ -37,8 +37,10 @@ than once. That is normal.
 - **Show system components and frameworks**: off by default. It hides Windows components, system apps and
   framework packages, which you rarely need. Tick it to see everything.
 
-Below the table, "<shown> of <total> programs" tells how many entries pass the filters. If none do, the page
-says so.
+Below the table, "<shown> of <total> programs" tells how many entries pass the filters. While system
+components and frameworks are hidden, the line also says how many entries that hides, for example
+"476 of 871 programs · 395 hidden (system components and frameworks)". If nothing is hidden, the short form is
+shown. If no entry passes the filters, the page says so.
 
 ## The table
 
@@ -70,4 +72,4 @@ The buttons are above the table and also in the right-click menu of a row. They 
 - To find leftovers of a program you removed, search for its name here: if it is absent from every source, it
   is probably gone.
 
-Next: [Results](results.md) shows where the space goes.
+Next: [Findings](findings.md) lists what you could remove, [Results](results.md) shows where the space goes.
