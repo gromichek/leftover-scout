@@ -8,7 +8,7 @@ Owned by the lead. Updated after every merged PR.
 - Phase 1: T-001 and T-002 accepted by the owner (manual tests passed 2026-11-07).
 - T-018 (in-app help EN + RU) accepted by the owner (2026-11-07).
 - T-003 (Results page) accepted by the owner (2026-11-08); D-031…D-034 accepted.
-- T-004 (installed programs + Programs page) merged; owner's manual test pending.
+- T-004 (installed programs + Programs page) accepted by the owner (2026-11-09) with finding #7.
 - Next: T-005 (rules: JSON schema, loader, first rule set) — questions for the owner first.
 
 ## Done
@@ -35,4 +35,5 @@ is fixed immediately.
 | 3 | 2026-11-07 | Lead review #7 | `MonitorWorkAreas` lives in `LeftoverScout.Windows.Scanning` but has nothing to do with scanning; move to a `UI` namespace/folder | T-018 ✅ |
 | 4 | 2026-11-07 | Lead review #7 | Monitor work areas are converted from pixels to DIPs with one (system) DPI scale; on mixed-DPI setups the visibility check is approximate. Low priority | later |
 | 6 | 2026-11-08 | Lead review #17 | Size of the Windows SDK projection assemblies in the published exe not measured yet; check when the release build (T-015) exists | T-015 |
+| 7 | 2026-11-09 | Owner test T-004 | Programs: the first row cannot be selected with the mouse and has no context menu (keyboard works). Cause: the empty-state `TextBlock` (`Margin="4,36,0,0"`, `ProgramsView.xaml`) lies over the grid and catches mouse clicks even when empty. Fix: `IsHitTestVisible="False"` and collapse it when there is no message; add the same check to any future overlay | next task |
 | 5 | 2026-11-07 | Executor note #14 | Results: the default sort (Size descending) is applied by pre-sorting; the Size column header shows no sort arrow until the user clicks a header | T-004 ✅ |
