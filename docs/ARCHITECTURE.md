@@ -137,8 +137,15 @@ The registry is **only read** — LeftoverScout never cleans the registry (D-002
      `PackageManager.FindPackagesForUser`, `FindPackagesForUserWithPackageTypes` and `PackageTypes` could not be opened in the
      environment that wrote T-006b (network blocked). The `PackageTypes` members used here are from the API as known, not
      verified against the docs, and **it is not known** whether packages with an external location (sparse packages) are returned.
-     That is why the classifier does not rely on Store evidence alone: see the vendor cross-check below. To be verified on
-     Windows and with the docs.
+     That is why the classifier does not rely on Store evidence alone: see the vendor cross-check below.
+     **Lead docs check (2026-11-09):** `FindPackagesForUserWithPackageTypes` returns the packages of the given types
+     installed for the user (Microsoft Learn, "PackageManager.FindPackagesForUserWithPackageTypes"). Packages with an
+     external location ("sparse" identity packages that desktop programs use e.g. for File Explorer context menus) are
+     registered **per user by the program's own installer** (`Add-AppxPackage -ExternalLocation`), and the program — not
+     Windows — is responsible for registering and removing them (Microsoft Learn, "Grant package identity by packaging
+     with external location"; Windows Developer Blog, "Identity, Registration and Activation of Non-packaged Win32 Apps",
+     2019). So a folder in `Packages` can exist for an installed desktop program while no package is registered for the
+     user — exactly finding #10. The vendor cross-check (D-050) covers this case.
   3. `ProgramFolderSource` lists the top-level folders of Program Files, Program Files (x86) and
      `%LOCALAPPDATA%\Programs` (plus names of the direct subfolders for later matching).
   4. `StartMenuSource` lists shortcut names (`.lnk`, `.url`, without extension) and folders under the user and
