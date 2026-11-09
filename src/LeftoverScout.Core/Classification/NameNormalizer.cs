@@ -65,7 +65,9 @@ public static partial class NameNormalizer
         string text = word.ToString();
         word.Clear();
 
-        if (VersionWord().IsMatch(text))
+        // Versions and company suffixes are dropped as whole words, before camel-case splitting
+        // would cut them apart ("GmbH" -> "gmb" + "h").
+        if (VersionWord().IsMatch(text) || CompanySuffixes.Contains(text.ToLower(CultureInfo.InvariantCulture)))
         {
             return;
         }

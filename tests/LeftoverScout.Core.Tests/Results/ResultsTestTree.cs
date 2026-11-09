@@ -25,7 +25,7 @@ internal static class ResultsTestTree
     public static ScanResult Sample()
     {
         var reader = new FakeDirectoryReader()
-            .Folder(Root, DirEntry("Big"), DirEntry("Small"), DirEntry("Documents"), JunctionEntry("Application Data"), CloudDirEntry("OneDriveOnly"), DirEntry("Locked"), FileEntry("root.txt", 50, 2020))
+            .Folder(Root, DirEntry("Big"), DirEntry("Small"), DirEntry("Documents"), JunctionEntry("Application Data"), CloudDirEntry("CloudOnly"), DirEntry("Locked"), FileEntry("root.txt", 50, 2020))
             .Folder(Root + @"\Big", DirEntry("Deep"), FileEntry("big.bin", 300, 2023))
             .Folder(Root + @"\Big\Deep", FileEntry("deep.bin", 400, 2024))
             .Folder(Root + @"\Small", FileEntry("small.bin", 200, 2022))

@@ -97,7 +97,7 @@ public class FolderRowBuilderTests
 
     [Theory]
     [InlineData("Application Data", true, false, false)]
-    [InlineData("OneDriveOnly", false, true, false)]
+    [InlineData("CloudOnly", false, true, false)]
     [InlineData("Locked", false, false, true)]
     public void CanOpen_LinkCloudAndInaccessibleWithoutChildren_IsFalse(string name, bool link, bool cloud, bool inaccessible)
     {
@@ -152,7 +152,7 @@ public class FolderRowBuilderTests
 
         Assert.Equal(FolderTags.Personal, rows.Single(row => row.Name == "Documents").Tags);
         Assert.Equal(FolderTags.Link, rows.Single(row => row.Name == "Application Data").Tags);
-        Assert.Equal(FolderTags.Cloud, rows.Single(row => row.Name == "OneDriveOnly").Tags);
+        Assert.Equal(FolderTags.Cloud, rows.Single(row => row.Name == "CloudOnly").Tags);
         Assert.Equal(FolderTags.Inaccessible, rows.Single(row => row.Name == "Locked").Tags);
         Assert.False(rows.Single(row => row.Name == "Locked").CanOpen);
         Assert.True(rows.Single(row => row.Name == "Big").CanOpen);

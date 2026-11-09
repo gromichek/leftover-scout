@@ -77,13 +77,13 @@ public class ProfileScannerTests
     public async Task ScanAsync_CloudFolderNotPopulated_IsNotEnumerated()
     {
         var reader = new FakeDirectoryReader()
-            .Folder(Root, CloudDirEntry("OneDriveOnly"))
-            .Folder(Root + @"\OneDriveOnly", FileEntry("never.txt", 50));
+            .Folder(Root, CloudDirEntry("CloudOnly"))
+            .Folder(Root + @"\CloudOnly", FileEntry("never.txt", 50));
 
         ScanResult result = await Scan(reader, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(1, result.CloudFoldersNotScannedCount);
-        Assert.DoesNotContain(Root + @"\OneDriveOnly", reader.ReadPaths, StringComparer.OrdinalIgnoreCase);
+        Assert.DoesNotContain(Root + @"\CloudOnly", reader.ReadPaths, StringComparer.OrdinalIgnoreCase);
         Assert.True(result.Root!.Children[0].IsCloudFolderNotScanned);
         Assert.Equal(0, result.Root.LocalSize);
         Assert.Equal(1, result.Root.SubfolderCount);

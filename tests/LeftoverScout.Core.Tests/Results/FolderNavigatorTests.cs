@@ -38,7 +38,7 @@ public class FolderNavigatorTests
 
     [Theory]
     [InlineData("Application Data")]
-    [InlineData("OneDriveOnly")]
+    [InlineData("CloudOnly")]
     [InlineData("Locked")]
     [InlineData("(files in this folder)")]
     public void TryOpen_RowThatCannotOpen_StaysInPlace(string name)
