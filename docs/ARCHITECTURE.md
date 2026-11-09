@@ -131,8 +131,21 @@ The registry is **only read** — LeftoverScout never cleans the registry (D-002
      component; `InstallDate` only as `yyyyMMdd`; empty `InstallLocation` falls back to the folder of `DisplayIcon`;
      the same key name and display name in both views of one hive is listed once.
   2. `StoreProgramSource` maps `IStorePackage` objects from `IStorePackageProvider` (Windows:
-     `WinRtStorePackageProvider`, `PackageManager.FindPackagesForUser(string.Empty)` = current user, no admin, D-036).
-     Each property is read separately; one that throws is left empty.
+     `WinRtStorePackageProvider`, `PackageManager.FindPackagesForUserWithPackageTypes(string.Empty, Main | Framework | Resource | Bundle | Optional)`
+     = current user, no admin, D-036; results de-duplicated by package full name in `StorePackageMerger`).
+     Each property is read separately; one that throws is left empty. **Docs check (T-006b):** the Microsoft Learn pages for
+     `PackageManager.FindPackagesForUser`, `FindPackagesForUserWithPackageTypes` and `PackageTypes` could not be opened in the
+     environment that wrote T-006b (network blocked). The `PackageTypes` members used here are from the API as known, not
+     verified against the docs, and **it is not known** whether packages with an external location (sparse packages) are returned.
+     That is why the classifier does not rely on Store evidence alone: see the vendor cross-check below.
+     **Lead docs check (2026-11-09):** `FindPackagesForUserWithPackageTypes` returns the packages of the given types
+     installed for the user (Microsoft Learn, "PackageManager.FindPackagesForUserWithPackageTypes"). Packages with an
+     external location ("sparse" identity packages that desktop programs use e.g. for File Explorer context menus) are
+     registered **per user by the program's own installer** (`Add-AppxPackage -ExternalLocation`), and the program — not
+     Windows — is responsible for registering and removing them (Microsoft Learn, "Grant package identity by packaging
+     with external location"; Windows Developer Blog, "Identity, Registration and Activation of Non-packaged Win32 Apps",
+     2019). So a folder in `Packages` can exist for an installed desktop program while no package is registered for the
+     user — exactly finding #10. The vendor cross-check (D-050) covers this case.
   3. `ProgramFolderSource` lists the top-level folders of Program Files, Program Files (x86) and
      `%LOCALAPPDATA%\Programs` (plus names of the direct subfolders for later matching).
   4. `StartMenuSource` lists shortcut names (`.lnk`, `.url`, without extension) and folders under the user and
@@ -190,7 +203,10 @@ Offline, explainable and pure (no file system, no registry; injected `TimeProvid
 - `LeftoverClassifier` returns a `LeftoverMap` (folder → `LeftoverVerdict`): `InUse` (an evidence match or an
   ownership rule whose hints match always wins), `Leftover` with `High` / `Medium` / `Low`, or `Unknown`. A folder is
   "not changed" when its newest file is exactly 6 months old or older. Store package folders: High when the family is
-  not installed and unchanged for 6 months, otherwise Medium. Ownership rule with `requiresInstallation: true` and no
+  not installed and unchanged for 6 months, otherwise Medium. Before that, a not-found package whose vendor part (package name before the last `_`, then before the first `.`)
+  matches as a whole token the name, publisher or registry key name of an installed program (registry and Store sources only,
+  never Start menu or folder names; generic or shorter than 3 characters: skipped) is **In use** (D-050), and a not-found
+  package whose vendor part starts with `microsoft` is Medium at most (D-051). Ownership rule with `requiresInstallation: true` and no
   evidence: High; with `false`: Unknown. Other candidates without evidence: Medium (unchanged for 6 months or empty)
   or Low. Two safety limits beyond the task text: no Leftover verdict at all when any evidence source failed, and a
   dot-folder without an ownership rule is rated Low at most (`.ssh`, `.docker`, ... are tool settings).

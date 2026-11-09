@@ -98,10 +98,12 @@ installed**? The answer is a label in **Notes**. Labels only describe: **nothing
 
 | Label | Meaning in practice |
 |---|---|
-| **Leftover: High** | Very likely safe to remove later: no installed program matches, and either it is a Store app that is not installed for you and has not changed for 6 months, or the folder belongs to a well-known program that should have been found installed but was not. |
+| **Leftover: High** | Very likely safe to remove later: no installed program matches, and either it is a Store app package that is not installed for you, does not match any installed program and has not changed for 6 months (packages from Microsoft are never rated **High**), or the folder belongs to a well-known program that should have been found installed but was not. |
 | **Leftover: Medium** | Check first. No installed program matches the folder name, and the folder has not changed for 6 months or is empty; or it is the data of a Store app that is not installed but changed recently. |
 | **Leftover: Low** | Probably still used. No installed program matches the name, but the folder changed within the last 6 months. |
 | **In use: …** | The folder belongs to an installed program, named after the colon (for example **In use: Discord**). |
+
+A folder in `AppData\Local\Packages` whose package is not registered for you is also compared with your installed desktop programs: if its vendor name (for example `Kaspersky` in `Kaspersky.ShellEx22_…`) matches the name, publisher or registry key of an installed program, it is **In use**, because such packages are often installed together with a desktop program.
 
 Hover over the label to read the reason, for example "No installed program named 'FooSoft' was found. Not changed
 since 2023-05." A folder without a leftover label was either not checked (personal, protected, cache, link, cloud or
@@ -118,6 +120,7 @@ How LeftoverScout decides:
   (such as Gradle) are not called leftovers just because no program was found. A folder that starts with a dot is
   never rated higher than **Low** unless a built-in rule knows the program. If the installed programs could not be
   read completely, no leftover labels are shown.
+- Packages from Microsoft that are not found are rated **Medium** at most, because Windows installs many of them in ways LeftoverScout cannot fully see.
 - "Not changed" means that the newest file in the folder is at least 6 months old.
 - A wrong label is possible. Before you ever remove something, check the reason and make sure that you no longer
   need the program.

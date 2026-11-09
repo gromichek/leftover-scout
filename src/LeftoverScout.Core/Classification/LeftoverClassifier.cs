@@ -13,10 +13,11 @@ namespace LeftoverScout.Core.Classification;
 /// <remarks>
 /// Safety bias: when in doubt the answer is "not a leftover". Verdicts:
 /// <list type="bullet">
-/// <item>InUse wins over everything: any evidence match, or an ownership rule whose hints match.</item>
+/// <item>InUse wins over everything: any evidence match, an ownership rule whose hints match, or a not-found Store package
+/// whose vendor part matches an installed program (D-050).</item>
 /// <item>High: a Store package folder of a package that is not installed and unchanged for 6 months; an ownership rule
 /// with <c>requiresInstallation: true</c> whose program is not found.</item>
-/// <item>Medium: a Store package folder changed within 6 months; a candidate without evidence that is unchanged for
+/// <item>Medium: a Store package folder of a not-installed <c>Microsoft…</c> package (never High, D-051); a Store package folder changed within 6 months; a candidate without evidence that is unchanged for
 /// 6 months or has no files.</item>
 /// <item>Low: a candidate without evidence that changed within 6 months.</item>
 /// <item>Unknown: generic or unusable names, children of Microsoft, tools that need no installer, and everything when the
@@ -99,7 +100,20 @@ public sealed partial class LeftoverClassifier
             return LeftoverVerdict.InUse(installed, $"Store package '{family}' is installed for this user ({installed}).");
         }
 
+        if (index.MatchVendor(PackageNames.VendorPart(family)) is { } related)
+        {
+            return LeftoverVerdict.InUse(
+                related.ProgramName,
+                $"Store package '{family}' is not registered for this user, but its name matches the installed program '{related.ProgramName}'. It probably belongs to that program.");
+        }
+
         string notInstalled = $"Store package '{family}' is not installed for this user.";
+        if (PackageNames.VendorPart(family).StartsWith("microsoft", StringComparison.OrdinalIgnoreCase))
+        {
+            string reason = $"{notInstalled} Windows installs many Microsoft packages in ways LeftoverScout cannot fully see, so it is rated Medium at most.";
+            return LeftoverVerdict.Leftover(LeftoverConfidence.Medium, reason);
+        }
+
         if (IsUnchanged(folder, cutoff))
         {
             return LeftoverVerdict.Leftover(LeftoverConfidence.High, $"{notInstalled} Not changed since {Month(folder.NewestWriteTimeUtc!.Value)}.");

@@ -166,6 +166,90 @@ public class LeftoverClassifierTests
         Assert.Contains("Contoso.Notes_abc123", verdict.Explanation, StringComparison.Ordinal);
     }
 
+    // --- Package vendor cross-check (D-050, D-051) ---
+
+    private const string KasperskyFamily = "Kaspersky.ShellEx22_b81m8cbssw9gt";
+
+    [Fact]
+    public void Package_VendorMatchesInstalledRegistryProgram_IsInUse()
+    {
+        LeftoverVerdict? verdict = InPackages(KasperskyFamily, Old, Snapshot(Registry("Kaspersky Standard", "AO Kaspersky Lab")));
+
+        Assert.Equal(LeftoverVerdictKind.InUse, verdict!.Kind);
+        Assert.Equal("In use: Kaspersky Standard", verdict.Label);
+        Assert.Equal(
+            $"Store package '{KasperskyFamily}' is not registered for this user, but its name matches the installed program 'Kaspersky Standard'. It probably belongs to that program.",
+            verdict.Explanation);
+    }
+
+    [Fact]
+    public void Package_VendorMatchesOnlyAPublisher_IsInUse()
+    {
+        LeftoverVerdict? verdict = InPackages(KasperskyFamily, Old, Snapshot(Registry("Secure Connection", "AO Kaspersky Lab")));
+
+        Assert.Equal(LeftoverVerdictKind.InUse, verdict!.Kind);
+    }
+
+    [Fact]
+    public void Package_VendorMatchesOnlyAStartMenuName_IsEvaluatedAsBefore()
+    {
+        AssertLeftover(InPackages(KasperskyFamily, Old, Snapshot(StartMenu("Kaspersky Standard"))), LeftoverConfidence.High);
+    }
+
+    [Fact]
+    public void Package_VendorMatchesOnlyAProgramFolder_IsEvaluatedAsBefore()
+    {
+        AssertLeftover(InPackages(KasperskyFamily, Old, Snapshot(ProgramFolder("Kaspersky Lab"))), LeftoverConfidence.High);
+    }
+
+    [Fact]
+    public void Package_VendorIsOnlyPartOfAWord_IsNotInUse()
+    {
+        AssertLeftover(InPackages("Kasper.Tool_abc123", Old, Snapshot(Registry("Kasperski Suite"))), LeftoverConfidence.High);
+    }
+
+    [Theory]
+    [InlineData("Ab.Tool_abc123")]
+    [InlineData("App.Thing_abc123")]
+    [InlineData("Data.Thing_abc123")]
+    public void Package_ShortOrGenericVendor_SkipsTheCrossCheck(string family)
+    {
+        EvidenceSnapshot evidence = Snapshot(Registry("Ab Tools", "App Data Inc"));
+
+        AssertLeftover(InPackages(family, Old, evidence), LeftoverConfidence.High);
+    }
+
+    [Fact]
+    public void Package_MicrosoftNotFoundAndUnchanged_IsMediumNotHigh()
+    {
+        LeftoverVerdict? verdict = InPackages("Microsoft.SomeRemovedApp_8wekyb3d8bbwe", Old);
+
+        AssertLeftover(verdict, LeftoverConfidence.Medium);
+        Assert.Contains("Microsoft packages", verdict!.Explanation, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("MicrosoftCorporationII.Foo_8wekyb3d8bbwe")]
+    [InlineData("MicrosoftWindows.Client.Bar_cw5n1h2txyewy")]
+    public void Package_OtherMicrosoftPrefixes_AreMediumAtMost(string family)
+    {
+        AssertLeftover(InPackages(family, Old), LeftoverConfidence.Medium);
+    }
+
+    [Fact]
+    public void Package_MicrosoftInstalledForTheUser_IsStillInUse()
+    {
+        LeftoverVerdict? verdict = InPackages("Microsoft.Notes_8wekyb3d8bbwe", Old, Snapshot(Store("Sticky Notes", "microsoft.notes_8wekyb3d8bbwe")));
+
+        Assert.Equal(LeftoverVerdictKind.InUse, verdict!.Kind);
+    }
+
+    [Fact]
+    public void Package_UnrelatedVendorNotFoundAndUnchanged_IsStillHigh()
+    {
+        AssertLeftover(InPackages("Fabrikam.Gone_abc123", Old), LeftoverConfidence.High);
+    }
+
     // --- Ownership rules ---
 
     [Fact]
