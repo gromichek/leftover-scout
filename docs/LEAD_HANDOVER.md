@@ -66,8 +66,8 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 See `docs/PROGRESS.md`. At the time of writing: T-004 accepted by the owner (finding #7 collected).
 T-006 accepted by the owner with finding #10 (Kaspersky shell-extension package wrongly High).
-T-008 merged (#32), owner's manual test pending. Next: Phase 3 (safe cleanup) — ask the owner
-first (Recycle Bin limits, locked files, confirmation flow, journal, what may be selected).
+T-008 accepted by the owner. Phase 3 decisions D-056…D-061 taken; T-009 (safety guard) task file
+written, waiting for the executor session.
 
 Lead note: manual test steps must describe only what the help/app promise. **Owner preference (2026-11-09): do not remind about `git pull` / how to start the app in test steps — only what to check in the app.** (T-004 step 5 wrongly said Calculator might be hidden by the system filter; it is a normal Store app.)
 
@@ -151,6 +151,12 @@ for CS0246 on `Stream`/`File`/`Path` first.
 | D-053 | 2026-11-09 | Findings lists leftovers (High/Medium/Low) + cache/temp/logs/crash dumps; default: High, Medium, caches; Low hidden | Personal/protected never listed |
 | D-054 | 2026-11-09 | Findings: table (Path, Kind, Confidence, Size, Last modified, Program) + details panel + total line | |
 | D-055 | 2026-11-09 | Findings row actions: Open in Explorer, Copy path, Show in Results | |
+| D-056 | 2026-11-09 | Findings get checkboxes; nothing preselected; "select all visible"; Low selectable but flagged | |
+| D-057 | 2026-11-09 | Items that do not fit into the Recycle Bin are **not** deleted; skipped and reported; separate "Delete permanently" with double confirmation | Windows may silently delete permanently otherwise |
+| D-058 | 2026-11-09 | Warn when the owning program seems to run; skip locked files, delete the rest, report "partly removed" | |
+| D-059 | 2026-11-09 | Flow Findings → Clean up selected… → Cleanup page (review, mode, Start, progress, Cancel after current item, summary); every item re-checked right before deletion | |
+| D-060 | 2026-11-09 | JSON journal per session in `data\journal\`; History page with sessions, details, Open Recycle Bin | Local only |
+| D-061 | 2026-11-09 | Phase 3 order: T-009 guard → T-010 cleanup service → T-011 Cleanup page + selection → T-012 journal + History | Deleting reachable from the UI only in T-011 |
 
 ## Notes for the next lead
 
