@@ -65,8 +65,8 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 ## Current state
 
 See `docs/PROGRESS.md`. At the time of writing: T-004 accepted by the owner (finding #7 collected).
-T-005 accepted by the owner. T-006 (leftover detection + finding #9 + #8) task file written,
-waiting for the executor session.
+T-006 merged (#24); owner's manual test pending (ask specifically about installed programs
+wrongly marked as leftovers). Next task not chosen yet (T-007 known caches vs T-008 findings page).
 
 Lead note: manual test steps must describe only what the help/app promise. (T-004 step 5 wrongly said Calculator might be hidden by the system filter; it is a normal Store app.)
 
