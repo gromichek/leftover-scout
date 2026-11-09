@@ -21,13 +21,14 @@ public sealed class EvidenceIndex
 
         foreach (InstalledProgram program in snapshot.Programs)
         {
-            AddName(program.Name, program, isPublisher: false);
-            AddName(program.Publisher, program, isPublisher: true);
+            bool vendorEvidence = program.Source is ProgramSource.Registry or ProgramSource.Store;
+            AddName(program.Name, program, isPublisher: false, vendorEvidence);
+            AddName(program.Publisher, program, isPublisher: true, vendorEvidence);
 
             switch (program.Source)
             {
                 case ProgramSource.Registry:
-                    AddName(RegistryKeyName(program.SourceDetail), program, isPublisher: false);
+                    AddName(RegistryKeyName(program.SourceDetail), program, isPublisher: false, vendorEvidence: true);
                     break;
 
                 case ProgramSource.Store:
@@ -94,6 +95,41 @@ public sealed class EvidenceIndex
         return best is null ? null : new EvidenceMatch(best.Program.Name, OnlyPublisher: !anyName);
     }
 
+    /// <summary>
+    /// Compares the vendor part of a Store package name (decision D-050) with the <b>name, publisher or registry key name</b>
+    /// of installed programs (registry and Store sources only; never Start menu or folder names). The vendor must appear as a
+    /// whole token; null when nothing matches or when the vendor is generic or shorter than 3 characters.
+    /// </summary>
+    public EvidenceMatch? MatchVendor(string vendorPart)
+    {
+        ArgumentNullException.ThrowIfNull(vendorPart);
+        NormalizedName vendor = NameNormalizer.Normalize(vendorPart);
+        string[] significant = Significant(vendor.Tokens);
+        if (vendor.IsEmpty || vendor.Joined.Length < MinimumTokenLength || GenericNames.IsGeneric(vendor) || significant.Length == 0)
+        {
+            return null;
+        }
+
+        Entry? best = null;
+        bool anyName = false;
+        foreach (Entry entry in _entries)
+        {
+            if (!entry.VendorEvidence
+                || !(vendor.Joined == entry.Name.Joined || significant.All(token => entry.Name.Tokens.Contains(token))))
+            {
+                continue;
+            }
+
+            anyName |= !entry.IsPublisher;
+            if (best is null || Rank(entry) < Rank(best))
+            {
+                best = entry;
+            }
+        }
+
+        return best is null ? null : new EvidenceMatch(best.Program.Name, OnlyPublisher: !anyName);
+    }
+
     /// <summary>Finds the installed Store package with this family name (case-insensitive); null when there is none.</summary>
     public string? FindStoreFamily(string familyName) =>
         _storeFamilies.GetValueOrDefault(familyName);
@@ -116,12 +152,12 @@ public sealed class EvidenceIndex
     // Lower is better: names before publishers, then registry, Store, program folders, Start menu.
     private static int Rank(Entry entry) => (entry.IsPublisher ? 10 : 0) + (int)entry.Program.Source;
 
-    private void AddName(string? text, InstalledProgram program, bool isPublisher)
+    private void AddName(string? text, InstalledProgram program, bool isPublisher, bool vendorEvidence = false)
     {
         NormalizedName name = NameNormalizer.Normalize(text);
         if (!name.IsEmpty)
         {
-            _entries.Add(new Entry(name, Significant(name.Tokens), program, isPublisher));
+            _entries.Add(new Entry(name, Significant(name.Tokens), program, isPublisher, vendorEvidence));
         }
     }
 
@@ -143,5 +179,5 @@ public sealed class EvidenceIndex
         return separator >= 0 ? text[(separator + 1)..] : text;
     }
 
-    private sealed record Entry(NormalizedName Name, string[] Significant, InstalledProgram Program, bool IsPublisher);
+    private sealed record Entry(NormalizedName Name, string[] Significant, InstalledProgram Program, bool IsPublisher, bool VendorEvidence);
 }
