@@ -66,7 +66,8 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 See `docs/PROGRESS.md`. At the time of writing: T-004 accepted by the owner (finding #7 collected).
 T-006 accepted by the owner with finding #10 (Kaspersky shell-extension package wrongly High).
-Proposed to the owner: small task T-006b for #10 first, then T-008 (findings page).
+Owner chose: T-006b (#10) first, then T-008 (findings page). T-006b task file written, waiting for
+the executor session.
 
 Lead note: manual test steps must describe only what the help/app promise. **Owner preference (2026-11-09): do not remind about `git pull` / how to start the app in test steps — only what to check in the app.** (T-004 step 5 wrongly said Calculator might be hidden by the system filter; it is a normal Store app.)
 
@@ -144,6 +145,8 @@ for CS0246 on `Stream`/`File`/`Path` first.
 | D-047 | 2026-11-09 | Leftover verdict shown as Notes label + explanation tooltip in Results; findings page in T-008 | |
 | D-048 | 2026-11-09 | Personal folders redirected outside the profile are not scanned (D-020 stays) | Leftovers in e.g. `Documents\My Games` on another drive are not found — possible later task |
 | D-049 | 2026-11-09 | Standard personal folders in the profile root (Documents, Desktop, Downloads, …, OneDrive*) are personal + protected **by name**, even when redirected | Owner finding #9 |
+| D-050 | 2026-11-09 | A not-found package folder whose vendor part matches an installed program (name/publisher/registry key) is **In use**, never a leftover | Lead proposal under the owner's "safety first" rule; owner chose to fix #10 first (option a) |
+| D-051 | 2026-11-09 | Not-found `Microsoft…` packages are rated **Medium at most** | Lead proposal, same basis |
 
 ## Notes for the next lead
 
