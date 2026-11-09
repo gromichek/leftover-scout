@@ -31,7 +31,7 @@ Goal: each suspicious item gets a category, a confidence level and an explanatio
 
 | ID | Task | Status |
 |---|---|---|
-| T-005 | Rules: JSON schema, loader, validation, first rule set for well-known locations | ⬜ |
+| T-005 | Rules: JSON format, loader/validator/matcher, 40–60 initial rules, rule labels in Results Notes; includes finding #7 | 📝 |
 | T-006 | Orphan detection: match items to evidence, confidence levels, explanation texts | ⬜ |
 | T-007 | Known caches and temp locations (categories that are safe to clear) | ⬜ |
 | T-008 | Classification UI: filters by category/confidence, details panel with evidence | ⬜ |
