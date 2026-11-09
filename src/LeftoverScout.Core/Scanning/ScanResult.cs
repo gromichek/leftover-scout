@@ -1,3 +1,4 @@
+using LeftoverScout.Core.Classification;
 using LeftoverScout.Core.Evidence;
 using LeftoverScout.Core.Rules;
 
@@ -38,4 +39,10 @@ public sealed record ScanResult(
     /// scan service after the scan; null when matching was not done or failed.
     /// </summary>
     public RuleMatchMap? RuleMatches { get; init; }
+
+    /// <summary>
+    /// The leftover verdicts (decisions D-044 … D-047). Computed once by the scan service after rule matching; null when
+    /// classification was not done or failed.
+    /// </summary>
+    public LeftoverMap? Leftovers { get; init; }
 }

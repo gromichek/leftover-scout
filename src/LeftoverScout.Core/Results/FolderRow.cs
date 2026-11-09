@@ -1,3 +1,4 @@
+using LeftoverScout.Core.Classification;
 using LeftoverScout.Core.Rules;
 using LeftoverScout.Core.Scanning;
 
@@ -30,4 +31,7 @@ public sealed record FolderRow(
 {
     /// <summary>The rules that apply to the folder (ownership, cache, protected); null when none apply.</summary>
     public FolderRuleMatch? RuleMatch { get; init; }
+
+    /// <summary>The leftover verdict (decision D-047); null when the folder was not evaluated.</summary>
+    public LeftoverVerdict? Leftover { get; init; }
 }

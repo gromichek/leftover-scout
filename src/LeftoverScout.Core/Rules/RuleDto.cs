@@ -32,6 +32,8 @@ internal sealed class ProgramDto
 {
     public string? DisplayName { get; set; }
 
+    public bool? RequiresInstallation { get; set; }
+
     public List<string?>? Names { get; set; }
 
     public List<string?>? Publishers { get; set; }

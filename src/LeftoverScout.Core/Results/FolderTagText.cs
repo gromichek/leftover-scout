@@ -1,3 +1,4 @@
+using LeftoverScout.Core.Classification;
 using LeftoverScout.Core.Rules;
 using LeftoverScout.Core.Scanning;
 
@@ -82,19 +83,32 @@ public static class FolderTagText
         };
     }
 
-    /// <summary>The tags and the rule label joined with ", " (empty when there is nothing to show).</summary>
-    public static string Describe(FolderTags tags, FolderRuleMatch? match)
+    /// <summary>
+    /// The tags, the rule label and the leftover label (<c>Leftover: High</c>, <c>In use: Discord</c>; decision D-047)
+    /// joined with ", " (empty when there is nothing to show).
+    /// </summary>
+    public static string Describe(FolderTags tags, FolderRuleMatch? match, LeftoverVerdict? verdict = null)
     {
-        string label = RuleLabel(match);
-        string tagText = Describe(tags);
-        return tagText.Length == 0 ? label : label.Length == 0 ? tagText : $"{tagText}, {label}";
+        var parts = new List<string>(3);
+        AddIfNotEmpty(parts, Describe(tags));
+        AddIfNotEmpty(parts, RuleLabel(match));
+        AddIfNotEmpty(parts, verdict?.Label);
+        return string.Join(", ", parts);
+    }
+
+    private static void AddIfNotEmpty(List<string> parts, string? text)
+    {
+        if (!string.IsNullOrEmpty(text))
+        {
+            parts.Add(text);
+        }
     }
 
     /// <summary>
     /// The tooltip: one sentence per tag, then the explanation of the rule label and the description of every
     /// matched rule, the primary rule first (empty when there is nothing to show).
     /// </summary>
-    public static string Explain(FolderTags tags, FolderRuleMatch? match)
+    public static string Explain(FolderTags tags, FolderRuleMatch? match, LeftoverVerdict? verdict = null)
     {
         var lines = new List<string>();
         string tagText = Explain(tags);
@@ -117,6 +131,11 @@ public static class FolderTagText
                     ? $"• {ruleMatch.Rule.Description} (rule of a parent folder)"
                     : $"• {ruleMatch.Rule.Description}");
             }
+        }
+
+        if (verdict is { Kind: not LeftoverVerdictKind.Unknown })
+        {
+            lines.Add(verdict.Explanation);
         }
 
         return string.Join("\n", lines);

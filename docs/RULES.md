@@ -5,7 +5,7 @@ the `rules/` folder at the repository root. The files are embedded into the app 
 works fully offline and has no user-editable rules.
 
 Rules only **describe** folders. They never delete anything. Deciding whether a folder is a leftover is a separate
-step (classification).
+step (classification, see `docs/ARCHITECTURE.md`); ownership rules feed it through `requiresInstallation` and the program hints.
 
 ## Rule kinds
 
@@ -15,8 +15,9 @@ step (classification).
 | `cache` | The folder holds a cache, temporary files, logs or crash dumps. | **Cache: <program>**, **Temp**, **Logs**, **Crash dumps** |
 | `protected` | The folder must **never** be offered for deletion. | **Protected** |
 
-Personal folders (Documents, Desktop, Pictures, Videos, Music, Downloads, OneDrive) are protected automatically with
-subtree scope; no rule is needed. **Protection is absolute**: if several rules match, `protected` wins, and the
+Personal folders (Documents, Desktop, Downloads, Pictures, Videos, Music, Favorites, Contacts, Links, Saved Games, Searches,
+3D Objects, OneDrive*) are protected automatically with subtree scope; no rule is needed. They are recognised by their
+known-folder paths and, directly in the profile root, **by name** (decision D-049). **Protection is absolute**: if several rules match, `protected` wins, and the
 loader rejects any `cache` or `ownership` rule whose path could lie inside a `subtree`-protected path.
 
 ## Files
@@ -51,7 +52,8 @@ Unknown properties are errors (a typo such as `categroy` is reported, not ignore
 | Field | Description |
 |---|---|
 | `displayName` | Required. Name shown to the user (**Owner: Discord**). |
-| `names`, `publishers`, `uninstallKeys`, `packageFamilies`, `programFolders` | Optional lists of plain strings, compared case-insensitively, **no wildcards**. They help a later step compare the rule with the installed programs found on the computer: program or display names, publisher names, registry Uninstall key names, Store package family names and install folder names. |
+| `requiresInstallation` | **Required for ownership rules** (`true` or `false`); optional for cache rules (then `false`). `true` when the program is normally installed with an installer entry (Discord, Chrome, Steam, ...): if no installed program matches, leftover detection rates the folder a leftover. `false` for tools that often have no installer entry (for example Gradle): missing evidence then proves nothing and the verdict stays *unknown*. When unsure, use `false`. |
+| `names`, `publishers`, `uninstallKeys`, `packageFamilies`, `programFolders` | Optional lists of plain strings, compared case-insensitively, **no wildcards**. Leftover detection compares them with the installed programs found on the computer (publisher names are not used as proof that the program itself is installed): program or display names, publisher names, registry Uninstall key names, Store package family names and install folder names. |
 
 ## Path patterns
 
@@ -84,7 +86,7 @@ scan, because later versions can scan other profiles.
 
 The loader checks every rule and skips an invalid one (the app logs the rule id and the reason, and keeps running).
 The shipped files must have **no** errors; the tests fail otherwise. Errors include: unknown kind, scope, category or
-token; a bad pattern; a duplicate id; a missing required field; wildcards in program hints; a `cache` or `ownership`
+token; a bad pattern; a duplicate id; a missing required field (including `requiresInstallation` of an ownership rule); wildcards in program hints; a `cache` or `ownership`
 path that lies inside a `subtree`-protected path; a misspelled property.
 
 ## Adding or changing a rule

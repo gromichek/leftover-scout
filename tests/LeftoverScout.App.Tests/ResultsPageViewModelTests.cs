@@ -1,4 +1,6 @@
 using LeftoverScout.App.ViewModels;
+using LeftoverScout.Core.Classification;
+using LeftoverScout.Core.Evidence;
 using LeftoverScout.Core.Formatting;
 using LeftoverScout.Core.Rules;
 using LeftoverScout.Core.Scanning;
@@ -316,7 +318,7 @@ public class ResultsPageViewModelTests
               { "id": "protect-appdata", "kind": "protected", "paths": ["{Profile}\\AppData"], "scope": "folder",
                 "description": "The AppData folder is protected.", "source": "test" },
               { "id": "sample-cache", "kind": "cache", "paths": ["{LocalAppData}"], "category": "cache", "scope": "folder",
-                "program": { "displayName": "Sample App" }, "description": "Sample cache.", "source": "test" } ] }
+                "program": { "displayName": "Sample App", "requiresInstallation": true }, "description": "Sample cache.", "source": "test" } ] }
             """)]);
         Assert.Empty(rules.Errors);
         scan = scan with { RuleMatches = new RuleMatcher(rules.RuleSet).Match(scan.Root!, TestContext.Current.CancellationToken) };
@@ -329,6 +331,30 @@ public class ResultsPageViewModelTests
 
         viewModel.OpenFolderCommand.Execute(appData);
         Assert.Equal("Cache: Sample App", RowNamed(viewModel, "Local").NotesText);
+    }
+
+    [Fact]
+    public async Task Rows_WithLeftovers_ShowLeftoverLabelAndExplanation()
+    {
+        var reader = new MapReader()
+            .Folder(Root, Dir("AppData"))
+            .Folder(Root + @"\AppData", Dir("Roaming"))
+            .Folder(Root + @"\AppData\Roaming", Dir("FooSoft"), Dir("Cache"))
+            .Folder(Root + @"\AppData\Roaming\FooSoft", File("a.dat", 5, year: 2020));
+        ScanResult scan = await new ProfileScanner(reader)
+            .ScanAsync(new ScanTarget(Root, true), new ScanOptions(), null, TestContext.Current.CancellationToken);
+        var evidence = new EvidenceSnapshot([], new Dictionary<ProgramSource, int>(), [], DateTimeOffset.UnixEpoch, TimeSpan.Zero);
+        LeftoverMap leftovers = new LeftoverClassifier(TimeProvider.System).Classify(scan.Root!, evidence, RuleMatchMap.Empty, TestContext.Current.CancellationToken);
+        scan = scan with { CompletedAt = new DateTimeOffset(2025, 3, 4, 12, 30, 0, TimeSpan.Zero), Leftovers = leftovers };
+        var (viewModel, _, _, _) = Create(scan);
+
+        viewModel.OpenFolderCommand.Execute(RowNamed(viewModel, "AppData"));
+        viewModel.OpenFolderCommand.Execute(RowNamed(viewModel, "Roaming"));
+
+        FolderRowViewModel fooSoft = RowNamed(viewModel, "FooSoft");
+        Assert.Equal("Leftover: Medium", fooSoft.NotesText);
+        Assert.Contains("No installed program named 'FooSoft' was found.", fooSoft.NotesTooltip, StringComparison.Ordinal);
+        Assert.Equal(string.Empty, RowNamed(viewModel, "Cache").NotesText);
     }
 
     [Fact]

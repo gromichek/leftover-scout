@@ -87,7 +87,7 @@ public class FolderTagTextTests
     public void RuleLabel_OwnershipRule_ShowsOwner()
     {
         FolderRuleMatch match = MatchFor(
-            """{ "id": "sample-owner", "kind": "ownership", "paths": ["{Profile}\\Sample"], "program": { "displayName": "Sample App" }, "description": "d", "source": "s" }""",
+            """{ "id": "sample-owner", "kind": "ownership", "paths": ["{Profile}\\Sample"], "program": { "displayName": "Sample App", "requiresInstallation": true }, "description": "d", "source": "s" }""",
             "Sample");
 
         Assert.Equal("Owner: Sample App", FolderTagText.RuleLabel(match));

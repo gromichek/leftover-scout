@@ -49,10 +49,15 @@ folder has no files of its own.
 
 | Tag | Meaning |
 |---|---|
-| **Personal** | One of your own folders (Documents, Desktop, Pictures, Videos, Music, Downloads, OneDrive). It is measured, and it is protected: personal folders are never offered for cleanup. |
+| **Personal** | One of your own folders (Documents, Desktop, Downloads, Pictures, Videos, Music, Favorites, Contacts, Links, Saved Games, Searches, 3D Objects, OneDrive). It is measured, and it is protected: personal folders are never offered for cleanup. |
 | **Link** | A junction or symbolic link. It is not followed and not counted, so nothing is counted twice. Windows creates a few old ones (such as `Application Data`) in every profile. |
 | **Cloud** | An online-only OneDrive folder that is not available on this computer. It was not read, so nothing is downloaded. |
 | **Inaccessible** | The folder could not be read completely (access denied or another error). Its size may be too small. |
+
+These standard folders in your profile folder are **Personal** by name, even if Windows stores your
+documents or pictures on another drive; a folder whose name starts with `OneDrive` (for example
+`OneDrive - Contoso`) is **Personal** too. Personal folders that were moved to another drive are **not scanned**,
+because they lie outside your profile.
 
 Rows tagged **Link** or **Cloud** cannot be opened. An **Inaccessible** folder opens only if some of its
 content could be read.
@@ -82,6 +87,40 @@ the most important first.
 The rules are built into the app: a list of well-known locations of Windows and popular programs, each with a short
 description. LeftoverScout works fully offline and never downloads rules. The list is small today and will grow
 with new versions. A folder without a label is simply not in the list; that says nothing about whether it is needed.
+
+### Leftover labels
+
+After each scan, LeftoverScout also checks the folders where programs keep their data: the first level of
+`AppData\Roaming`, `AppData\Local` and `AppData\LocalLow`, the subfolders of a vendor folder (such as `JetBrains`),
+the folders that start with a dot in your profile folder (such as `.gradle`) and every folder in
+`AppData\Local\Packages`. It asks one question: does this folder probably belong to a program that is **no longer
+installed**? The answer is a label in **Notes**. Labels only describe: **nothing is selected or deleted.**
+
+| Label | Meaning in practice |
+|---|---|
+| **Leftover: High** | Very likely safe to remove later: no installed program matches, and either it is a Store app that is not installed for you and has not changed for 6 months, or the folder belongs to a well-known program that should have been found installed but was not. |
+| **Leftover: Medium** | Check first. No installed program matches the folder name, and the folder has not changed for 6 months or is empty; or it is the data of a Store app that is not installed but changed recently. |
+| **Leftover: Low** | Probably still used. No installed program matches the name, but the folder changed within the last 6 months. |
+| **In use: …** | The folder belongs to an installed program, named after the colon (for example **In use: Discord**). |
+
+Hover over the label to read the reason, for example "No installed program named 'FooSoft' was found. Not changed
+since 2023-05." A folder without a leftover label was either not checked (personal, protected, cache, link, cloud or
+unreadable folders) or LeftoverScout could not decide.
+
+How LeftoverScout decides:
+
+- It compares the **names** of the folders with the names of the installed programs it found (registry, Store apps,
+  program folders and the Start menu) and with a built-in list of well-known programs. Only whole words are compared
+  after removing versions and endings such as "Inc" or "Ltd"; there is no guessing by similarity. Nothing is sent
+  anywhere.
+- **It errs on the safe side.** Generic names (such as `Cache`, `Temp`, `Logs`, `Data`), long numbers and
+  identifiers, and the contents of `Microsoft` folders are left without a label. Tools that often have no installer
+  (such as Gradle) are not called leftovers just because no program was found. A folder that starts with a dot is
+  never rated higher than **Low** unless a built-in rule knows the program. If the installed programs could not be
+  read completely, no leftover labels are shown.
+- "Not changed" means that the newest file in the folder is at least 6 months old.
+- A wrong label is possible. Before you ever remove something, check the reason and make sure that you no longer
+  need the program.
 
 ## Tab Large files
 
@@ -114,6 +153,7 @@ select a row.
 - `AppData\Local` usually holds caches and the data of installed programs; `AppData\Roaming` holds settings.
 - A large **Files** count with a small size usually means many tiny cache files.
 - Big folders tagged **Personal** are your own documents and media. Leave them alone; they are protected.
+- Start with **Leftover: High** and **Leftover: Medium** folders, read the reason in the tooltip and ask yourself whether you really uninstalled that program. **Leftover: Low** folders are probably still used.
 - **Cache**, **Temp**, **Logs** and **Crash dumps** labels show where space is spent on data that can be recreated. This version does not delete anything.
 - Sizes are logical file sizes and do not match Explorer to the byte, see [Scan](scan.md).
 

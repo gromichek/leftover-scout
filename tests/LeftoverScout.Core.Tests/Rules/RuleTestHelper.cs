@@ -19,8 +19,8 @@ internal static class RuleTestHelper
     public static string Cache(string id, string path, string category = "cache", string? scope = null) =>
         $$"""{ "id": "{{id}}", "kind": "cache", "paths": ["{{path.Replace("\\", "\\\\")}}"], "category": "{{category}}", {{(scope is null ? "" : $"\"scope\": \"{scope}\",")}} "description": "d", "source": "s" }""";
 
-    public static string Owner(string id, string path, string program = "Sample App", string? scope = null) =>
-        $$"""{ "id": "{{id}}", "kind": "ownership", "paths": ["{{path.Replace("\\", "\\\\")}}"], {{(scope is null ? "" : $"\"scope\": \"{scope}\",")}} "program": { "displayName": "{{program}}" }, "description": "d", "source": "s" }""";
+    public static string Owner(string id, string path, string program = "Sample App", string? scope = null, bool requiresInstallation = true) =>
+        $$"""{ "id": "{{id}}", "kind": "ownership", "paths": ["{{path.Replace("\\", "\\\\")}}"], {{(scope is null ? "" : $"\"scope\": \"{scope}\",")}} "program": { "displayName": "{{program}}", "requiresInstallation": {{(requiresInstallation ? "true" : "false")}} }, "description": "d", "source": "s" }""";
 
     /// <summary>Scans a fictional profile that contains exactly the given folders (relative paths below the profile root).</summary>
     public static FolderNode Tree(IReadOnlyList<string>? personalFolders = null, params string[] relativeFolders)

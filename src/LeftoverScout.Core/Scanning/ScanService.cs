@@ -1,3 +1,4 @@
+using LeftoverScout.Core.Classification;
 using LeftoverScout.Core.Evidence;
 using LeftoverScout.Core.Rules;
 using Microsoft.Extensions.Logging;
@@ -14,6 +15,7 @@ public sealed class ScanService : IScanService
     private readonly IPersonalFolderProvider _personalFolders;
     private readonly EvidenceCollector _evidenceCollector;
     private readonly RuleMatcher _ruleMatcher;
+    private readonly LeftoverClassifier _classifier;
     private readonly ILogger<ScanService> _logger;
     private readonly TimeProvider _timeProvider;
     private int _running;
@@ -25,6 +27,7 @@ public sealed class ScanService : IScanService
         IPersonalFolderProvider personalFolders,
         EvidenceCollector evidenceCollector,
         RuleMatcher ruleMatcher,
+        LeftoverClassifier classifier,
         ILogger<ScanService> logger,
         TimeProvider timeProvider)
     {
@@ -32,6 +35,7 @@ public sealed class ScanService : IScanService
         _personalFolders = personalFolders;
         _evidenceCollector = evidenceCollector;
         _ruleMatcher = ruleMatcher;
+        _classifier = classifier;
         _logger = logger;
         _timeProvider = timeProvider;
         _scanner = new ProfileScanner(reader, timeProvider);
@@ -98,7 +102,14 @@ public sealed class ScanService : IScanService
 
             if (result.Root is { } root)
             {
-                result = result with { CompletedAt = _timeProvider.GetUtcNow(), Evidence = evidence, RuleMatches = MatchRules(root, cancellationToken) };
+                RuleMatchMap? ruleMatches = MatchRules(root, cancellationToken);
+                result = result with
+                {
+                    CompletedAt = _timeProvider.GetUtcNow(),
+                    Evidence = evidence,
+                    RuleMatches = ruleMatches,
+                    Leftovers = ClassifyLeftovers(root, evidence, ruleMatches, cancellationToken),
+                };
                 LastResult = result;
                 _logger.LogInformation(
                     "Scan completed in {DurationMs} ms: {Folders} folders, {Files} files, {LocalBytes} local bytes, {CloudBytes} cloud-only bytes, {Errors} errors.",
@@ -139,6 +150,26 @@ public sealed class ScanService : IScanService
         catch (Exception exception)
         {
             _logger.LogWarning("Rules could not be matched ({ExceptionType}).", exception.GetType().Name);
+            return null;
+        }
+    }
+
+    // Detects leftovers once per completed scan. A failure here must not lose the scan result.
+    private LeftoverMap? ClassifyLeftovers(FolderNode root, EvidenceSnapshot? evidence, RuleMatchMap? ruleMatches, CancellationToken cancellationToken)
+    {
+        try
+        {
+            LeftoverMap leftovers = _classifier.Classify(root, evidence, ruleMatches, cancellationToken);
+            _logger.LogInformation("Leftover detection evaluated {Folders} folders.", leftovers.Count);
+            return leftovers;
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            return null;
+        }
+        catch (Exception exception)
+        {
+            _logger.LogWarning("Leftovers could not be detected ({ExceptionType}).", exception.GetType().Name);
             return null;
         }
     }

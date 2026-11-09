@@ -1,3 +1,4 @@
+using LeftoverScout.Core.Classification;
 using LeftoverScout.Core.Evidence;
 using LeftoverScout.Core.Rules;
 using LeftoverScout.Core.Scanning;
@@ -28,7 +29,7 @@ public class ScanServiceTests
             [new FakeProgramSource(collect ?? (_ => [SampleProgram]))],
             NullLogger<EvidenceCollector>.Instance,
             TimeProvider.System);
-        return new ScanService(new ScanTarget(Root, true), reader, new NoPersonalFolders(), collector, new RuleMatcher(ruleSet ?? RuleSet.Empty), NullLogger<ScanService>.Instance, TimeProvider.System);
+        return new ScanService(new ScanTarget(Root, true), reader, new NoPersonalFolders(), collector, new RuleMatcher(ruleSet ?? RuleSet.Empty), new LeftoverClassifier(TimeProvider.System), NullLogger<ScanService>.Instance, TimeProvider.System);
     }
 
     [Fact]
@@ -41,6 +42,26 @@ public class ScanServiceTests
         Assert.NotNull(result.Evidence);
         Assert.Equal([SampleProgram], result.Evidence.Programs);
         Assert.Same(result.Evidence, service.LastResult!.Evidence);
+    }
+
+    [Fact]
+    public async Task RunAsync_Completed_DetectsLeftoversOnceAndStoresThemWithTheResult()
+    {
+        ScanService service = Create(
+            new FakeDirectoryReader()
+                .Folder(Root, DirEntry("AppData"))
+                .Folder(Root + @"\AppData", DirEntry("Local"))
+                .Folder(Root + @"\AppData\Local", DirEntry("FooSoft"))
+                .Folder(Root + @"\AppData\Local\FooSoft", FileEntry("a.dat", 3, year: 2020)));
+
+        ScanResult result = await service.RunAsync(null, TestContext.Current.CancellationToken);
+
+        Assert.NotNull(result.Leftovers);
+        FolderNode fooSoft = result.Root!.Children.Single().Children.Single().Children.Single();
+        LeftoverVerdict verdict = result.Leftovers.Get(fooSoft)!;
+        Assert.Equal(LeftoverVerdictKind.Leftover, verdict.Kind);
+        Assert.Equal(LeftoverConfidence.Medium, verdict.Confidence);
+        Assert.Same(result.Leftovers, service.LastResult!.Leftovers);
     }
 
     [Fact]

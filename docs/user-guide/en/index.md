@@ -1,7 +1,7 @@
 # LeftoverScout user guide
 
 > LeftoverScout is in early development. Today it can scan your profile, let you browse what takes
-> space and show the programs installed on this computer. Explaining and cleaning up are planned. This guide always describes what the app does now.
+> space, show the programs installed on this computer and mark folders that probably belong to uninstalled programs. Cleaning up is planned. This guide always describes what the app does now.
 
 ## What LeftoverScout does
 
@@ -10,13 +10,14 @@ settings, caches and logs that often stay behind even after the program is unins
 LeftoverScout is built to:
 
 1. **Scan** your profile and show what takes space. Scanning never changes anything.
-2. **Explain** which folders probably belong to programs that are no longer installed, and why.
+2. **Explain** which folders probably belong to programs that are no longer installed, and why. The **Results** page already shows this as **Leftover** labels.
 3. **Clean up** only the items you select, by default into the **Recycle Bin**, so you can restore them.
 
 ## Order of work
 
 1. Open **Scan** and press **Start scan**. See [Scan](scan.md).
 2. Open **Results** to browse folders by size, see large files and open them in Explorer. See [Results](results.md).
+   Look for **Leftover** and **In use** labels in the **Notes** column.
    Open **Programs** to see which programs are installed on this computer. See [Programs](programs.md).
 3. **Cleanup** will remove the items you select. See [Cleanup](cleanup.md). *(planned)*
 4. **History** will show what was removed. See [History](history.md). *(planned)*
