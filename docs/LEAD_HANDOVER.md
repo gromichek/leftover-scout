@@ -65,7 +65,7 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 ## Current state
 
 See `docs/PROGRESS.md`. At the time of writing: T-004 accepted by the owner (finding #7 collected).
-Next: T-005 (rules) — design questions for the owner before writing the task.
+T-005 (rules) task file written, waiting for the executor session; includes finding #7.
 
 Lead note: manual test steps must describe only what the help/app promise. (T-004 step 5 wrongly said Calculator might be hidden by the system filter; it is a normal Store app.)
 
@@ -128,6 +128,10 @@ for CS0246 on `Stream`/`File`/`Path` first.
 | D-037 | 2026-11-08 | New **Programs** page between Results and Cleanup | |
 | D-038 | 2026-11-08 | Evidence collected automatically as part of every scan; failing source never fails the scan | |
 | D-039 | 2026-11-08 | After a **cancelled** scan, pages keep showing the previous completed result | |
+| D-040 | 2026-11-09 | Rules = JSON files in `rules/`, embedded in the app; no user-editable rules for now | |
+| D-041 | 2026-11-09 | Rule kinds: ownership, cache (cache/temp/logs/crashDumps), protected; path tokens `{Profile}`, `{RoamingAppData}`, `{LocalAppData}`, `{LocalLow}` + `*` for one folder; no regex | Protection is absolute (personal folders included) |
+| D-042 | 2026-11-09 | Initial rule set of 40–60 well-known rules, each with description and source; never invent paths | |
+| D-043 | 2026-11-09 | Results Notes shows the matched rule (Cache/Owner/Protected…) with a tooltip | |
 
 ## Notes for the next lead
 
