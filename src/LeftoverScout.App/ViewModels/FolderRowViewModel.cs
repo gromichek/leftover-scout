@@ -19,8 +19,8 @@ public sealed class FolderRowViewModel
         PercentText = string.Create(CultureInfo.CurrentCulture, $"{row.PercentOfParent:0.0} %");
         FilesText = row.FileCount.ToString("N0", CultureInfo.CurrentCulture);
         LastModifiedText = row.NewestWriteTimeUtc is { } utc ? ResultsFormat.LocalDateTime(utc) : string.Empty;
-        NotesText = FolderTagText.Describe(row.Tags, row.RuleMatch);
-        NotesTooltip = FolderTagText.Explain(row.Tags, row.RuleMatch);
+        NotesText = FolderTagText.Describe(row.Tags, row.RuleMatch, row.Leftover);
+        NotesTooltip = FolderTagText.Explain(row.Tags, row.RuleMatch, row.Leftover);
     }
 
     /// <summary>The underlying row.</summary>

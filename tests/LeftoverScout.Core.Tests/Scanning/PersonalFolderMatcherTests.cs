@@ -39,4 +39,49 @@ public class PersonalFolderMatcherTests
 
         Assert.False(matcher.IsPersonal(@"C:\Users\SampleUser\Documents\Work"));
     }
+
+    [Theory]
+    [InlineData("Documents")]
+    [InlineData("desktop")]
+    [InlineData("Downloads")]
+    [InlineData("Pictures")]
+    [InlineData("Videos")]
+    [InlineData("Music")]
+    [InlineData("Favorites")]
+    [InlineData("Contacts")]
+    [InlineData("Links")]
+    [InlineData("Saved Games")]
+    [InlineData("Searches")]
+    [InlineData("3D Objects")]
+    [InlineData("OneDrive")]
+    [InlineData("OneDrive - Contoso")]
+    public void IsPersonal_StandardNameInProfileRoot_IsPersonalWithoutKnownFolderPaths(string name)
+    {
+        var matcher = new PersonalFolderMatcher(ProfileRoot, []);
+
+        Assert.True(matcher.IsPersonal(ProfileRoot + "\\" + name));
+    }
+
+    [Fact]
+    public void IsPersonal_RedirectedDocuments_StillLeavesProfileDocumentsPersonal()
+    {
+        var matcher = new PersonalFolderMatcher(ProfileRoot, [@"D:\Redirected\Documents"]);
+
+        Assert.True(matcher.IsPersonal(@"C:\Users\SampleUser\Documents"));
+        Assert.False(matcher.IsPersonal(@"D:\Redirected\Documents"));
+    }
+
+    [Theory]
+    [InlineData(@"C:\Users\SampleUser\Documents2")]
+    [InlineData(@"C:\Users\SampleUser\My Documents")]
+    [InlineData(@"C:\Users\SampleUser\AppData")]
+    [InlineData(@"C:\Users\SampleUser\AppData\Local\Documents")]
+    [InlineData(@"C:\Users\SampleUser\Work\Music")]
+    [InlineData(@"C:\Users\SampleUser\MyOneDrive")]
+    public void IsPersonal_NearMissesAndNestedNames_AreNotPersonal(string path)
+    {
+        var matcher = new PersonalFolderMatcher(ProfileRoot, []);
+
+        Assert.False(matcher.IsPersonal(path));
+    }
 }

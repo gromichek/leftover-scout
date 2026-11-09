@@ -2,6 +2,7 @@ using LeftoverScout.App.Help;
 using LeftoverScout.App.Services;
 using LeftoverScout.App.Startup;
 using LeftoverScout.App.ViewModels;
+using LeftoverScout.Core.Classification;
 using LeftoverScout.Core.Evidence;
 using LeftoverScout.Core.Help;
 using LeftoverScout.Core.Logging;
@@ -71,6 +72,7 @@ public static class ServiceRegistration
         // Rules knowledge base (embedded JSON, validated at load time; invalid rules are skipped and logged).
         services.AddSingleton(provider => EmbeddedRuleLoader.Load(provider.GetRequiredService<ILogger<RuleSet>>()));
         services.AddSingleton<RuleMatcher>();
+        services.AddSingleton<LeftoverClassifier>();
 
         services.AddSingleton<IScanService, ScanService>();
         services.AddSingleton<IHelpSource, EmbeddedHelpSource>();

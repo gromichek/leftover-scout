@@ -36,6 +36,22 @@ public class ShippedRulesTests
     }
 
     [Fact]
+    public void ShippedRules_GradleDoesNotRequireInstallation_AndTheOthersDo()
+    {
+        Assert.All(
+            Result.RuleSet.Rules.Where(rule => rule.Kind == RuleKind.Ownership),
+            rule => Assert.Equal(rule.Id != "gradle-data", rule.Program!.RequiresInstallation, rule.Id));
+    }
+
+    [Fact]
+    public void ShippedRules_SpotifyCacheWarnsAboutDownloadingAgain()
+    {
+        Rule rule = Result.RuleSet.Rules.Single(item => item.Id == "spotify-cache");
+        Assert.Contains("download", rule.Description, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("again", rule.Description, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public void ShippedRules_HaveUniqueIds()
     {
         Assert.Equal(Result.RuleSet.Rules.Count, Result.RuleSet.Rules.Select(rule => rule.Id).Distinct(StringComparer.Ordinal).Count());

@@ -9,6 +9,7 @@
       ],
       "program": {
         "displayName": "Google Chrome",
+        "requiresInstallation": true,
         "names": [
           "Google Chrome"
         ],
@@ -33,6 +34,7 @@
       ],
       "program": {
         "displayName": "Microsoft Edge",
+        "requiresInstallation": true,
         "names": [
           "Microsoft Edge"
         ],
@@ -55,6 +57,7 @@
       ],
       "program": {
         "displayName": "Mozilla Firefox",
+        "requiresInstallation": true,
         "names": [
           "Mozilla Firefox"
         ],
@@ -80,6 +83,7 @@
       ],
       "program": {
         "displayName": "Discord",
+        "requiresInstallation": true,
         "names": [
           "Discord"
         ],
@@ -105,6 +109,7 @@
       ],
       "program": {
         "displayName": "Microsoft Teams",
+        "requiresInstallation": true,
         "names": [
           "Microsoft Teams"
         ],
@@ -129,6 +134,7 @@
       ],
       "program": {
         "displayName": "Microsoft Teams",
+        "requiresInstallation": true,
         "names": [
           "Microsoft Teams"
         ],
@@ -150,6 +156,7 @@
       ],
       "program": {
         "displayName": "Zoom",
+        "requiresInstallation": true,
         "names": [
           "Zoom",
           "Zoom Workplace"
@@ -174,6 +181,7 @@
       ],
       "program": {
         "displayName": "Spotify",
+        "requiresInstallation": true,
         "names": [
           "Spotify"
         ],
@@ -201,6 +209,7 @@
       ],
       "program": {
         "displayName": "Steam",
+        "requiresInstallation": true,
         "names": [
           "Steam"
         ],
@@ -227,6 +236,7 @@
       ],
       "program": {
         "displayName": "Visual Studio Code",
+        "requiresInstallation": true,
         "names": [
           "Microsoft Visual Studio Code",
           "Visual Studio Code"
@@ -250,6 +260,7 @@
       ],
       "program": {
         "displayName": "JetBrains IDE",
+        "requiresInstallation": true,
         "names": [
           "JetBrains"
         ],
@@ -271,6 +282,7 @@
       ],
       "program": {
         "displayName": "Slack",
+        "requiresInstallation": true,
         "names": [
           "Slack"
         ],
@@ -295,6 +307,7 @@
       ],
       "program": {
         "displayName": "Gradle",
+        "requiresInstallation": false,
         "names": [
           "Gradle"
         ],

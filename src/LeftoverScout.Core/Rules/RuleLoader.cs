@@ -228,7 +228,7 @@ public static partial class RuleLoader
         ProgramHints? program = null;
         if (dto.Program is not null)
         {
-            program = ValidateProgram(dto.Program, errors);
+            program = ValidateProgram(dto.Program, kindKnown && kind == RuleKind.Ownership, errors);
         }
 
         if (kindKnown && kind == RuleKind.Ownership && dto.Program is null)
@@ -267,13 +267,18 @@ public static partial class RuleLoader
             dto.Source!.Trim());
     }
 
-    private static ProgramHints? ValidateProgram(ProgramDto dto, List<string> errors)
+    private static ProgramHints? ValidateProgram(ProgramDto dto, bool requireInstallationFlag, List<string> errors)
     {
         int before = errors.Count;
 
         if (string.IsNullOrWhiteSpace(dto.DisplayName))
         {
             errors.Add("The program needs a displayName.");
+        }
+
+        if (requireInstallationFlag && dto.RequiresInstallation is null)
+        {
+            errors.Add("The program of an ownership rule needs 'requiresInstallation' (true or false).");
         }
 
         IReadOnlyList<string> names = CleanHints(dto.Names, "names", errors);
@@ -284,7 +289,7 @@ public static partial class RuleLoader
 
         return errors.Count > before
             ? null
-            : new ProgramHints(dto.DisplayName!.Trim(), names, publishers, uninstallKeys, packageFamilies, programFolders);
+            : new ProgramHints(dto.DisplayName!.Trim(), dto.RequiresInstallation ?? false, names, publishers, uninstallKeys, packageFamilies, programFolders);
     }
 
     private static List<string> CleanHints(List<string?>? values, string listName, List<string> errors)

@@ -71,10 +71,13 @@ Pieces:
   token before every folder (a cancelled scan returns `ScanCompletion.Cancelled` without totals), throttles
   progress reports (default 100 ms) and aggregates totals bottom-up. Children are sorted by name
   (ordinal, ignore case), so results are deterministic. The walk is single-threaded.
-- `PersonalFolderMatcher` (Core) marks the personal folders (D-020). `PersonalFolderProvider` (Windows)
+- `PersonalFolderMatcher` (Core) marks the personal folders (D-020, D-049). `PersonalFolderProvider` (Windows)
   supplies them: `SHGetKnownFolderPath` for Documents, Desktop, Pictures, Videos, Music, Downloads plus the
   environment variables `OneDrive`, `OneDriveConsumer`, `OneDriveCommercial`. Folders outside the profile
-  are ignored.
+  are ignored (D-048). In addition, a direct child of the profile root is personal **by name** (case-insensitive):
+  `Documents`, `Desktop`, `Downloads`, `Pictures`, `Videos`, `Music`, `Favorites`, `Contacts`, `Links`,
+  `Saved Games`, `Searches`, `3D Objects` or a name starting with `OneDrive`. This keeps `{Profile}\Documents`
+  protected when Windows redirects the real Documents folder to another drive.
 - `ScanService` (Core, singleton, `IScanService`) runs the scanner, logs start and end (totals and
   duration, never paths) and keeps `LastResult` (last *completed* scan) for the Results page.
 - `ScanPageViewModel` (App) binds the Scan page; `ScanSummary` (Core) computes the numbers it shows.
@@ -168,8 +171,35 @@ names `Rules/<file>.json` (not copied). Format and contributor guide: `docs/RULE
 - Results (D-043): `FolderRow.RuleMatch` feeds `FolderTagText.RuleLabel/Describe/Explain` (`Protected`, `Cache: <program>`,
   `Temp`, `Logs`, `Crash dumps`, `Owner: <program>` and a tooltip with the rule descriptions).
 
+### Leftover detection (T-006)
+Offline, explainable and pure (no file system, no registry; injected `TimeProvider`). Code lives in
+`LeftoverScout.Core.Classification` (decisions D-044 … D-047). Safety bias: when in doubt the answer is "not a leftover".
+- `NameNormalizer` lower-cases a name, splits it into tokens (non-alphanumerics, camel case, letter-digit
+  boundaries), drops version tokens (`2022`, `v2`, `x64`, `x86`) and company suffixes (`inc`, `ltd`, `llc`, `sro`, ...).
+  Dotted abbreviations (`s.r.o.`) are joined first.
+- `EvidenceIndex` is built once per scan from the `EvidenceSnapshot` (program names, publishers, registry key names,
+  Store identity and family names, program folder names with their subfolders, Start menu names). A folder name matches
+  when the joined forms are equal, when all significant tokens (at least 3 characters, not generic) of the folder are
+  tokens of one entry, or when all significant tokens of an entry are tokens of the folder name. **No fuzzy
+  similarity.** `GenericNames` is the stop-list (`temp`, `cache`, `data`, `microsoft`, ...): a generic folder name
+  decides nothing.
+- `LeftoverCandidateFinder` picks the folders (D-044): first level of `AppData\Roaming`, `Local`, `LocalLow`; the
+  subfolders of a *vendor* folder (a first-level folder that matches only a publisher name; never `Microsoft`, whose
+  children stay Unknown); dot-folders in the profile root; every folder in `AppData\Local\Packages`. Personal,
+  protected (any scope), cache/temp/logs/crash-dump, link, unread cloud and inaccessible folders are not candidates.
+- `LeftoverClassifier` returns a `LeftoverMap` (folder → `LeftoverVerdict`): `InUse` (an evidence match or an
+  ownership rule whose hints match always wins), `Leftover` with `High` / `Medium` / `Low`, or `Unknown`. A folder is
+  "not changed" when its newest file is exactly 6 months old or older. Store package folders: High when the family is
+  not installed and unchanged for 6 months, otherwise Medium. Ownership rule with `requiresInstallation: true` and no
+  evidence: High; with `false`: Unknown. Other candidates without evidence: Medium (unchanged for 6 months or empty)
+  or Low. Two safety limits beyond the task text: no Leftover verdict at all when any evidence source failed, and a
+  dot-folder without an ownership rule is rated Low at most (`.ssh`, `.docker`, ... are tool settings).
+- `ScanService` runs the classifier once after rule matching and stores the map in `ScanResult.Leftovers`. Results
+  (D-047): `FolderRow.Leftover` feeds `FolderTagText` (`Leftover: High|Medium|Low`, `In use: <program>`; the tooltip
+  holds the explanation; Unknown shows nothing). The dedicated findings page follows in T-008.
+
 ### Classification (planned)
-Combines items + evidence + rules into **findings**. Each finding has:
+The findings page (T-008) will combine items, evidence, rules and the leftover verdicts into **findings**. Each finding has:
 - a category (e.g. orphaned program data, cache, temp, unknown);
 - a confidence level (High / Medium / Low / Unknown);
 - a human-readable explanation of the evidence ("why we think so").

@@ -270,7 +270,7 @@
           "Spotify"
         ]
       },
-      "description": "Offline song cache of the Spotify desktop app.",
+      "description": "Offline song cache of the Spotify desktop app. Spotify may download offline songs again after you clear it.",
       "source": "Spotify support: cache location on Windows"
     },
     {

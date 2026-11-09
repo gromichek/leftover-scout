@@ -39,7 +39,7 @@ public class RuleLoaderTests
     {
         RuleLoadResult result = Load("""
             { "id": "o-hints", "kind": "ownership", "paths": ["{RoamingAppData}\\sample"],
-              "program": { "displayName": "Sample", "names": ["Sample App"], "publishers": ["Sample Inc."],
+              "program": { "displayName": "Sample", "requiresInstallation": true, "names": ["Sample App"], "publishers": ["Sample Inc."],
                            "uninstallKeys": ["SampleKey"], "packageFamilies": ["Sample.Family_abc"], "programFolders": ["Sample"] },
               "description": "d", "source": "s" }
             """);
@@ -156,9 +156,42 @@ public class RuleLoaderTests
     }
 
     [Fact]
+    public void Load_OwnershipWithoutRequiresInstallation_SkipsTheRule()
+    {
+        RuleLoadResult result = Load("""
+            { "id": "no-flag", "kind": "ownership", "paths": ["{Profile}\\a"],
+              "program": { "displayName": "Sample" }, "description": "d", "source": "s" }
+            """);
+
+        AssertSkipped(result, "no-flag", "requiresInstallation");
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Load_RequiresInstallation_IsKept(bool value)
+    {
+        RuleLoadResult result = Load(Owner("o-flag", @"{Profile}\a", requiresInstallation: value));
+
+        Assert.Empty(result.Errors);
+        Assert.Equal(value, result.RuleSet.Rules.Single().Program!.RequiresInstallation);
+    }
+
+    [Fact]
+    public void Load_CacheProgramWithoutRequiresInstallation_IsValid()
+    {
+        RuleLoadResult result = Load("""
+            { "id": "c-flag", "kind": "cache", "paths": ["{Profile}\\a"], "category": "cache",
+              "program": { "displayName": "Sample" }, "description": "d", "source": "s" }
+            """);
+
+        Assert.Empty(result.Errors);
+    }
+
+    [Fact]
     public void Load_ProgramWithoutDisplayName_SkipsTheRule()
     {
-        RuleLoadResult result = Load("""{ "id": "no-name", "kind": "ownership", "paths": ["{Profile}\\a"], "program": { "names": ["x"] }, "description": "d", "source": "s" }""");
+        RuleLoadResult result = Load("""{ "id": "no-name", "kind": "ownership", "paths": ["{Profile}\\a"], "program": { "requiresInstallation": true, "names": ["x"] }, "description": "d", "source": "s" }""");
 
         AssertSkipped(result, "no-name", "displayName");
     }
@@ -173,7 +206,7 @@ public class RuleLoaderTests
     {
         RuleLoadResult result = Load($$"""
             { "id": "wild-hint", "kind": "ownership", "paths": ["{Profile}\\a"],
-              "program": { "displayName": "Sample", "{{list}}": ["Sam*"] }, "description": "d", "source": "s" }
+              "program": { "displayName": "Sample", "requiresInstallation": true, "{{list}}": ["Sam*"] }, "description": "d", "source": "s" }
             """);
 
         AssertSkipped(result, "wild-hint", "wildcard");

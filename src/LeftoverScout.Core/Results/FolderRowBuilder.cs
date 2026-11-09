@@ -1,3 +1,4 @@
+using LeftoverScout.Core.Classification;
 using LeftoverScout.Core.Rules;
 using LeftoverScout.Core.Scanning;
 
@@ -17,7 +18,8 @@ public static class FolderRowBuilder
     /// </summary>
     /// <param name="folder">The folder to show.</param>
     /// <param name="ruleMatches">The rules matched for the scan (decision D-043); null shows no rule labels.</param>
-    public static IReadOnlyList<FolderRow> Build(FolderNode folder, RuleMatchMap? ruleMatches = null)
+    /// <param name="leftovers">The leftover verdicts of the scan (decision D-047); null shows no leftover labels.</param>
+    public static IReadOnlyList<FolderRow> Build(FolderNode folder, RuleMatchMap? ruleMatches = null, LeftoverMap? leftovers = null)
     {
         ArgumentNullException.ThrowIfNull(folder);
 
@@ -42,6 +44,7 @@ public static class FolderRowBuilder
                 CanOpen(child))
             {
                 RuleMatch = ruleMatches?.Get(child),
+                Leftover = leftovers?.Get(child),
             });
         }
 
