@@ -1,5 +1,6 @@
 using LeftoverScout.App.ViewModels;
 using LeftoverScout.Core.Formatting;
+using LeftoverScout.Core.Rules;
 using LeftoverScout.Core.Scanning;
 using LeftoverScout.Core.Shell;
 using LeftoverScout.Core.Storage;
@@ -304,6 +305,38 @@ public class ResultsPageViewModelTests
 
         // A bigger folder in bytes must sort above a smaller one even when its text would sort lower.
         Assert.True(RowNamed(viewModel, "AppData").Size < videos.Size);
+    }
+
+    [Fact]
+    public void Rows_WithRuleMatches_ShowRuleLabelAndExplanation()
+    {
+        ScanResult scan = Result();
+        RuleLoadResult rules = RuleLoader.Load([new RuleFile("test.json", """
+            { "schemaVersion": 1, "rules": [
+              { "id": "protect-appdata", "kind": "protected", "paths": ["{Profile}\\AppData"], "scope": "folder",
+                "description": "The AppData folder is protected.", "source": "test" },
+              { "id": "sample-cache", "kind": "cache", "paths": ["{LocalAppData}"], "category": "cache", "scope": "folder",
+                "program": { "displayName": "Sample App" }, "description": "Sample cache.", "source": "test" } ] }
+            """)]);
+        Assert.Empty(rules.Errors);
+        scan = scan with { RuleMatches = new RuleMatcher(rules.RuleSet).Match(scan.Root!, TestContext.Current.CancellationToken) };
+        var (viewModel, _, _, _) = Create(scan);
+
+        FolderRowViewModel appData = RowNamed(viewModel, "AppData");
+        Assert.Equal("Protected", appData.NotesText);
+        Assert.Contains("never offers", appData.NotesTooltip, StringComparison.Ordinal);
+        Assert.Contains("The AppData folder is protected.", appData.NotesTooltip, StringComparison.Ordinal);
+
+        viewModel.OpenFolderCommand.Execute(appData);
+        Assert.Equal("Cache: Sample App", RowNamed(viewModel, "Local").NotesText);
+    }
+
+    [Fact]
+    public void Rows_WithoutRuleMatches_ShowNoRuleLabel()
+    {
+        var (viewModel, _, _, _) = Create(Result());
+
+        Assert.Equal(string.Empty, RowNamed(viewModel, "AppData").NotesText);
     }
 
     [Fact]

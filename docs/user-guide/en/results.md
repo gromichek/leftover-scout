@@ -49,13 +49,39 @@ folder has no files of its own.
 
 | Tag | Meaning |
 |---|---|
-| **Personal** | One of your own folders (Documents, Desktop, Pictures, Videos, Music, Downloads, OneDrive). It is measured, but it will be protected from cleanup. |
+| **Personal** | One of your own folders (Documents, Desktop, Pictures, Videos, Music, Downloads, OneDrive). It is measured, and it is protected: personal folders are never offered for cleanup. |
 | **Link** | A junction or symbolic link. It is not followed and not counted, so nothing is counted twice. Windows creates a few old ones (such as `Application Data`) in every profile. |
 | **Cloud** | An online-only OneDrive folder that is not available on this computer. It was not read, so nothing is downloaded. |
 | **Inaccessible** | The folder could not be read completely (access denied or another error). Its size may be too small. |
 
 Rows tagged **Link** or **Cloud** cannot be opened. An **Inaccessible** folder opens only if some of its
 content could be read.
+
+### Labels from the built-in rules
+
+After each scan, LeftoverScout compares the folders with a built-in list of well-known locations. When a folder
+matches, a label is added to **Notes**. These labels only describe the folder: **nothing is selected or deleted.**
+
+| Label | Meaning |
+|---|---|
+| **Protected** | The folder must never be offered for deletion. This covers the `AppData` folders themselves and important Windows data such as saved credentials, keys and certificates, the Start menu and the Store app links. **Personal** folders are protected too, even though they show the **Personal** tag instead. |
+| **Cache: …** | A cache of the program named after the colon (for example **Cache: Discord**). A program can download or build it again. |
+| **Temp** | Temporary files. |
+| **Logs** | Log files. |
+| **Crash dumps** | Files that Windows or a program wrote after a failure. |
+| **Owner: …** | The folder belongs to the program named after the colon (for example **Owner: Discord**). It does not tell you whether the program is still installed. |
+
+Protection and labels apply to a folder and, for most rules, to everything inside it, so subfolders of a protected
+folder are protected too. If several rules match, **Protected** wins; otherwise the most specific rule is shown.
+
+Hover over the **Notes** cell: the tooltip explains the label and lists the description of every matching rule,
+the most important first.
+
+### How does LeftoverScout know?
+
+The rules are built into the app: a list of well-known locations of Windows and popular programs, each with a short
+description. LeftoverScout works fully offline and never downloads rules. The list is small today and will grow
+with new versions. A folder without a label is simply not in the list; that says nothing about whether it is needed.
 
 ## Tab Large files
 
@@ -87,7 +113,8 @@ select a row.
 - Sort by **Size** and open the biggest folders first.
 - `AppData\Local` usually holds caches and the data of installed programs; `AppData\Roaming` holds settings.
 - A large **Files** count with a small size usually means many tiny cache files.
-- Big folders tagged **Personal** are your own documents and media. Leave them alone.
+- Big folders tagged **Personal** are your own documents and media. Leave them alone; they are protected.
+- **Cache**, **Temp**, **Logs** and **Crash dumps** labels show where space is spent on data that can be recreated. This version does not delete anything.
 - Sizes are logical file sizes and do not match Explorer to the byte, see [Scan](scan.md).
 
 Next: [Cleanup](cleanup.md) (planned).

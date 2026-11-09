@@ -36,7 +36,7 @@ tests/
   LeftoverScout.Core.Tests/
   LeftoverScout.Windows.Tests/
   LeftoverScout.App.Tests/      View model tests (added in T-001).
-rules/                      (planned) JSON knowledge base shipped with the app.
+rules/                      JSON knowledge base, embedded into Core (T-005). See docs/RULES.md.
 docs/                       Project documents, tasks, user guide.
 ```
 
@@ -147,12 +147,26 @@ The registry is **only read** — LeftoverScout never cleans the registry (D-002
   `IFolderExistence` says the folder exists) and "Copy name". The view applies the default sort and its header arrow
   with `DataGridSorting` (also used for the Size column of Results).
 
-### Rules (planned)
-An offline JSON knowledge base in `rules/` (D-005), validated at load time:
-- *ownership rules*: "folder pattern X belongs to program Y (publisher, uninstall key hints)";
-- *known caches*: locations that are safe to clear;
-- *protected locations*: never offered for deletion.
-Rules are data, so the community can extend them via PRs.
+### Rules (T-005)
+An offline JSON knowledge base in `rules/` (D-005, D-040 … D-043), embedded into `LeftoverScout.Core` with the logical
+names `Rules/<file>.json` (not copied). Format and contributor guide: `docs/RULES.md`. Code lives in
+`LeftoverScout.Core.Rules`:
+- three kinds: *ownership* (folder → program with match hints), *cache* (category cache / temp / logs / crashDumps)
+  and *protected* (never offered for deletion);
+- `PathPattern`: one token (`{Profile}`, `{RoamingAppData}`, `{LocalAppData}`, `{LocalLow}`) followed by literal names or
+  `*` (exactly one folder name); no regular expressions. Tokens are resolved against the profile root of the scan, never
+  against `Environment` paths (D-003);
+- `RuleLoader` parses the files with `System.Text.Json` (`UnmappedMemberHandling = Disallow`), validates them and returns
+  a `RuleLoadResult` (valid `RuleSet` plus `RuleValidationError`s). An invalid rule is skipped, never fatal;
+  `EmbeddedRuleLoader` logs the skipped rule ids. A `cache` or `ownership` rule that can lie inside a `subtree`-protected
+  path is rejected: protection is absolute;
+- `RuleMatcher` indexes the patterns in a trie and walks the scan tree once, producing a `RuleMatchMap` (per folder a
+  `FolderRuleMatch`). Protected wins, then direct before inherited matches, then more literal segments. Personal folders
+  (`FolderNode.IsPersonal`) are protected with subtree scope by a built-in rule (D-020);
+- `ScanService` runs the matcher once after each completed scan and stores the map in `ScanResult.RuleMatches`;
+  the Results page only reads it (no re-matching while navigating). A matcher failure is logged and leaves the map empty.
+- Results (D-043): `FolderRow.RuleMatch` feeds `FolderTagText.RuleLabel/Describe/Explain` (`Protected`, `Cache: <program>`,
+  `Temp`, `Logs`, `Crash dumps`, `Owner: <program>` and a tooltip with the rule descriptions).
 
 ### Classification (planned)
 Combines items + evidence + rules into **findings**. Each finding has:

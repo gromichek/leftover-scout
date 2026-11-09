@@ -1,0 +1,614 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    {
+      "id": "windows-user-temp",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\Temp"
+      ],
+      "category": "temp",
+      "description": "Temporary files of programs for your account; most can be recreated.",
+      "source": "Well-known Windows user temp folder (the TEMP variable)"
+    },
+    {
+      "id": "windows-crash-dumps",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\CrashDumps"
+      ],
+      "category": "crashDumps",
+      "description": "Crash dumps that Windows saves when a program fails.",
+      "source": "Windows Error Reporting local dumps default folder (Microsoft Learn)"
+    },
+    {
+      "id": "windows-inet-cache",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\Microsoft\\Windows\\INetCache"
+      ],
+      "category": "cache",
+      "description": "Cache of Windows web components and older Microsoft browsers.",
+      "source": "Well-known Windows location"
+    },
+    {
+      "id": "windows-thumbnail-cache",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\Microsoft\\Windows\\Explorer"
+      ],
+      "category": "cache",
+      "description": "Thumbnail and icon caches of File Explorer; Windows recreates them.",
+      "source": "Well-known Windows location of thumbcache files"
+    },
+    {
+      "id": "chrome-cache",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\Google\\Chrome\\User Data\\*\\Cache",
+        "{LocalAppData}\\Google\\Chrome\\User Data\\*\\Code Cache"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "Google Chrome",
+        "names": [
+          "Google Chrome"
+        ],
+        "publishers": [
+          "Google LLC"
+        ],
+        "uninstallKeys": [
+          "Google Chrome"
+        ],
+        "programFolders": [
+          "Chrome"
+        ]
+      },
+      "description": "Web page and script cache of Google Chrome.",
+      "source": "Well-known Chrome user data layout"
+    },
+    {
+      "id": "chrome-gpu-cache",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\Google\\Chrome\\User Data\\*\\GPUCache",
+        "{LocalAppData}\\Google\\Chrome\\User Data\\ShaderCache",
+        "{LocalAppData}\\Google\\Chrome\\User Data\\GrShaderCache"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "Google Chrome",
+        "names": [
+          "Google Chrome"
+        ],
+        "publishers": [
+          "Google LLC"
+        ],
+        "uninstallKeys": [
+          "Google Chrome"
+        ],
+        "programFolders": [
+          "Chrome"
+        ]
+      },
+      "description": "Graphics shader cache of Google Chrome.",
+      "source": "Well-known Chrome user data layout"
+    },
+    {
+      "id": "edge-cache",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\Microsoft\\Edge\\User Data\\*\\Cache",
+        "{LocalAppData}\\Microsoft\\Edge\\User Data\\*\\Code Cache"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "Microsoft Edge",
+        "names": [
+          "Microsoft Edge"
+        ],
+        "publishers": [
+          "Microsoft Corporation"
+        ],
+        "programFolders": [
+          "Edge"
+        ]
+      },
+      "description": "Web page and script cache of Microsoft Edge.",
+      "source": "Well-known Edge user data layout"
+    },
+    {
+      "id": "edge-gpu-cache",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\Microsoft\\Edge\\User Data\\*\\GPUCache",
+        "{LocalAppData}\\Microsoft\\Edge\\User Data\\ShaderCache",
+        "{LocalAppData}\\Microsoft\\Edge\\User Data\\GrShaderCache"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "Microsoft Edge",
+        "names": [
+          "Microsoft Edge"
+        ],
+        "publishers": [
+          "Microsoft Corporation"
+        ],
+        "programFolders": [
+          "Edge"
+        ]
+      },
+      "description": "Graphics shader cache of Microsoft Edge.",
+      "source": "Well-known Edge user data layout"
+    },
+    {
+      "id": "firefox-cache",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\Mozilla\\Firefox\\Profiles\\*\\cache2"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "Mozilla Firefox",
+        "names": [
+          "Mozilla Firefox"
+        ],
+        "publishers": [
+          "Mozilla"
+        ],
+        "uninstallKeys": [
+          "Mozilla Firefox"
+        ],
+        "programFolders": [
+          "Mozilla Firefox"
+        ]
+      },
+      "description": "Web page cache of Mozilla Firefox.",
+      "source": "Mozilla support: Firefox profiles and cache location"
+    },
+    {
+      "id": "discord-cache",
+      "kind": "cache",
+      "paths": [
+        "{RoamingAppData}\\discord\\Cache",
+        "{RoamingAppData}\\discord\\Code Cache",
+        "{RoamingAppData}\\discord\\GPUCache"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "Discord",
+        "names": [
+          "Discord"
+        ],
+        "publishers": [
+          "Discord Inc."
+        ],
+        "uninstallKeys": [
+          "Discord"
+        ],
+        "programFolders": [
+          "Discord"
+        ]
+      },
+      "description": "Cache of the Discord desktop app.",
+      "source": "Well-known Discord (Electron) data layout"
+    },
+    {
+      "id": "teams-classic-cache",
+      "kind": "cache",
+      "paths": [
+        "{RoamingAppData}\\Microsoft\\Teams\\Cache",
+        "{RoamingAppData}\\Microsoft\\Teams\\Application Cache",
+        "{RoamingAppData}\\Microsoft\\Teams\\blob_storage",
+        "{RoamingAppData}\\Microsoft\\Teams\\GPUCache",
+        "{RoamingAppData}\\Microsoft\\Teams\\tmp"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "Microsoft Teams",
+        "names": [
+          "Microsoft Teams"
+        ],
+        "publishers": [
+          "Microsoft Corporation"
+        ],
+        "uninstallKeys": [
+          "Teams"
+        ],
+        "programFolders": [
+          "Teams"
+        ]
+      },
+      "description": "Cache of the classic Microsoft Teams app.",
+      "source": "Microsoft Learn: clear the Teams client cache"
+    },
+    {
+      "id": "zoom-logs",
+      "kind": "cache",
+      "paths": [
+        "{RoamingAppData}\\Zoom\\logs"
+      ],
+      "category": "logs",
+      "program": {
+        "displayName": "Zoom",
+        "names": [
+          "Zoom",
+          "Zoom Workplace"
+        ],
+        "publishers": [
+          "Zoom Video Communications, Inc."
+        ],
+        "programFolders": [
+          "Zoom"
+        ]
+      },
+      "description": "Log files of the Zoom app.",
+      "source": "Zoom support: log file location"
+    },
+    {
+      "id": "spotify-cache",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\Spotify\\Data"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "Spotify",
+        "names": [
+          "Spotify"
+        ],
+        "publishers": [
+          "Spotify AB"
+        ],
+        "uninstallKeys": [
+          "Spotify"
+        ],
+        "packageFamilies": [
+          "SpotifyAB.SpotifyMusic_zpdnekdrzrea0"
+        ],
+        "programFolders": [
+          "Spotify"
+        ]
+      },
+      "description": "Offline song cache of the Spotify desktop app.",
+      "source": "Spotify support: cache location on Windows"
+    },
+    {
+      "id": "steam-html-cache",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\Steam\\htmlcache"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "Steam",
+        "names": [
+          "Steam"
+        ],
+        "publishers": [
+          "Valve Corporation"
+        ],
+        "uninstallKeys": [
+          "Steam"
+        ],
+        "programFolders": [
+          "Steam"
+        ]
+      },
+      "description": "Web content cache of the Steam client.",
+      "source": "Well-known Steam client folder"
+    },
+    {
+      "id": "vscode-cache",
+      "kind": "cache",
+      "paths": [
+        "{RoamingAppData}\\Code\\Cache",
+        "{RoamingAppData}\\Code\\CachedData",
+        "{RoamingAppData}\\Code\\Code Cache",
+        "{RoamingAppData}\\Code\\GPUCache"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "Visual Studio Code",
+        "names": [
+          "Microsoft Visual Studio Code",
+          "Visual Studio Code"
+        ],
+        "publishers": [
+          "Microsoft Corporation"
+        ],
+        "programFolders": [
+          "Microsoft VS Code"
+        ]
+      },
+      "description": "Caches of Visual Studio Code.",
+      "source": "Visual Studio Code user data layout (Electron)"
+    },
+    {
+      "id": "vscode-logs",
+      "kind": "cache",
+      "paths": [
+        "{RoamingAppData}\\Code\\logs"
+      ],
+      "category": "logs",
+      "program": {
+        "displayName": "Visual Studio Code",
+        "names": [
+          "Microsoft Visual Studio Code",
+          "Visual Studio Code"
+        ],
+        "publishers": [
+          "Microsoft Corporation"
+        ],
+        "programFolders": [
+          "Microsoft VS Code"
+        ]
+      },
+      "description": "Log files of Visual Studio Code.",
+      "source": "Visual Studio Code user data layout (Electron)"
+    },
+    {
+      "id": "jetbrains-caches",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\JetBrains\\*\\caches"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "JetBrains IDE",
+        "names": [
+          "JetBrains"
+        ],
+        "publishers": [
+          "JetBrains s.r.o."
+        ],
+        "programFolders": [
+          "JetBrains"
+        ]
+      },
+      "description": "Index and cache data of a JetBrains IDE; the IDE rebuilds it.",
+      "source": "JetBrains documentation: IDE directories (system directory)"
+    },
+    {
+      "id": "jetbrains-logs",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\JetBrains\\*\\log"
+      ],
+      "category": "logs",
+      "program": {
+        "displayName": "JetBrains IDE",
+        "names": [
+          "JetBrains"
+        ],
+        "publishers": [
+          "JetBrains s.r.o."
+        ],
+        "programFolders": [
+          "JetBrains"
+        ]
+      },
+      "description": "Log files of a JetBrains IDE.",
+      "source": "JetBrains documentation: IDE directories (system directory)"
+    },
+    {
+      "id": "nvidia-shader-cache",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\NVIDIA\\DXCache",
+        "{LocalAppData}\\NVIDIA\\GLCache",
+        "{LocalAppData}\\NVIDIA Corporation\\NV_Cache",
+        "{LocalLow}\\NVIDIA\\PerDriverVersion\\DXCache"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "NVIDIA graphics driver",
+        "names": [
+          "NVIDIA Graphics Driver"
+        ],
+        "publishers": [
+          "NVIDIA Corporation"
+        ],
+        "programFolders": [
+          "NVIDIA Corporation"
+        ]
+      },
+      "description": "Graphics shader cache of the NVIDIA driver; the driver rebuilds it.",
+      "source": "NVIDIA driver shader cache locations"
+    },
+    {
+      "id": "amd-shader-cache",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\AMD\\DxCache",
+        "{LocalAppData}\\AMD\\GLCache",
+        "{LocalAppData}\\AMD\\VkCache"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "AMD graphics driver",
+        "names": [
+          "AMD Software"
+        ],
+        "publishers": [
+          "Advanced Micro Devices, Inc."
+        ],
+        "programFolders": [
+          "AMD"
+        ]
+      },
+      "description": "Graphics shader cache of the AMD driver; the driver rebuilds it.",
+      "source": "AMD driver shader cache locations"
+    },
+    {
+      "id": "npm-cache",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\npm-cache"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "npm",
+        "names": [
+          "npm",
+          "Node.js"
+        ],
+        "publishers": [
+          "OpenJS Foundation"
+        ],
+        "programFolders": [
+          "nodejs"
+        ]
+      },
+      "description": "Download cache of npm.",
+      "source": "npm documentation: npm cache (default folder on Windows)"
+    },
+    {
+      "id": "nuget-packages",
+      "kind": "cache",
+      "paths": [
+        "{Profile}\\.nuget\\packages"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "NuGet",
+        "names": [
+          "NuGet"
+        ],
+        "publishers": [
+          "Microsoft Corporation"
+        ]
+      },
+      "description": "NuGet packages downloaded for .NET projects; they are restored again when needed.",
+      "source": "Microsoft Learn: manage the NuGet global-packages folder"
+    },
+    {
+      "id": "nuget-http-cache",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\NuGet\\v3-cache",
+        "{LocalAppData}\\NuGet\\plugins-cache"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "NuGet",
+        "names": [
+          "NuGet"
+        ],
+        "publishers": [
+          "Microsoft Corporation"
+        ]
+      },
+      "description": "Download cache of NuGet.",
+      "source": "Microsoft Learn: manage the NuGet cache folders"
+    },
+    {
+      "id": "pip-cache",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\pip\\Cache"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "pip",
+        "names": [
+          "pip",
+          "Python"
+        ],
+        "publishers": [
+          "Python Software Foundation"
+        ]
+      },
+      "description": "Download cache of pip, the Python package installer.",
+      "source": "pip documentation: caching (default folder on Windows)"
+    },
+    {
+      "id": "gradle-caches",
+      "kind": "cache",
+      "paths": [
+        "{Profile}\\.gradle\\caches",
+        "{Profile}\\.gradle\\wrapper\\dists"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "Gradle",
+        "names": [
+          "Gradle"
+        ],
+        "publishers": [
+          "Gradle Inc."
+        ]
+      },
+      "description": "Downloaded dependencies and Gradle distributions; they are downloaded again when needed.",
+      "source": "Gradle documentation: Gradle user home directory"
+    },
+    {
+      "id": "yarn-cache",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\Yarn\\Cache"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "Yarn",
+        "names": [
+          "Yarn"
+        ],
+        "publishers": [
+          "Yarn Contributors"
+        ]
+      },
+      "description": "Download cache of Yarn.",
+      "source": "Yarn documentation: cache folder on Windows"
+    },
+    {
+      "id": "visualstudio-component-cache",
+      "kind": "cache",
+      "paths": [
+        "{LocalAppData}\\Microsoft\\VisualStudio\\*\\ComponentModelCache"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "Visual Studio",
+        "names": [
+          "Microsoft Visual Studio"
+        ],
+        "publishers": [
+          "Microsoft Corporation"
+        ],
+        "programFolders": [
+          "Microsoft Visual Studio"
+        ]
+      },
+      "description": "Component cache of Visual Studio; it is rebuilt at the next start.",
+      "source": "Visual Studio documentation: component cache location"
+    },
+    {
+      "id": "slack-cache",
+      "kind": "cache",
+      "paths": [
+        "{RoamingAppData}\\Slack\\Cache",
+        "{RoamingAppData}\\Slack\\Code Cache",
+        "{RoamingAppData}\\Slack\\GPUCache"
+      ],
+      "category": "cache",
+      "program": {
+        "displayName": "Slack",
+        "names": [
+          "Slack"
+        ],
+        "publishers": [
+          "Slack Technologies"
+        ],
+        "uninstallKeys": [
+          "Slack"
+        ],
+        "programFolders": [
+          "slack"
+        ]
+      },
+      "description": "Cache of the Slack desktop app.",
+      "source": "Well-known Slack (Electron) data layout"
+    }
+  ]
+}

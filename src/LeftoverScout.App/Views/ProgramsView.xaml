@@ -105,7 +105,9 @@
 
         <TextBlock Margin="4,36,0,0"
                    VerticalAlignment="Top"
-                   Text="{Binding EmptyMessage}" />
+                   IsHitTestVisible="False"
+                   Text="{Binding EmptyMessage}"
+                   Visibility="{Binding HasEmptyMessage, Converter={StaticResource BooleanToVisibility}}" />
       </Grid>
 
       <TextBlock Grid.Row="5" Margin="0,8,0,0" Text="{Binding CountText}" />

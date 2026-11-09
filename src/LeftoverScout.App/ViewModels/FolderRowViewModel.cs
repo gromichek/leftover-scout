@@ -19,8 +19,8 @@ public sealed class FolderRowViewModel
         PercentText = string.Create(CultureInfo.CurrentCulture, $"{row.PercentOfParent:0.0} %");
         FilesText = row.FileCount.ToString("N0", CultureInfo.CurrentCulture);
         LastModifiedText = row.NewestWriteTimeUtc is { } utc ? ResultsFormat.LocalDateTime(utc) : string.Empty;
-        NotesText = FolderTagText.Describe(row.Tags);
-        NotesTooltip = FolderTagText.Explain(row.Tags);
+        NotesText = FolderTagText.Describe(row.Tags, row.RuleMatch);
+        NotesTooltip = FolderTagText.Explain(row.Tags, row.RuleMatch);
     }
 
     /// <summary>The underlying row.</summary>
@@ -56,10 +56,10 @@ public sealed class FolderRowViewModel
     /// <summary>Newest write time in local time, short date and time.</summary>
     public string LastModifiedText { get; }
 
-    /// <summary>Notes tags joined with ", ".</summary>
+    /// <summary>Notes tags and the rule label (decision D-043), joined with ", ".</summary>
     public string NotesText { get; }
 
-    /// <summary>One sentence per tag; empty when there is no tag.</summary>
+    /// <summary>One sentence per tag, then the matched rule descriptions; empty when there is nothing to show.</summary>
     public string NotesTooltip { get; }
 
     /// <summary>True when double-click or Enter opens the row.</summary>

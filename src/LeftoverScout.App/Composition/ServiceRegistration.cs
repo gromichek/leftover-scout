@@ -5,6 +5,7 @@ using LeftoverScout.App.ViewModels;
 using LeftoverScout.Core.Evidence;
 using LeftoverScout.Core.Help;
 using LeftoverScout.Core.Logging;
+using LeftoverScout.Core.Rules;
 using LeftoverScout.Core.Scanning;
 using LeftoverScout.Core.Settings;
 using LeftoverScout.Core.Shell;
@@ -66,6 +67,10 @@ public static class ServiceRegistration
         services.AddSingleton<IInstalledProgramSource, ProgramFolderSource>();
         services.AddSingleton<IInstalledProgramSource, StartMenuSource>();
         services.AddSingleton<EvidenceCollector>();
+
+        // Rules knowledge base (embedded JSON, validated at load time; invalid rules are skipped and logged).
+        services.AddSingleton(provider => EmbeddedRuleLoader.Load(provider.GetRequiredService<ILogger<RuleSet>>()));
+        services.AddSingleton<RuleMatcher>();
 
         services.AddSingleton<IScanService, ScanService>();
         services.AddSingleton<IHelpSource, EmbeddedHelpSource>();

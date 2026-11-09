@@ -1,0 +1,309 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    {
+      "id": "chrome-data",
+      "kind": "ownership",
+      "paths": [
+        "{LocalAppData}\\Google\\Chrome"
+      ],
+      "program": {
+        "displayName": "Google Chrome",
+        "names": [
+          "Google Chrome"
+        ],
+        "publishers": [
+          "Google LLC"
+        ],
+        "uninstallKeys": [
+          "Google Chrome"
+        ],
+        "programFolders": [
+          "Chrome"
+        ]
+      },
+      "description": "Data of Google Chrome: profiles, settings and caches.",
+      "source": "Well-known Chrome user data layout"
+    },
+    {
+      "id": "edge-data",
+      "kind": "ownership",
+      "paths": [
+        "{LocalAppData}\\Microsoft\\Edge"
+      ],
+      "program": {
+        "displayName": "Microsoft Edge",
+        "names": [
+          "Microsoft Edge"
+        ],
+        "publishers": [
+          "Microsoft Corporation"
+        ],
+        "programFolders": [
+          "Edge"
+        ]
+      },
+      "description": "Data of Microsoft Edge: profiles, settings and caches.",
+      "source": "Well-known Edge user data layout"
+    },
+    {
+      "id": "firefox-data",
+      "kind": "ownership",
+      "paths": [
+        "{RoamingAppData}\\Mozilla\\Firefox",
+        "{LocalAppData}\\Mozilla\\Firefox"
+      ],
+      "program": {
+        "displayName": "Mozilla Firefox",
+        "names": [
+          "Mozilla Firefox"
+        ],
+        "publishers": [
+          "Mozilla"
+        ],
+        "uninstallKeys": [
+          "Mozilla Firefox"
+        ],
+        "programFolders": [
+          "Mozilla Firefox"
+        ]
+      },
+      "description": "Data of Mozilla Firefox: profiles, settings and caches.",
+      "source": "Mozilla support: Firefox profile locations"
+    },
+    {
+      "id": "discord-data",
+      "kind": "ownership",
+      "paths": [
+        "{RoamingAppData}\\discord",
+        "{LocalAppData}\\Discord"
+      ],
+      "program": {
+        "displayName": "Discord",
+        "names": [
+          "Discord"
+        ],
+        "publishers": [
+          "Discord Inc."
+        ],
+        "uninstallKeys": [
+          "Discord"
+        ],
+        "programFolders": [
+          "Discord"
+        ]
+      },
+      "description": "Data and program files of the Discord desktop app.",
+      "source": "Well-known Discord data layout"
+    },
+    {
+      "id": "teams-classic-data",
+      "kind": "ownership",
+      "paths": [
+        "{RoamingAppData}\\Microsoft\\Teams",
+        "{LocalAppData}\\Microsoft\\Teams"
+      ],
+      "program": {
+        "displayName": "Microsoft Teams",
+        "names": [
+          "Microsoft Teams"
+        ],
+        "publishers": [
+          "Microsoft Corporation"
+        ],
+        "uninstallKeys": [
+          "Teams"
+        ],
+        "programFolders": [
+          "Teams"
+        ]
+      },
+      "description": "Data and program files of the classic Microsoft Teams app.",
+      "source": "Well-known Teams data layout"
+    },
+    {
+      "id": "teams-new-data",
+      "kind": "ownership",
+      "paths": [
+        "{LocalAppData}\\Packages\\MSTeams_8wekyb3d8bbwe"
+      ],
+      "program": {
+        "displayName": "Microsoft Teams",
+        "names": [
+          "Microsoft Teams"
+        ],
+        "publishers": [
+          "Microsoft Corporation"
+        ],
+        "packageFamilies": [
+          "MSTeams_8wekyb3d8bbwe"
+        ]
+      },
+      "description": "Data of the new Microsoft Teams (Microsoft Store app).",
+      "source": "Microsoft Store package family name of the new Teams"
+    },
+    {
+      "id": "zoom-data",
+      "kind": "ownership",
+      "paths": [
+        "{RoamingAppData}\\Zoom"
+      ],
+      "program": {
+        "displayName": "Zoom",
+        "names": [
+          "Zoom",
+          "Zoom Workplace"
+        ],
+        "publishers": [
+          "Zoom Video Communications, Inc."
+        ],
+        "programFolders": [
+          "Zoom"
+        ]
+      },
+      "description": "Data of the Zoom app.",
+      "source": "Well-known Zoom data layout"
+    },
+    {
+      "id": "spotify-data",
+      "kind": "ownership",
+      "paths": [
+        "{RoamingAppData}\\Spotify",
+        "{LocalAppData}\\Spotify",
+        "{LocalAppData}\\Packages\\SpotifyAB.SpotifyMusic_zpdnekdrzrea0"
+      ],
+      "program": {
+        "displayName": "Spotify",
+        "names": [
+          "Spotify"
+        ],
+        "publishers": [
+          "Spotify AB"
+        ],
+        "uninstallKeys": [
+          "Spotify"
+        ],
+        "packageFamilies": [
+          "SpotifyAB.SpotifyMusic_zpdnekdrzrea0"
+        ],
+        "programFolders": [
+          "Spotify"
+        ]
+      },
+      "description": "Data of the Spotify desktop app.",
+      "source": "Well-known Spotify data layout"
+    },
+    {
+      "id": "steam-data",
+      "kind": "ownership",
+      "paths": [
+        "{LocalAppData}\\Steam"
+      ],
+      "program": {
+        "displayName": "Steam",
+        "names": [
+          "Steam"
+        ],
+        "publishers": [
+          "Valve Corporation"
+        ],
+        "uninstallKeys": [
+          "Steam"
+        ],
+        "programFolders": [
+          "Steam"
+        ]
+      },
+      "description": "Data of the Steam client.",
+      "source": "Well-known Steam client folder"
+    },
+    {
+      "id": "vscode-data",
+      "kind": "ownership",
+      "paths": [
+        "{RoamingAppData}\\Code",
+        "{Profile}\\.vscode",
+        "{LocalAppData}\\Programs\\Microsoft VS Code"
+      ],
+      "program": {
+        "displayName": "Visual Studio Code",
+        "names": [
+          "Microsoft Visual Studio Code",
+          "Visual Studio Code"
+        ],
+        "publishers": [
+          "Microsoft Corporation"
+        ],
+        "programFolders": [
+          "Microsoft VS Code"
+        ]
+      },
+      "description": "Settings, extensions and program files of Visual Studio Code.",
+      "source": "Visual Studio Code documentation: user data and extension folders"
+    },
+    {
+      "id": "jetbrains-data",
+      "kind": "ownership",
+      "paths": [
+        "{RoamingAppData}\\JetBrains",
+        "{LocalAppData}\\JetBrains"
+      ],
+      "program": {
+        "displayName": "JetBrains IDE",
+        "names": [
+          "JetBrains"
+        ],
+        "publishers": [
+          "JetBrains s.r.o."
+        ],
+        "programFolders": [
+          "JetBrains"
+        ]
+      },
+      "description": "Settings and caches of JetBrains IDEs.",
+      "source": "JetBrains documentation: IDE directories"
+    },
+    {
+      "id": "slack-data",
+      "kind": "ownership",
+      "paths": [
+        "{RoamingAppData}\\Slack"
+      ],
+      "program": {
+        "displayName": "Slack",
+        "names": [
+          "Slack"
+        ],
+        "publishers": [
+          "Slack Technologies"
+        ],
+        "uninstallKeys": [
+          "Slack"
+        ],
+        "programFolders": [
+          "slack"
+        ]
+      },
+      "description": "Data of the Slack desktop app.",
+      "source": "Well-known Slack data layout"
+    },
+    {
+      "id": "gradle-data",
+      "kind": "ownership",
+      "paths": [
+        "{Profile}\\.gradle"
+      ],
+      "program": {
+        "displayName": "Gradle",
+        "names": [
+          "Gradle"
+        ],
+        "publishers": [
+          "Gradle Inc."
+        ]
+      },
+      "description": "The Gradle user home: settings, caches and wrappers.",
+      "source": "Gradle documentation: Gradle user home directory"
+    }
+  ]
+}

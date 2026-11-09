@@ -131,6 +131,7 @@ public class ProgramsPageViewModelTests
         Assert.StartsWith("Collected ", viewModel.HeaderText, StringComparison.Ordinal);
         Assert.False(viewModel.HasErrors);
         Assert.Equal(string.Empty, viewModel.EmptyMessage);
+        Assert.False(viewModel.HasEmptyMessage);
     }
 
     [Fact]
@@ -193,6 +194,21 @@ public class ProgramsPageViewModelTests
         Assert.Empty(viewModel.Rows);
         Assert.Equal("0 of 5 programs", viewModel.CountText);
         Assert.Equal("No programs match the current filters.", viewModel.EmptyMessage);
+        Assert.True(viewModel.HasEmptyMessage);
+    }
+
+    [Fact]
+    public void EmptyMessage_ClearedAgain_IsNoLongerShown()
+    {
+        // The message sits over the grid: when there is nothing to say it must be collapsed so it cannot take mouse clicks.
+        var (viewModel, _, _, _) = Create(Snapshot());
+        viewModel.SearchText = "no such program";
+        Assert.True(viewModel.HasEmptyMessage);
+
+        viewModel.SearchText = string.Empty;
+
+        Assert.False(viewModel.HasEmptyMessage);
+        Assert.Equal(string.Empty, viewModel.EmptyMessage);
     }
 
     [Fact]

@@ -1,4 +1,5 @@
 using LeftoverScout.Core.Evidence;
+using LeftoverScout.Core.Rules;
 using Microsoft.Extensions.Logging;
 
 namespace LeftoverScout.Core.Scanning;
@@ -12,6 +13,7 @@ public sealed class ScanService : IScanService
     private readonly ProfileScanner _scanner;
     private readonly IPersonalFolderProvider _personalFolders;
     private readonly EvidenceCollector _evidenceCollector;
+    private readonly RuleMatcher _ruleMatcher;
     private readonly ILogger<ScanService> _logger;
     private readonly TimeProvider _timeProvider;
     private int _running;
@@ -22,12 +24,14 @@ public sealed class ScanService : IScanService
         IDirectoryReader reader,
         IPersonalFolderProvider personalFolders,
         EvidenceCollector evidenceCollector,
+        RuleMatcher ruleMatcher,
         ILogger<ScanService> logger,
         TimeProvider timeProvider)
     {
         _target = target;
         _personalFolders = personalFolders;
         _evidenceCollector = evidenceCollector;
+        _ruleMatcher = ruleMatcher;
         _logger = logger;
         _timeProvider = timeProvider;
         _scanner = new ProfileScanner(reader, timeProvider);
@@ -94,7 +98,7 @@ public sealed class ScanService : IScanService
 
             if (result.Root is { } root)
             {
-                result = result with { CompletedAt = _timeProvider.GetUtcNow(), Evidence = evidence };
+                result = result with { CompletedAt = _timeProvider.GetUtcNow(), Evidence = evidence, RuleMatches = MatchRules(root, cancellationToken) };
                 LastResult = result;
                 _logger.LogInformation(
                     "Scan completed in {DurationMs} ms: {Folders} folders, {Files} files, {LocalBytes} local bytes, {CloudBytes} cloud-only bytes, {Errors} errors.",
@@ -116,6 +120,26 @@ public sealed class ScanService : IScanService
         finally
         {
             Volatile.Write(ref _running, 0);
+        }
+    }
+
+    // Matches the rules once per completed scan. A failure here must not lose the scan result.
+    private RuleMatchMap? MatchRules(FolderNode root, CancellationToken cancellationToken)
+    {
+        try
+        {
+            RuleMatchMap matches = _ruleMatcher.Match(root, cancellationToken);
+            _logger.LogInformation("Rules matched {Folders} folders.", matches.Count);
+            return matches;
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            return null;
+        }
+        catch (Exception exception)
+        {
+            _logger.LogWarning("Rules could not be matched ({ExceptionType}).", exception.GetType().Name);
+            return null;
         }
     }
 

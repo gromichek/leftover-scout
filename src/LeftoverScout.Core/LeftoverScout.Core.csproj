@@ -10,6 +10,11 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
 
+  <!-- The rules knowledge base is embedded, not copied (decision D-040). Logical names: Rules/<file>.json -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\rules\*.json" LogicalName="Rules/%(Filename)%(Extension)" />
+  </ItemGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="LeftoverScout.Core.Tests" />
   </ItemGroup>

@@ -27,7 +27,7 @@ The status bar at the bottom shows "Scanning…", then "Scan completed in 42 s" 
 |---|---|
 | Local size | Size of all files stored on this computer (logical file size, as Explorer shows under "Size"). Hard-linked files are counted once per link. |
 | Cloud-only size | Size of files that exist only in the cloud (for example OneDrive "online-only" files). They take no space here and are **not** part of the local size. They are never downloaded by the scan. |
-| Personal folders | Local size of Documents, Desktop, Pictures, Videos, Music, Downloads and OneDrive. They are measured but marked personal, because later versions will never offer them for deletion. |
+| Personal folders | Local size of Documents, Desktop, Pictures, Videos, Music, Downloads and OneDrive. They are measured but marked personal and protected: they are never offered for deletion. |
 | Folders / Files | How many were found. |
 | Skipped links | Junctions and symbolic links. LeftoverScout does not follow them, so nothing is counted twice or outside your profile. Windows creates a few old ones (such as `Application Data`) in every profile, so this is normally not zero. |
 | Cloud folders not scanned | OneDrive folders that are not available on this computer. Listing them would make OneDrive download them, so LeftoverScout leaves them alone. |
