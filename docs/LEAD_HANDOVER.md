@@ -66,7 +66,8 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 See `docs/PROGRESS.md`. At the time of writing: T-004 accepted by the owner (finding #7 collected).
 T-006 accepted by the owner with finding #10 (Kaspersky shell-extension package wrongly High).
-T-006b merged (#28), owner's manual test pending. Next: T-008 (findings page) — ask the owner first.
+T-006b accepted by the owner (finding #11 collected). Next: T-008 (findings page) — questions asked
+to the owner 2026-11-09.
 
 Lead note: manual test steps must describe only what the help/app promise. **Owner preference (2026-11-09): do not remind about `git pull` / how to start the app in test steps — only what to check in the app.** (T-004 step 5 wrongly said Calculator might be hidden by the system filter; it is a normal Store app.)
 
