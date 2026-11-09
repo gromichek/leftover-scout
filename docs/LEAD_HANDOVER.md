@@ -65,7 +65,7 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 ## Current state
 
 See `docs/PROGRESS.md`. At the time of writing: T-004 accepted by the owner (finding #7 collected).
-T-005 (rules) task file written, waiting for the executor session; includes finding #7.
+T-005 merged (#21), owner's manual test pending. Next: T-006 (orphan detection) — ask the owner first.
 
 Lead note: manual test steps must describe only what the help/app promise. (T-004 step 5 wrongly said Calculator might be hidden by the system filter; it is a normal Store app.)
 
@@ -83,6 +83,11 @@ for CS0246 on `Stream`/`File`/`Path` first.
 
 - Personal marking (D-020) sets `FolderNode.IsPersonal` only on the personal folder itself, not
   on its descendants. Protection/classification (T-006, T-009) must check ancestors.
+- Ownership rules exist for tools that have **no installer** (e.g. Gradle `.gradle`); for npm/pip/NuGet
+  caches there may be no evidence at all. T-006 must not call such folders leftovers just because
+  no installed program matches — use the rule category (cache) instead, and treat missing evidence
+  as "unknown", not "orphan", unless the rule says the program is normally installed.
+- Review every rule in rule PRs (paths + description + source); wrong rules are the main data-loss risk.
 - The scanner keeps the last result in `IScanService.LastResult` (singleton) — T-003 reads it.
 
 ## Decision table
