@@ -334,17 +334,15 @@ public class ResultsPageViewModelTests
     }
 
     [Fact]
-    public void Rows_WithLeftovers_ShowLeftoverLabelAndExplanation()
+    public async Task Rows_WithLeftovers_ShowLeftoverLabelAndExplanation()
     {
         var reader = new MapReader()
             .Folder(Root, Dir("AppData"))
             .Folder(Root + @"\AppData", Dir("Roaming"))
             .Folder(Root + @"\AppData\Roaming", Dir("FooSoft"), Dir("Cache"))
             .Folder(Root + @"\AppData\Roaming\FooSoft", File("a.dat", 5, year: 2020));
-        ScanResult scan = new ProfileScanner(reader)
-            .ScanAsync(new ScanTarget(Root, true), new ScanOptions(), null, CancellationToken.None)
-            .GetAwaiter()
-            .GetResult();
+        ScanResult scan = await new ProfileScanner(reader)
+            .ScanAsync(new ScanTarget(Root, true), new ScanOptions(), null, TestContext.Current.CancellationToken);
         var evidence = new EvidenceSnapshot([], new Dictionary<ProgramSource, int>(), [], DateTimeOffset.UnixEpoch, TimeSpan.Zero);
         LeftoverMap leftovers = new LeftoverClassifier(TimeProvider.System).Classify(scan.Root!, evidence, RuleMatchMap.Empty, TestContext.Current.CancellationToken);
         scan = scan with { CompletedAt = new DateTimeOffset(2025, 3, 4, 12, 30, 0, TimeSpan.Zero), Leftovers = leftovers };

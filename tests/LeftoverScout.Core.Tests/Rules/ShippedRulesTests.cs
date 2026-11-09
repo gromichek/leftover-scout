@@ -40,7 +40,7 @@ public class ShippedRulesTests
     {
         Assert.All(
             Result.RuleSet.Rules.Where(rule => rule.Kind == RuleKind.Ownership),
-            rule => Assert.Equal(rule.Id != "gradle-data", rule.Program!.RequiresInstallation, rule.Id));
+            rule => Assert.True(rule.Program!.RequiresInstallation == (rule.Id != "gradle-data"), rule.Id));
     }
 
     [Fact]
