@@ -66,8 +66,7 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 See `docs/PROGRESS.md`. At the time of writing: T-004 accepted by the owner (finding #7 collected).
 T-006 accepted by the owner with finding #10 (Kaspersky shell-extension package wrongly High).
-Owner chose: T-006b (#10) first, then T-008 (findings page). T-006b task file written, waiting for
-the executor session.
+T-006b merged (#28), owner's manual test pending. Next: T-008 (findings page) — ask the owner first.
 
 Lead note: manual test steps must describe only what the help/app promise. **Owner preference (2026-11-09): do not remind about `git pull` / how to start the app in test steps — only what to check in the app.** (T-004 step 5 wrongly said Calculator might be hidden by the system filter; it is a normal Store app.)
 
@@ -162,4 +161,6 @@ for CS0246 on `Stream`/`File`/`Path` first.
   `git fetch origin +refs/heads/<branch>:refs/remotes/origin/<alias>`.
 - Executor sessions have no .NET SDK either, so their first CI run may fail on compile errors;
   the lead fixes small ones directly on the branch.
+- Executor sessions often cannot open Microsoft Learn (network blocked). When a task depends on docs,
+  the lead verifies them (WebSearch) during review and records the result with sources.
 - CI job logs are readable via `gh api repos/gromichek/leftover-scout/actions/jobs/<check-run id>/logs`.
