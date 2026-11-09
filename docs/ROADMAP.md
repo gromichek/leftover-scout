@@ -33,6 +33,7 @@ Goal: each suspicious item gets a category, a confidence level and an explanatio
 |---|---|---|
 | T-005 | Rules: JSON format, loader/validator/matcher, 40–60 initial rules, rule labels in Results Notes; includes finding #7 | ✅ |
 | T-006 | Leftover detection: candidates, normalized name matching vs evidence, High/Medium/Low with explanations, Results labels; personal folders by name (#9), Spotify description (#8) | ✅ |
+| T-006b | Safer package verdicts: complete Store query, vendor cross-check with installed programs, Microsoft packages max Medium (finding #10) | 📝 |
 | T-007 | Known caches and temp locations (categories that are safe to clear) | ⬜ |
 | T-008 | Classification UI: filters by category/confidence, details panel with evidence | ⬜ |
 

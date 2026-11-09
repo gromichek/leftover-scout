@@ -11,7 +11,7 @@ Owned by the lead. Updated after every merged PR.
 - T-004 (installed programs + Programs page) accepted by the owner (2026-11-09) with finding #7.
 - T-005 (rules knowledge base) accepted by the owner (2026-11-09) with finding #9.
 - T-006 (leftover detection) accepted by the owner (2026-11-09) with finding #10.
-- Next: T-007 (known caches) or T-008 (findings page) — to discuss with the owner.
+- Next task: T-006b (package verdicts, finding #10) — task file written; then T-008 (findings page).
 
 ## Done
 
@@ -41,6 +41,6 @@ is fixed immediately.
 | 6 | 2026-11-08 | Lead review #17 | Size of the Windows SDK projection assemblies in the published exe not measured yet; check when the release build (T-015) exists | T-015 |
 | 8 | 2026-11-09 | Lead review #21 | Rule `spotify-cache` (`{LocalAppData}\Spotify\Data`): sources disagree whether downloaded (offline) songs can live there. Description must warn: "Spotify downloads songs again after clearing". Not data loss, but the user must know | T-006 ✅ |
 | 9 | 2026-11-09 | Owner test T-005 | **Safety:** the owner's Documents is redirected to another drive; `{Profile}\Documents` still exists but is not marked Personal/protected (personal marking used only the current known-folder paths). Must be protected by name before any cleanup exists | T-006 ✅ |
-| 10 | 2026-11-09 | Owner test T-006 | `AppData\Local\Packages\Kaspersky.ShellEx22_<id>` is **Leftover: High** although Kaspersky is installed (registry). It is a shell-extension package installed with the desktop program, not returned by `PackageManager` for the user. Fix: when a package family is not found, compare the package name tokens and publisher with the evidence index; a match → not a leftover ("may belong to installed X"). Investigate why `FindPackagesForUser` misses it (docs only, no guessing). Must be done **before any cleanup** exists | next task |
+| 10 | 2026-11-09 | Owner test T-006 | `AppData\Local\Packages\Kaspersky.ShellEx22_<id>` is **Leftover: High** although Kaspersky is installed (registry). It is a shell-extension package installed with the desktop program, not returned by `PackageManager` for the user. Fix: when a package family is not found, compare the package name tokens and publisher with the evidence index; a match → not a leftover ("may belong to installed X"). Investigate why `FindPackagesForUser` misses it (docs only, no guessing). Must be done **before any cleanup** exists | T-006b |
 | 7 | 2026-11-09 | Owner test T-004 | Programs: the first row cannot be selected with the mouse and has no context menu (keyboard works). Cause: the empty-state `TextBlock` (`Margin="4,36,0,0"`, `ProgramsView.xaml`) lies over the grid and catches mouse clicks even when empty. Fix: `IsHitTestVisible="False"` and collapse it when there is no message; add the same check to any future overlay | T-005 ✅ |
 | 5 | 2026-11-07 | Executor note #14 | Results: the default sort (Size descending) is applied by pre-sorting; the Size column header shows no sort arrow until the user clicks a header | T-004 ✅ |
