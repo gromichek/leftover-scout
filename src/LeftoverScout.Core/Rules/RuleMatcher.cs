@@ -43,6 +43,82 @@ public sealed class RuleMatcher
                 node.Terminals.Add(new RuleMatch(rule, pattern, IsInherited: false));
             }
         }
+
+        MarkProtectedBelow(_trieRoot);
+    }
+
+    /// <summary>
+    /// Finds the rules of one folder from its path only, without a scan tree. Used by the cleanup guard as a check that
+    /// is independent of the scan result. Subtree rules of every ancestor are returned as inherited. The built-in
+    /// protection of personal folders is not part of this match (the guard checks personal folders itself).
+    /// </summary>
+    /// <param name="relativeSegments">The folder names below the profile root; empty for the root itself.</param>
+    /// <returns>The matching rules, or null when no rule applies.</returns>
+    public FolderRuleMatch? MatchPath(IReadOnlyList<string> relativeSegments)
+    {
+        ArgumentNullException.ThrowIfNull(relativeSegments);
+
+        TrieNode[] states = [_trieRoot];
+        List<RuleMatch>? inherited = null;
+        List<RuleMatch>? direct = null;
+        for (int depth = 0; depth <= relativeSegments.Count; depth++)
+        {
+            bool isFolder = depth == relativeSegments.Count;
+            foreach (TrieNode state in states)
+            {
+                foreach (RuleMatch terminal in state.Terminals)
+                {
+                    if (isFolder)
+                    {
+                        (direct ??= []).Add(terminal);
+                    }
+                    else if (terminal.Rule.Scope == RuleScope.Subtree)
+                    {
+                        (inherited ??= []).Add(terminal with { IsInherited = true });
+                    }
+                }
+            }
+
+            if (!isFolder)
+            {
+                states = Advance(states, relativeSegments[depth]);
+            }
+        }
+
+        return inherited is null && direct is null
+            ? null
+            : new FolderRuleMatch((inherited ?? []).Concat(direct ?? []));
+    }
+
+    /// <summary>
+    /// True when a protected rule names a folder strictly below the given folder, so that deleting the folder would
+    /// delete a protected folder. A <c>*</c> in a rule counts as matching.
+    /// </summary>
+    /// <param name="relativeSegments">The folder names below the profile root.</param>
+    public bool ContainsProtectedPath(IReadOnlyList<string> relativeSegments)
+    {
+        ArgumentNullException.ThrowIfNull(relativeSegments);
+
+        TrieNode[] states = [_trieRoot];
+        foreach (string segment in relativeSegments)
+        {
+            states = Advance(states, segment);
+        }
+
+        return states.Any(state => state.HasProtectedBelow);
+    }
+
+    private static bool MarkProtectedBelow(TrieNode node)
+    {
+        bool below = false;
+        foreach (TrieNode child in node.Children)
+        {
+            bool childHasProtected = child.Terminals.Any(match => match.Rule.Kind == RuleKind.Protected);
+            below |= MarkProtectedBelow(child) | childHasProtected;
+        }
+
+        node.HasProtectedBelow = below;
+        return below;
     }
 
     /// <summary>
@@ -126,6 +202,28 @@ public sealed class RuleMatcher
         public TrieNode? Wildcard { get; private set; }
 
         public List<RuleMatch> Terminals { get; } = [];
+
+        /// <summary>True when a protected rule ends somewhere strictly below this node.</summary>
+        public bool HasProtectedBelow { get; set; }
+
+        public IEnumerable<TrieNode> Children
+        {
+            get
+            {
+                if (Literals is not null)
+                {
+                    foreach (TrieNode literal in Literals.Values)
+                    {
+                        yield return literal;
+                    }
+                }
+
+                if (Wildcard is not null)
+                {
+                    yield return Wildcard;
+                }
+            }
+        }
 
         public TrieNode LiteralChild(string name)
         {

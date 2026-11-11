@@ -238,9 +238,41 @@ The Findings page (decisions D-052 … D-055) combines the scan tree, the rule m
 
 Selection for cleanup will be added to the Findings page later (*planned*); the Cleanup page will then show confirmation and progress.
 
-### Cleanup (planned)
-A single cleanup service in `LeftoverScout.Windows` is the **only** code allowed to delete:
-1. re-checks every selected item against the protected list right before deletion;
+### Safety guard (T-009) and cleanup (planned)
+`CleanupGuard` (`LeftoverScout.Core.Cleanup`) is the one gate every deletion must pass. It deletes, moves and opens
+nothing; T-010 (cleanup service) and T-011 (Cleanup page) call it. Input is a `CleanupRequest` (a `ScanTarget` and the
+selected `CleanupItem`s: path, kind, confidence, size and newest write time **as the scan saw them**, used for warnings
+only). Output is a `CleanupGuardReport`: one `GuardResult` per item (`IsAllowed`, `BlockReason`s, `GuardWarning`s) plus
+the reduction info. The guard re-checks everything fresh and never trusts the scan result.
+
+Layers of protection (an item must pass all of them):
+1. **Findings builder / rules** (scan time): protected rules and personal folders are never offered. This is the first line.
+2. **Request reduction** (`RequestReducer`, pure): duplicates (normalized, case-insensitive) are removed and an item
+   inside another selected item is dropped; the report lists what was merged.
+3. **Pure path checks** (`CleanupPathChecker`, `ParsedPath`; table-driven tests): block a path that is not a plain fully
+   qualified path (`..`, `.`, wildcards, streams, trailing dots or spaces; `/` is read as `\`), a device or `\\?\` path,
+   a path that is not **strictly inside** the profile root (whole segments, so `Sam2` is not inside `Sam`), the profile
+   root and the fixed roots (`AppData`, `Roaming`, `Local`, `LocalLow`), the app's own program and data folders (and
+   anything inside or containing them), personal folders (known-folder paths, standard names and `OneDrive*` directly in the
+   profile root; the path itself, any **ancestor**, or a folder that **contains** a known personal folder), and anything
+   protected by a rule (`RuleMatcher.MatchPath`: a `subtree` rule of the path or any ancestor, a `folder` rule of the path
+   itself, or a folder that contains a protected rule path). Independent of the Findings builder and of the scan tree.
+4. **Hard-coded deny list** (`ProtectedDenyList`, in code, not JSON): the fixed roots and the Windows security folders
+   of `rules/protected.json` (Microsoft, Packages, Programs, Protect, Credentials, SystemCertificates, Crypto, Vault,
+   Start Menu, WindowsApps), so a missing or broken rule file can never unprotect them.
+5. **Live file system checks** (`IPathProbe`, Windows implementation `WindowsPathProbe`; only attribute queries with
+   `FindFirstFileExW` on the item itself and `GetLongPathNameW`, `\\?\` prefix for long paths, nothing is opened or
+   followed). Run only for items that passed 1-4. Block when: the path does not exist or is not a folder; the long form
+   (8.3 short names expanded) fails the path checks again (`APPDAT~1` cannot hide `AppData`); the item or **any parent
+   between the profile root and the item** is a name-surrogate reparse point (junction, symlink); the item or a parent is
+   a cloud folder that is not downloaded (`RECALL_ON_OPEN`); or an attribute query fails ("could not be checked").
+
+What only **warns** (never allows a blocked item): the folder has newer direct content than the scan saw
+(`IDirectoryReader` listing, names and times only); confidence Low; confidence Medium. When unsure, the guard blocks.
+Logging writes counts per block reason, never paths.
+
+The cleanup service in `LeftoverScout.Windows` (T-010) will be the **only** code allowed to delete:
+1. re-checks every selected item with `CleanupGuard` right before deletion;
 2. deletes to the **Recycle Bin** by default (Windows Shell API);
 3. permanent deletion only via an explicit option with double confirmation (D-004);
 4. reports per-item results (deleted / skipped / failed and why);
