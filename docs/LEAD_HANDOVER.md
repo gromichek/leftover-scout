@@ -66,8 +66,7 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 See `docs/PROGRESS.md`. At the time of writing: T-004 accepted by the owner (finding #7 collected).
 T-006 accepted by the owner with finding #10 (Kaspersky shell-extension package wrongly High).
-T-009 (safety guard) merged (#36). Next: T-010 (cleanup service) — write the task (no owner
-questions pending; D-056…D-061 cover it).
+T-009 merged (#36). T-010 (cleanup service) task file written, waiting for the executor session.
 
 Lead note: manual test steps must describe only what the help/app promise. **Owner preference (2026-11-09): do not remind about `git pull` / how to start the app in test steps — only what to check in the app.** (T-004 step 5 wrongly said Calculator might be hidden by the system filter; it is a normal Store app.)
 
@@ -157,6 +156,9 @@ for CS0246 on `Stream`/`File`/`Path` first.
 | D-059 | 2026-11-09 | Flow Findings → Clean up selected… → Cleanup page (review, mode, Start, progress, Cancel after current item, summary); every item re-checked right before deletion | |
 | D-060 | 2026-11-09 | JSON journal per session in `data\journal\`; History page with sessions, details, Open Recycle Bin | Local only |
 | D-061 | 2026-11-09 | Phase 3 order: T-009 guard → T-010 cleanup service → T-011 Cleanup page + selection → T-012 journal + History | Deleting reachable from the UI only in T-011 |
+| D-062 | 2026-11-11 | Recycle Bin mode: three layers against silent permanent deletion — pre-check bin settings (off / too large → skip), veto in `PreDeleteItem` when `TSF_DELETE_RECYCLE_IF_POSSIBLE` is missing, verify `psiNewlyCreated` in `PostDeleteItem` | Lead, refines owner decision D-057. `FOF_WANTNUKEWARNING` alone only shows a dialog |
+| D-063 | 2026-11-11 | Locked files: recycle the whole folder first; if in use, recycle children one by one so only locked items remain ("partly removed") | Lead, refines D-058 |
+| D-064 | 2026-11-11 | "Program running" is a warning before start (process image path inside the item, or process name matches the item's program), never a block | Lead, refines D-058 |
 
 ## Notes for the next lead
 
