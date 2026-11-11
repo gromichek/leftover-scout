@@ -30,6 +30,9 @@ internal static unsafe partial class NativeMethods
         nint searchFilter,
         int additionalFlags);
 
+    [LibraryImport("kernel32.dll", EntryPoint = "GetLongPathNameW", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+    internal static partial uint GetLongPathName(string shortPath, char* longPath, uint bufferLength);
+
     [LibraryImport("kernel32.dll", EntryPoint = "FindNextFileW", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static partial bool FindNextFile(FindHandle findFile, ref Win32FindData findFileData);
