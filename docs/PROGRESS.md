@@ -14,7 +14,7 @@ Owned by the lead. Updated after every merged PR.
 - T-006b (package verdicts, finding #10) accepted by the owner (2026-11-09) with finding #11.
 - T-008 (findings page) accepted by the owner (2026-11-09). Phase 2 complete except T-007 (more cache rules).
 - Phase 3 (safe cleanup): T-009 (safety guard) merged — no visible change, no owner test needed.
-- Next: T-010 (cleanup service) — task file not written yet.
+- Next task: T-010 (cleanup service) — task file written, session not started yet.
 
 ## Done
 
