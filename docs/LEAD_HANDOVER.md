@@ -66,8 +66,8 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 See `docs/PROGRESS.md`. At the time of writing: T-004 accepted by the owner (finding #7 collected).
 T-006 accepted by the owner with finding #10 (Kaspersky shell-extension package wrongly High).
-T-010 merged (#39). Next: T-011 (selection on Findings + Cleanup page) — write the task; decisions
-D-056…D-064 cover it.
+T-010 merged (#39). Owner swapped the order (D-065): T-012 (journal + History) task file written,
+waiting for the executor session; T-011 (Cleanup page) after it.
 
 Lead note: manual test steps must describe only what the help/app promise. **Owner preference (2026-11-09): do not remind about `git pull` / how to start the app in test steps — only what to check in the app.** (T-004 step 5 wrongly said Calculator might be hidden by the system filter; it is a normal Store app.)
 
@@ -160,6 +160,9 @@ for CS0246 on `Stream`/`File`/`Path` first.
 | D-062 | 2026-11-11 | Recycle Bin mode: three layers against silent permanent deletion — pre-check bin settings (off / too large → skip), veto in `PreDeleteItem` when `TSF_DELETE_RECYCLE_IF_POSSIBLE` is missing, verify `psiNewlyCreated` in `PostDeleteItem` | Lead, refines owner decision D-057. `FOF_WANTNUKEWARNING` alone only shows a dialog |
 | D-063 | 2026-11-11 | Locked files: recycle the whole folder first; if in use, recycle children one by one so only locked items remain ("partly removed") | Lead, refines D-058 |
 | D-064 | 2026-11-11 | "Program running" is a warning before start (process image path inside the item, or process name matches the item's program), never a block | Lead, refines D-058 |
+| D-065 | 2026-11-11 | **T-012 (journal + History) before T-011** (Cleanup page), so the first real cleanup is already recorded | Owner, changes the order in D-061 |
+| D-066 | 2026-11-11 | Journal file created before the first item, rewritten atomically after each item, finalized at the end; not finalized → shown as Interrupted | Lead |
+| D-067 | 2026-11-11 | The app never deletes journals | Lead |
 
 ## Notes for the next lead
 

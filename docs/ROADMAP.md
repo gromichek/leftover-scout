@@ -45,8 +45,8 @@ Goal: the user removes chosen items safely and can see what was done.
 |---|---|---|
 | T-009 | Safety guard: request reduction, pure path checks, hard-coded deny list, live checks (8.3 names, junction ancestors, cloud) — no deletion, no UI | ✅ |
 | T-010 | Cleanup service: Recycle Bin via Shell API (never silently permanent), permanent mode, locked files, running-program warning, per-item results, cancel | ✅ |
+| T-012 | JSON session journal in `data\journal\` + History page (sessions, details, Open Recycle Bin) | 📝 |
 | T-011 | Selection on Findings + Cleanup page: review, mode, double confirmation for permanent, progress, summary | ⬜ |
-| T-012 | JSON session journal in `data\journal\` + History page (sessions, details, Open Recycle Bin) | ⬜ |
 
 ## Phase 4 — Polish and release
 
