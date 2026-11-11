@@ -12,9 +12,11 @@ namespace LeftoverScout.Core.Cleanup;
 /// <param name="Confidence">The confidence of a leftover; null for cache kinds.</param>
 /// <param name="SizeBytes">Logical size in bytes as seen by the scan.</param>
 /// <param name="NewestWriteTimeUtc">Newest write time (UTC) in the folder as seen by the scan; null when it had no files.</param>
+/// <param name="ProgramName">The program the finding belongs to (from the rule), used for the running-program warning only; null when unknown.</param>
 public sealed record CleanupItem(
     string FullPath,
     FindingKind Kind,
     LeftoverConfidence? Confidence,
     long SizeBytes,
-    DateTime? NewestWriteTimeUtc);
+    DateTime? NewestWriteTimeUtc,
+    string? ProgramName = null);

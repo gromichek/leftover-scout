@@ -10,7 +10,7 @@ namespace LeftoverScout.Core.Cleanup;
 /// from a fresh check of the path text, the rules, a hard-coded deny list and the real file system. It never trusts the
 /// scan result and never changes anything: only attributes and the names of the direct entries are read.
 /// </summary>
-public sealed class CleanupGuard
+public sealed class CleanupGuard : ICleanupGuard
 {
     private readonly RuleMatcher _matcher;
     private readonly IPathProbe _probe;
