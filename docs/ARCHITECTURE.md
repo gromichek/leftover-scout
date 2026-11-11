@@ -238,7 +238,7 @@ The Findings page (decisions D-052 … D-055) combines the scan tree, the rule m
 
 Selection for cleanup will be added to the Findings page later (*planned*); the Cleanup page will then show confirmation and progress.
 
-### Safety guard (T-009) and cleanup (planned)
+### Safety guard (T-009)
 `CleanupGuard` (`LeftoverScout.Core.Cleanup`) is the one gate every deletion must pass. It deletes, moves and opens
 nothing; T-010 (cleanup service) and T-011 (Cleanup page) call it. Input is a `CleanupRequest` (a `ScanTarget` and the
 selected `CleanupItem`s: path, kind, confidence, size and newest write time **as the scan saw them**, used for warnings
@@ -271,12 +271,49 @@ What only **warns** (never allows a blocked item): the folder has newer direct c
 (`IDirectoryReader` listing, names and times only); confidence Low; confidence Medium. When unsure, the guard blocks.
 Logging writes counts per block reason, never paths.
 
-The cleanup service in `LeftoverScout.Windows` (T-010) will be the **only** code allowed to delete:
-1. re-checks every selected item with `CleanupGuard` right before deletion;
-2. deletes to the **Recycle Bin** by default (Windows Shell API);
-3. permanent deletion only via an explicit option with double confirmation (D-004);
-4. reports per-item results (deleted / skipped / failed and why);
-5. writes a session journal (what, where from, size, result).
+### Cleanup service (T-010)
+No UI starts it yet (T-011 adds the Cleanup page). Code lives in `LeftoverScout.Core.Cleanup` (logic) and
+`LeftoverScout.Windows.Cleanup` (the only code that deletes). Decisions D-062 … D-064.
+
+- `ICleanupService.RunAsync(CleanupRequest, CleanupMode, IProgress<CleanupProgress>?, CancellationToken)` returns a
+  `CleanupSessionResult` (times, mode, one `CleanupItemResult` per item: `Removed`, `PartlyRemoved`,
+  `SkippedTooLargeForRecycleBin`, `SkippedRecycleBinOff`, `NotRecycled`, `Blocked`, `NotFound`, `Failed`, `NotStarted`).
+  `CleanupService` (Core) runs on a thread-pool thread, reduces the request (`RequestReducer`), and for **every item**
+  calls `ICleanupGuard.Check` again with that single item right before touching it. Cancellation is checked between items
+  only; the current item completes (D-059). Logging: counts per outcome and bytes, never paths.
+- `IEntryRemover` removes one file or folder. `ShellEntryRemover` (Windows) uses `IFileOperation` on a short-lived STA
+  thread per call, with `FOF_SILENT | FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_NOCONFIRMMKDIR`; Recycle Bin mode adds
+  `FOFX_RECYCLEONDELETE | FOF_ALLOWUNDO | FOF_WANTNUKEWARNING`. `FOFX_NOSKIPJUNCTIONS` is never set. `IFileOperation` is
+  called through its documented vtable (function pointers; no RCW, so nothing leaks, every COM object is released in a
+  `finally`); the progress sink is a source-generated COM class (`[GeneratedComClass]`, `FileOperationSink`).
+- **Three layers against silent permanent deletion in Recycle Bin mode (D-062):**
+  1. *Pre-check* (`RecycleBinPolicy`, pure; `WindowsRecycleBinSettingsReader`, read-only registry): `NukeOnDelete` and
+     `MaxCapacity` of the item's volume under `HKCU\...\Explorer\BitBucket\Volume\{volume GUID}` (the GUID from
+     `GetVolumeNameForVolumeMountPointW`), and the policy `Policies\Explorer\NoRecycleFiles` (HKCU, HKLM). Bin off →
+     `SkippedRecycleBinOff`; scan size above the maximum → `SkippedTooLargeForRecycleBin`. Unreadable settings allow the
+     item (layers 2 and 3 still protect).
+  2. *Veto* (`ShellOperationRules.ShouldVetoDelete`): `PreDeleteItem` returns a failure HRESULT when
+     `TSF_DELETE_RECYCLE_IF_POSSIBLE` (0x80) is missing from the flags → nothing is deleted, `NotRecycled`.
+  3. *Verify* (`ShellOperationRules.IsUnexpectedPermanentDelete`): `PostDeleteItem` with success but no
+     `psiNewlyCreated` in Recycle Bin mode sets `DeletedPermanentlyUnexpectedly` on the item and the session.
+  The shell reports success only after the guard-independent check that the folder is really gone (`IPathProbe`).
+- **Locked files (D-063)** — `FolderRemover` (Core): first the whole folder; if that fails (not a veto), the children one by
+  one, depth-first (a subfolder is tried as a whole first). Only entries that cannot be removed (and their parents) remain:
+  `PartlyRemoved` with the count of entries left; nothing removed at all → `Failed`. A veto of the whole folder is final
+  (`NotRecycled`): the children would be vetoed too. Bytes removed for a partly removed folder = scan size minus what
+  `FolderSizer` measures afterwards.
+- **Junctions and links:** the fallback never touches a name-surrogate reparse point (junction, symlink) or an online-only
+  cloud folder: they are left in place and counted as left. The whole-folder delete is done by the shell without
+  `FOFX_NOSKIPJUNCTIONS`; the flag's documented meaning is "do not skip junctions" (Microsoft Learn,
+  "IFileOperation::SetOperationFlags"), so by default junctions are not traversed. The integration test
+  `Run_JunctionInsideFolder_TargetSurvives` (both modes) proves that a junction target and its files survive.
+- **Running programs (D-064):** `IRunningProgramDetector.Find(CleanupRequest)` returns, per item, the names of running
+  processes whose image path lies inside the item or whose normalized name equals the normalized program name
+  (`CleanupItem.ProgramName`, else the folder name; generic names never match by name). `WindowsProcessLister` uses
+  `Process.GetProcesses()` and `QueryFullProcessImageNameW` with `PROCESS_QUERY_LIMITED_INFORMATION`; failures are ignored.
+  It is a warning before the start, never a block; no process is touched.
+
+Still to come: the Cleanup page (T-011) and the session journal (T-012).
 
 ### Settings and journals
 Stored in a `data\` folder next to the exe (portable — deleting the app folder leaves no
@@ -288,7 +325,7 @@ the user with an info bar (D-012).
 - `settings.json`: `AppSettings` record, read/written by `JsonSettingsStore` (System.Text.Json).
   A missing or corrupt file gives defaults and a logged warning; saves go to a temp file in the
   same folder and replace the target.
-- Journals (Phase 3) will live in the same folder.
+- Journals (Phase 3, T-012) will live in the same folder.
 
 ### Composition root, logging, single instance
 - `App.OnStartup` (in `LeftoverScout.App`) is the composition root: single-instance check,
