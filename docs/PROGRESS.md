@@ -13,7 +13,8 @@ Owned by the lead. Updated after every merged PR.
 - T-006 (leftover detection) accepted by the owner (2026-11-09) with finding #10.
 - T-006b (package verdicts, finding #10) accepted by the owner (2026-11-09) with finding #11.
 - T-008 (findings page) accepted by the owner (2026-11-09). Phase 2 complete except T-007 (more cache rules).
-- Phase 3 (safe cleanup) started. Next task: T-009 (safety guard) — task file written, session not started yet.
+- Phase 3 (safe cleanup): T-009 (safety guard) merged — no visible change, no owner test needed.
+- Next: T-010 (cleanup service) — task file not written yet.
 
 ## Done
 
@@ -29,6 +30,7 @@ Owned by the lead. Updated after every merged PR.
 | 2026-11-09 | T-006 | Leftover detection (normalizer, evidence index, candidates, High/Medium/Low/In use with explanations; extra safety: no verdict when evidence is incomplete, dot-folders max Low, GUID names unknown), personal folders by name (#9), `requiresInstallation`, Spotify description (#8); 706 tests. Lead fixed 3 test build errors, a normalizer bug (company suffix split by camel case: `GmbH`) and a test fixture that became personal by name | #24 |
 | 2026-11-09 | T-006b | Store query with all package types + de-duplication; package vendor cross-check with installed programs (D-050); Microsoft packages max Medium (D-051); 730 tests, CI green on first run. Lead added the documented explanation of packages with external location to ARCHITECTURE | #28 |
 | 2026-11-09 | T-008 | Findings page (leftovers + caches, filters, search, details, totals without double counting, Show in Results; builder re-checks protection incl. ancestors); finding #11 fixed; 791 tests. Lead fixed a blocking-wait test (xUnit1031) and the help topic list test | #32 |
+| 2026-11-11 | T-009 | Cleanup guard: request reduction, strict path parsing (trailing dots/spaces, streams, device names, `\\?\` rejected), fixed roots + hard-coded deny list, personal/protected incl. ancestors **and descendants**, path-based rule matching, live checks (8.3 long names, junction ancestors, cloud); no deletion, no UI; 954 tests. Lead fixed two missing usings and a wrong test assumption (`GetLongPathNameW` keeps letter case) | #36 |
 
 ## Collected for the next session task
 
