@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using static LeftoverScout.Core.Tests.Rules.RuleTestHelper;
 using static LeftoverScout.Core.Tests.Scanning.FakeDirectoryReader;
+using LeftoverScout.Core.Tests.Scanning;
 
 namespace LeftoverScout.Core.Tests.Cleanup;
 
