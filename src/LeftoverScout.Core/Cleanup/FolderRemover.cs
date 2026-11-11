@@ -40,6 +40,10 @@ public sealed class FolderRemover : IFolderRemover
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
 
+        // Measured before the first attempt: a permanent delete of a whole folder removes file by file and can stop
+        // half way (for example at a file in use). What it removed before it stopped must count as progress.
+        long sizeBefore = FolderSizer.Measure(_reader, path);
+
         EntryRemoveResult whole = _entries.Remove(path, mode);
         switch (whole.Status)
         {
@@ -70,7 +74,8 @@ public sealed class FolderRemover : IFolderRemover
         }
 
         string reason = $"{tally.Left} item(s) could not be removed: {tally.FirstReason ?? "in use or not accessible"}.";
-        return tally.Removed > 0
+        bool anythingRemoved = tally.Removed > 0 || FolderSizer.Measure(_reader, path) < sizeBefore;
+        return anythingRemoved
             ? new FolderRemoveResult(FolderRemoveStatus.PartlyRemoved, tally.Left, reason, tally.Unexpected)
             : new FolderRemoveResult(FolderRemoveStatus.Failed, tally.Left, reason, tally.Unexpected);
     }
