@@ -124,16 +124,19 @@ public class WindowsPathProbeTests
     }
 
     [Fact]
-    public void GetLongPath_WrongLetterCase_ReturnsTheRealCase()
+    public void GetLongPath_PathWithoutShortNames_ReturnsTheSamePath()
     {
+        // GetLongPathNameW only expands 8.3 short components; it does not change the letter case of long names.
+        // The guard compares paths case-insensitively, so the case does not matter.
         using var temp = new WindowsTempFolder();
         string folder = Path.Combine(temp.Path, "MixedCaseName");
         Directory.CreateDirectory(folder);
+        string requested = Path.Combine(temp.Path, "MIXEDCASENAME");
 
-        string? longPath = _probe.GetLongPath(Path.Combine(temp.Path, "MIXEDCASENAME"));
+        string? longPath = _probe.GetLongPath(requested);
 
         Assert.NotNull(longPath);
-        Assert.EndsWith(@"\MixedCaseName", longPath, StringComparison.Ordinal);
+        Assert.Equal(requested, longPath, ignoreCase: true);
     }
 
     [Fact]
