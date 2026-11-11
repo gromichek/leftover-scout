@@ -1,5 +1,6 @@
 using LeftoverScout.Core.Cleanup;
 using LeftoverScout.Core.Scanning;
+using LeftoverScout.Core.Tests.Scanning;
 
 namespace LeftoverScout.Core.Tests.Cleanup;
 
