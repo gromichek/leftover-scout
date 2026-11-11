@@ -15,7 +15,8 @@ Owned by the lead. Updated after every merged PR.
 - T-008 (findings page) accepted by the owner (2026-11-09). Phase 2 complete except T-007 (more cache rules).
 - Phase 3 (safe cleanup): T-009 (safety guard) merged — no visible change, no owner test needed.
 - T-010 (cleanup service) merged — no visible change, no owner test needed.
-- Next: T-011 (selection on Findings + Cleanup page) — first task where the owner can delete; write the task.
+- Next task: T-012 (journal + History, before T-011 per D-065) — task file written, session not started yet.
+  Then T-011 (selection + Cleanup page), the first task where the owner can delete.
 
 ## Done
 
