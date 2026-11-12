@@ -1,0 +1,118 @@
+<UserControl x:Class="LeftoverScout.App.Views.HistoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <TextBlock Grid.Row="0" FontSize="24" FontWeight="SemiBold" Text="{Binding Title}" />
+
+    <!-- Actions that are always available (all read-only) -->
+    <StackPanel Grid.Row="1" Margin="0,8,0,8" Orientation="Horizontal">
+      <Button Command="{Binding OpenRecycleBinCommand}" Content="Open Recycle Bin" />
+      <Button Margin="8,0,0,0"
+              Command="{Binding OpenJournalFolderCommand}"
+              Content="Open journal folder"
+              ToolTip="{Binding JournalFolderPath}" />
+    </StackPanel>
+
+    <!-- Empty state -->
+    <StackPanel Grid.Row="2" Visibility="{Binding HasNoSessions, Converter={StaticResource BooleanToVisibility}}">
+      <TextBlock FontSize="16" FontWeight="SemiBold" Text="{Binding EmptyTitle}" />
+      <TextBlock Margin="0,8,0,0" Text="{Binding EmptyDescription}" TextWrapping="Wrap" />
+    </StackPanel>
+
+    <!-- Sessions and details -->
+    <Grid Grid.Row="2" Visibility="{Binding HasSessions, Converter={StaticResource BooleanToVisibility}}">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="2*" MinHeight="90" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="3*" MinHeight="120" />
+      </Grid.RowDefinitions>
+
+      <DataGrid Grid.Row="0"
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                CanUserResizeRows="False"
+                HeadersVisibility="Column"
+                IsReadOnly="True"
+                ItemsSource="{Binding Sessions}"
+                SelectedItem="{Binding SelectedSession, Mode=TwoWay}"
+                SelectionMode="Single"
+                SelectionUnit="FullRow">
+        <DataGrid.Columns>
+          <DataGridTextColumn Width="150" Header="Date" SortMemberPath="SortTime"
+                              Binding="{Binding DateText, Mode=OneWay}" />
+          <DataGridTextColumn Width="110" Header="Mode" SortMemberPath="ModeText"
+                              Binding="{Binding ModeText, Mode=OneWay}" />
+          <DataGridTextColumn Width="70" Header="Items" SortMemberPath="ItemCount"
+                              Binding="{Binding ItemsText, Mode=OneWay}" />
+          <DataGridTextColumn Width="100" Header="Removed" SortMemberPath="BytesRemoved"
+                              Binding="{Binding RemovedText, Mode=OneWay}" />
+          <DataGridTextColumn Width="*" Header="Result" SortMemberPath="ResultText"
+                              Binding="{Binding ResultText, Mode=OneWay}" />
+        </DataGrid.Columns>
+      </DataGrid>
+
+      <TextBlock Grid.Row="1"
+                 Margin="0,8,0,0"
+                 FontWeight="SemiBold"
+                 Text="{Binding UnexpectedPermanentWarning}"
+                 TextWrapping="Wrap"
+                 Visibility="{Binding HasUnexpectedPermanentWarning, Converter={StaticResource BooleanToVisibility}}" />
+      <TextBlock Grid.Row="2"
+                 Margin="0,8,0,0"
+                 Text="{Binding DetailsMessage}"
+                 TextWrapping="Wrap"
+                 Visibility="{Binding HasDetailsMessage, Converter={StaticResource BooleanToVisibility}}" />
+
+      <DataGrid Grid.Row="3"
+                Margin="0,8,0,0"
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                CanUserResizeRows="False"
+                HeadersVisibility="Column"
+                IsReadOnly="True"
+                ItemsSource="{Binding Details}"
+                SelectedItem="{Binding SelectedDetail, Mode=TwoWay}"
+                SelectionMode="Single"
+                SelectionUnit="FullRow">
+        <DataGrid.ContextMenu>
+          <ContextMenu>
+            <MenuItem Header="Copy path"
+                      Command="{Binding PlacementTarget.DataContext.CopyPathCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+          </ContextMenu>
+        </DataGrid.ContextMenu>
+        <DataGrid.Columns>
+          <DataGridTextColumn Width="2*" Header="Path" SortMemberPath="RelativePath"
+                              Binding="{Binding RelativePath, Mode=OneWay}" />
+          <DataGridTextColumn Width="80" Header="Kind" SortMemberPath="KindText"
+                              Binding="{Binding KindText, Mode=OneWay}" />
+          <DataGridTextColumn Width="90" Header="Confidence" SortMemberPath="ConfidenceText"
+                              Binding="{Binding ConfidenceText, Mode=OneWay}" />
+          <DataGridTextColumn Width="80" Header="Size" SortMemberPath="SizeBytes"
+                              Binding="{Binding SizeText, Mode=OneWay}" />
+          <DataGridTextColumn Width="120" Header="Outcome" SortMemberPath="OutcomeText"
+                              Binding="{Binding OutcomeText, Mode=OneWay}" />
+          <DataGridTextColumn Width="2*" Header="Reason" SortMemberPath="ReasonText"
+                              Binding="{Binding ReasonText, Mode=OneWay}" />
+        </DataGrid.Columns>
+      </DataGrid>
+    </Grid>
+
+    <!-- Row actions for the selected detail row -->
+    <StackPanel Grid.Row="3"
+                Margin="0,8,0,0"
+                Orientation="Horizontal"
+                Visibility="{Binding HasSessions, Converter={StaticResource BooleanToVisibility}}">
+      <Button Command="{Binding CopyPathCommand}" Content="Copy path" />
+    </StackPanel>
+  </Grid>
+</UserControl>

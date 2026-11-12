@@ -313,7 +313,34 @@ No UI starts it yet (T-011 adds the Cleanup page). Code lives in `LeftoverScout.
   `Process.GetProcesses()` and `QueryFullProcessImageNameW` with `PROCESS_QUERY_LIMITED_INFORMATION`; failures are ignored.
   It is a warning before the start, never a block; no process is touched.
 
-Still to come: the Cleanup page (T-011) and the session journal (T-012).
+Still to come: the Cleanup page (T-011). The session journal is described below (T-012).
+
+### Cleanup journal and History page (T-012)
+Every cleanup session is recorded in `data\journal\cleanup-<yyyyMMdd-HHmmss>-<short id>.json` (decisions D-060, D-065 … D-067).
+Code lives in `LeftoverScout.Core.Journal`; the file system sits behind `IJournalStorage` (`FileJournalStorage` writes to disk).
+- **Format:** `JournalDocument` (`schemaVersion` 1, session id, app version, `startedAt` / `endedAt` with offset, `state`
+  `InProgress | Completed | Cancelled | Failed`, mode, profile root, `totals`, `items`) with `JournalItem` (full and relative path,
+  kind, confidence, size at scan, `JournalOutcome` = the cleanup outcomes plus `Pending`, reason, items left, bytes removed,
+  `deletedPermanentlyUnexpectedly`). `JournalJson` uses `System.Text.Json` with camelCase names, enum names as strings and
+  `UnmappedMemberHandling.Disallow`; an unknown property, enum name or schema version makes the file *unreadable*.
+- **Writer:** `ICleanupJournal` (`CleanupJournal`): `Begin` creates the file **before** the first item (all items `Pending`, the
+  request reduced like the service reduces it), `Record` rewrites it after **each** item, `Complete` finalizes it (`Cancelled`
+  when items did not start), `Abort` finalizes a session that ended with an exception (`Failed`) or a cancellation
+  exception. Every write goes to a temporary file in the same folder and replaces the target (`File.Move` with overwrite). No
+  method throws: a failure is logged (exception type only, never a path) and sets `JournalHandle.Warning`, which
+  the decorator copies to `CleanupSessionResult.JournalWarning`. `ActiveJournalSessions` lists the sessions running in this process.
+- **Reader:** `IJournalReader.ReadAll()` (`JournalReader`) returns `JournalEntry` items newest first. A file that cannot be read or
+  parsed is an `Unreadable` entry with its file name; an `InProgress` file whose session is not active in this process is
+  `Interrupted`.
+- **Integration:** `JournalingCleanupService` decorates `ICleanupService` and is what the container registers as `ICleanupService`
+  (the real `CleanupService` is registered as its own type). `ICleanupService.RunAsync` got an optional trailing
+  `Action<CleanupItemResult>? itemCompleted`, called synchronously after each item (also for items not started); an exception from the
+  callback is swallowed, so the journal can never stop a cleanup. `ICleanupJournal.SessionRecorded` is raised after `Begin` and after the
+  session ends.
+- **History page:** `HistoryPageViewModel` (App) reads the journals on a background thread (`RefreshAsync`, newest refresh wins),
+  refreshes on `SessionRecorded` through the UI synchronization context, and shows sessions and details (texts come from the pure
+  `JournalText`). Actions: `IShellLauncher.OpenRecycleBin` (`explorer.exe shell:RecycleBinFolder`), open the journal folder (created on
+  demand) and copy a path. Everything is read-only; the app never deletes journals (D-067).
 
 ### Settings and journals
 Stored in a `data\` folder next to the exe (portable — deleting the app folder leaves no
@@ -325,7 +352,7 @@ the user with an info bar (D-012).
 - `settings.json`: `AppSettings` record, read/written by `JsonSettingsStore` (System.Text.Json).
   A missing or corrupt file gives defaults and a logged warning; saves go to a temp file in the
   same folder and replace the target.
-- Journals (Phase 3, T-012) will live in the same folder.
+- Journals (T-012) live in the same folder, in `data\journal`; see "Cleanup journal and History page".
 
 ### Composition root, logging, single instance
 - `App.OnStartup` (in `LeftoverScout.App`) is the composition root: single-instance check,

@@ -35,6 +35,10 @@ public class FindingsPageViewModelTests
         {
         }
 
+        public void OpenRecycleBin()
+        {
+        }
+
         public void OpenUrl(string url)
         {
         }

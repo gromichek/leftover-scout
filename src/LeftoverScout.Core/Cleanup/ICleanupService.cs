@@ -13,9 +13,14 @@ public interface ICleanupService
     /// <param name="mode">Recycle Bin or permanent.</param>
     /// <param name="progress">Receives progress before each item.</param>
     /// <param name="cancellationToken">Stops the session before the next item begins.</param>
+    /// <param name="itemCompleted">
+    /// Called synchronously on the worker thread right after each item has its result (also for items that were not
+    /// started because of a cancellation). The cleanup journal uses it. An exception from the callback is ignored.
+    /// </param>
     Task<CleanupSessionResult> RunAsync(
         CleanupRequest request,
         CleanupMode mode,
         IProgress<CleanupProgress>? progress,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken,
+        Action<CleanupItemResult>? itemCompleted = null);
 }

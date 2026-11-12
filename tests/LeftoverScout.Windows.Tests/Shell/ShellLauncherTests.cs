@@ -20,4 +20,10 @@ public class ShellLauncherTests
     {
         Assert.Null(ShellLauncher.BuildSelectArguments(path));
     }
+
+    [Fact]
+    public void RecycleBinArguments_IsTheDocumentedShellFolderName()
+    {
+        Assert.Equal("shell:RecycleBinFolder", ShellLauncher.RecycleBinArguments);
+    }
 }

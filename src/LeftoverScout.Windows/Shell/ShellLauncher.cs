@@ -50,6 +50,23 @@ public sealed class ShellLauncher : IShellLauncher
         }
     }
 
+    /// <inheritdoc />
+    public void OpenRecycleBin()
+    {
+        try
+        {
+            // "shell:RecycleBinFolder" is the documented shell: folder name of the Recycle Bin.
+            using Process? process = Process.Start(new ProcessStartInfo("explorer.exe", RecycleBinArguments) { UseShellExecute = false });
+        }
+        catch (Exception ex) when (ex is Win32Exception or InvalidOperationException or FileNotFoundException)
+        {
+            _logger.LogWarning(ex, "Explorer could not be started to show the Recycle Bin.");
+        }
+    }
+
+    /// <summary>The argument string that makes explorer.exe show the Recycle Bin.</summary>
+    internal const string RecycleBinArguments = "shell:RecycleBinFolder";
+
     /// <summary>
     /// Builds the argument string <c>/select,"path"</c> for explorer.exe; null for an empty path or one with a double quote.
     /// </summary>

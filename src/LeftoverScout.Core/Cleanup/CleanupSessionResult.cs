@@ -11,6 +11,12 @@ public sealed record CleanupSessionResult(
     CleanupMode Mode,
     IReadOnlyList<CleanupItemResult> Items)
 {
+    /// <summary>
+    /// A short English message when the journal of this session could not be written completely (the cleanup itself
+    /// was not affected); null otherwise. Set by the journaling decorator.
+    /// </summary>
+    public string? JournalWarning { get; init; }
+
     /// <summary>Total bytes removed.</summary>
     public long BytesRemoved => Items.Sum(item => item.BytesRemoved);
 

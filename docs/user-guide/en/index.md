@@ -1,7 +1,7 @@
 # LeftoverScout user guide
 
 > LeftoverScout is in early development. Today it can scan your profile, let you browse what takes
-> space, show the programs installed on this computer, mark folders that probably belong to uninstalled programs and list what you could remove. Cleaning up is planned. This guide always describes what the app does now.
+> space, show the programs installed on this computer, mark folders that probably belong to uninstalled programs and list what you could remove. Cleaning up is planned; the **History** page is ready to record it. This guide always describes what the app does now.
 
 ## What LeftoverScout does
 
@@ -19,10 +19,10 @@ LeftoverScout is built to:
 2. Open **Findings** to see what you could remove: leftovers and caches, biggest first, each with its reason. See [Findings](findings.md).
    To check an item, open **Results** (browse folders by size, see large files; look for **Leftover** and **In use** labels in the **Notes** column, see [Results](results.md)) or **Programs** (which programs are installed on this computer, see [Programs](programs.md)).
 3. **Cleanup** will remove the items you select on **Findings**. See [Cleanup](cleanup.md). *(planned)*
-4. **History** will show what was removed. See [History](history.md). *(planned)*
+4. **History** shows what each cleanup removed and what happened to every item. See [History](history.md).
 
 The navigation order is **Scan**, **Results**, **Programs**, **Findings**, **Cleanup**, **History**, **Help**, **About**.
-At the moment **Scan**, **Results**, **Programs**, **Findings**, **Help** and **About** have content.
+At the moment **Scan**, **Results**, **Programs**, **Findings**, **History**, **Help** and **About** have content.
 
 ## What is safe
 
