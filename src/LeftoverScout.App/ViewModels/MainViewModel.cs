@@ -113,6 +113,17 @@ public sealed partial class MainViewModel : ObservableObject
             };
         }
 
+        foreach (HistoryPageViewModel historyPage in Pages.OfType<HistoryPageViewModel>())
+        {
+            historyPage.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(HistoryPageViewModel.StatusMessage) && !string.IsNullOrEmpty(historyPage.StatusMessage))
+                {
+                    StatusText = historyPage.StatusMessage;
+                }
+            };
+        }
+
         if (dataLocation.IsFallback)
         {
             _infoBarText = $"Settings are stored in {dataLocation.Path} because the program folder is not writable.";

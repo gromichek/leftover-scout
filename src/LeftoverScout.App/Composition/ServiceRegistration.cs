@@ -3,14 +3,17 @@ using LeftoverScout.App.Services;
 using LeftoverScout.App.Startup;
 using LeftoverScout.App.ViewModels;
 using LeftoverScout.Core.Classification;
+using LeftoverScout.Core.Cleanup;
 using LeftoverScout.Core.Evidence;
 using LeftoverScout.Core.Help;
+using LeftoverScout.Core.Journal;
 using LeftoverScout.Core.Logging;
 using LeftoverScout.Core.Rules;
 using LeftoverScout.Core.Scanning;
 using LeftoverScout.Core.Settings;
 using LeftoverScout.Core.Shell;
 using LeftoverScout.Core.Storage;
+using LeftoverScout.Windows.Cleanup;
 using LeftoverScout.Windows.Evidence;
 using LeftoverScout.Windows.Scanning;
 using LeftoverScout.Windows.Shell;
@@ -75,6 +78,33 @@ public static class ServiceRegistration
         services.AddSingleton<LeftoverClassifier>();
 
         services.AddSingleton<IScanService, ScanService>();
+
+        // Cleanup (T-010) wrapped by the journal (T-012). No page starts a cleanup yet; the journal is already in place.
+        string[] appFolders = [AppContext.BaseDirectory, dataLocation.Path];
+        services.AddSingleton<IPathProbe, WindowsPathProbe>();
+        services.AddSingleton<IRecycleBinSettingsReader, WindowsRecycleBinSettingsReader>();
+        services.AddSingleton<IEntryRemover, ShellEntryRemover>();
+        services.AddSingleton<IFolderRemover, FolderRemover>();
+        services.AddSingleton<ICleanupGuard>(provider => new CleanupGuard(
+            provider.GetRequiredService<RuleSet>(),
+            provider.GetRequiredService<IPathProbe>(),
+            provider.GetRequiredService<IDirectoryReader>(),
+            provider.GetRequiredService<IPersonalFolderProvider>(),
+            appFolders,
+            provider.GetRequiredService<ILogger<CleanupGuard>>()));
+        services.AddSingleton<CleanupService>();
+        services.AddSingleton<ActiveJournalSessions>();
+        services.AddSingleton<IJournalStorage>(new FileJournalStorage(dataLocation.Path));
+        services.AddSingleton<IJournalReader, JournalReader>();
+        services.AddSingleton<ICleanupJournal>(provider => new CleanupJournal(
+            provider.GetRequiredService<IJournalStorage>(),
+            provider.GetRequiredService<ActiveJournalSessions>(),
+            provider.GetRequiredService<TimeProvider>(),
+            AppInfo.GetVersion(),
+            provider.GetRequiredService<ILogger<CleanupJournal>>()));
+        services.AddSingleton<ICleanupService>(provider => new JournalingCleanupService(
+            provider.GetRequiredService<CleanupService>(),
+            provider.GetRequiredService<ICleanupJournal>()));
         services.AddSingleton<IHelpSource, EmbeddedHelpSource>();
         services.AddSingleton<HelpCatalog>();
 
@@ -89,8 +119,8 @@ public static class ServiceRegistration
         services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<FindingsPageViewModel>());
         services.AddSingleton<PageViewModel>(new PlaceholderPageViewModel(
             "Cleanup", HelpTopics.Cleanup, 3, "Moves the items you select to the Recycle Bin after you confirm."));
-        services.AddSingleton<PageViewModel>(new PlaceholderPageViewModel(
-            "History", HelpTopics.History, 3, "Shows what earlier cleanups removed and where it came from."));
+        services.AddSingleton<HistoryPageViewModel>();
+        services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<HistoryPageViewModel>());
         services.AddSingleton<HelpPageViewModel>();
         services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<HelpPageViewModel>());
         services.AddSingleton<PageViewModel>(provider => new AboutViewModel(

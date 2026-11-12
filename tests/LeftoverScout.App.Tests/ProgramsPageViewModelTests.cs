@@ -30,6 +30,10 @@ public class ProgramsPageViewModelTests
         {
         }
 
+        public void OpenRecycleBin()
+        {
+        }
+
         public void OpenUrl(string url)
         {
         }

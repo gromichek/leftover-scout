@@ -14,12 +14,12 @@ The window has a navigation list on the left:
 | **Programs** | Lists the programs installed on this computer, collected by every scan. See [Programs](programs.md). |
 | **Findings** | Lists what you could remove: leftovers and caches with size, confidence and reason. See [Findings](findings.md). |
 | **Cleanup** | Will move selected items to the Recycle Bin. Planned. See [Cleanup](cleanup.md). |
-| **History** | Will show what earlier cleanups removed. Planned. See [History](history.md). |
+| **History** | Shows what earlier cleanups removed and what happened to each item. See [History](history.md). |
 | **Help** | This help. See [Using this help](help.md). |
 | **About** | Version, license, project link and the data folder. See [About](about.md). |
 
-At the moment **Scan**, **Results**, **Programs**, **Findings**, **Help** and **About** have content; **Cleanup** and **History**
-show a short note about what they will do.
+At the moment **Scan**, **Results**, **Programs**, **Findings**, **History**, **Help** and **About** have content; **Cleanup**
+shows a short note about what it will do.
 
 ## Only one window
 
@@ -33,6 +33,7 @@ LeftoverScout keeps its own files in a `data` folder **next to the program**:
 
 - `data\settings.json`: window size and position, and the help language you chose.
 - `data\logs\leftoverscout-<date>.log`: a diagnostic log. The seven newest files are kept.
+- `data\journal\cleanup-<date>-<time>-<id>.json`: one record per cleanup, shown on **History**. Kept until you delete them yourself. See [History](history.md).
 
 Deleting the program folder removes all of it. Nothing is written to the registry.
 The **About** page shows the exact folder and has an **Open data folder** button.

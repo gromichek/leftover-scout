@@ -52,16 +52,22 @@ public sealed class CleanupService : ICleanupService
         CleanupRequest request,
         CleanupMode mode,
         IProgress<CleanupProgress>? progress,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        Action<CleanupItemResult>? itemCompleted = null)
     {
         ArgumentNullException.ThrowIfNull(request);
 
         // Runs on a thread-pool thread: the UI thread never blocks. The token is not passed to Task.Run on purpose,
         // so that a cancelled session still returns a complete result with "not started" items.
-        return Task.Run(() => Run(request, mode, progress, cancellationToken), CancellationToken.None);
+        return Task.Run(() => Run(request, mode, progress, cancellationToken, itemCompleted), CancellationToken.None);
     }
 
-    private CleanupSessionResult Run(CleanupRequest request, CleanupMode mode, IProgress<CleanupProgress>? progress, CancellationToken token)
+    private CleanupSessionResult Run(
+        CleanupRequest request,
+        CleanupMode mode,
+        IProgress<CleanupProgress>? progress,
+        CancellationToken token,
+        Action<CleanupItemResult>? itemCompleted)
     {
         DateTime started = _time.GetUtcNow().UtcDateTime;
         IReadOnlyList<CleanupItem> items = RequestReducer.Reduce(request.Items).Items;
@@ -74,7 +80,9 @@ public sealed class CleanupService : ICleanupService
             CleanupItem item = items[index];
             if (token.IsCancellationRequested)
             {
-                results.Add(new CleanupItemResult(item, CleanupOutcome.NotStarted, Reason: "The cleanup was cancelled before this folder."));
+                var notStarted = new CleanupItemResult(item, CleanupOutcome.NotStarted, Reason: "The cleanup was cancelled before this folder.");
+                results.Add(notStarted);
+                NotifyItemCompleted(itemCompleted, notStarted);
                 continue;
             }
 
@@ -83,11 +91,31 @@ public sealed class CleanupService : ICleanupService
             CleanupItemResult result = ProcessItem(request, item, mode);
             results.Add(result);
             bytesDone += result.BytesRemoved;
+            NotifyItemCompleted(itemCompleted, result);
         }
 
         var session = new CleanupSessionResult(started, _time.GetUtcNow().UtcDateTime, mode, results);
         LogSession(session);
         return session;
+    }
+
+    // The callback (the journal) must never stop or fail a cleanup: any exception from it is swallowed and logged
+    // (type only, never a path).
+    private void NotifyItemCompleted(Action<CleanupItemResult>? itemCompleted, CleanupItemResult result)
+    {
+        if (itemCompleted is null)
+        {
+            return;
+        }
+
+        try
+        {
+            itemCompleted(result);
+        }
+        catch (Exception exception) when (exception is not OutOfMemoryException)
+        {
+            _logger.LogWarning("The item-completed callback failed with {ExceptionType}.", exception.GetType().Name);
+        }
     }
 
     private CleanupItemResult ProcessItem(CleanupRequest request, CleanupItem item, CleanupMode mode)
@@ -158,7 +186,7 @@ public sealed class CleanupService : ICleanupService
         }
     }
 
-    private static string RelativePath(string profileRoot, string fullPath)
+    internal static string RelativePath(string profileRoot, string fullPath)
     {
         string root = profileRoot.TrimEnd('\\', '/');
         return fullPath.Length > root.Length + 1 && fullPath.StartsWith(root, StringComparison.OrdinalIgnoreCase)

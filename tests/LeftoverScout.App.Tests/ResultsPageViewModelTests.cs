@@ -35,6 +35,10 @@ public class ResultsPageViewModelTests
 
         public void SelectFile(string filePath) => SelectedFiles.Add(filePath);
 
+        public void OpenRecycleBin()
+        {
+        }
+
         public void OpenUrl(string url)
         {
         }

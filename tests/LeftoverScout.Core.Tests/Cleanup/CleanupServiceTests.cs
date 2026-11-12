@@ -239,6 +239,40 @@ public class CleanupServiceTests
         Assert.Equal([Root + @"\A"], remover.Removed);
     }
 
+    [Fact]
+    public async Task RunAsync_ItemCompletedCallback_GetsEveryResultInOrder_IncludingNotStarted()
+    {
+        using var cts = new CancellationTokenSource();
+        var remover = new FakeFolderRemover { OnRemove = _ => cts.Cancel() };
+        var seen = new List<CleanupOutcome>();
+
+        CleanupSessionResult result = await Service(new FakeGuard(), remover, new FakeBin()).RunAsync(
+            Request(Item("A"), Item("B")),
+            CleanupMode.Permanent,
+            null,
+            cts.Token,
+            item => seen.Add(item.Outcome));
+
+        Assert.Equal(new[] { CleanupOutcome.Removed, CleanupOutcome.NotStarted }, seen);
+        Assert.Equal(result.Items.Select(item => item.Outcome), seen);
+    }
+
+    [Fact]
+    public async Task RunAsync_ItemCompletedCallbackThrows_CleanupGoesOn()
+    {
+        var remover = new FakeFolderRemover();
+
+        CleanupSessionResult result = await Service(new FakeGuard(), remover, new FakeBin()).RunAsync(
+            Request(Item("A"), Item("B")),
+            CleanupMode.Permanent,
+            null,
+            TestContext.Current.CancellationToken,
+            _ => throw new InvalidOperationException("Journal failure."));
+
+        Assert.Equal(new[] { CleanupOutcome.Removed, CleanupOutcome.Removed }, result.Items.Select(item => item.Outcome));
+        Assert.Equal([Root + @"\A", Root + @"\B"], remover.Removed);
+    }
+
     private sealed class SyncProgress(Action<CleanupProgress> action) : IProgress<CleanupProgress>
     {
         public void Report(CleanupProgress value) => action(value);

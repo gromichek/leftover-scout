@@ -45,6 +45,10 @@ public class HelpPageViewModelTests
         {
         }
 
+        public void OpenRecycleBin()
+        {
+        }
+
         public void OpenUrl(string url) => OpenedUrls.Add(url);
     }
 
