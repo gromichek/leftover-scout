@@ -100,7 +100,7 @@ public class JournalingCleanupServiceTests
         Assert.Equal(JournalState.Failed, final.State);
         Assert.Equal(JournalOutcome.Removed, final.Items[0].Outcome);
         Assert.Equal(JournalOutcome.NotStarted, final.Items[1].Outcome);
-        Assert.Empty(new JournalReader(storage, active).ReadAll().Where(entry => entry.Status == JournalEntryStatus.Interrupted));
+        Assert.DoesNotContain(new JournalReader(storage, active).ReadAll(), entry => entry.Status == JournalEntryStatus.Interrupted);
     }
 
     [Fact]
