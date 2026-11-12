@@ -66,8 +66,9 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 See `docs/PROGRESS.md`. At the time of writing: T-004 accepted by the owner (finding #7 collected).
 T-006 accepted by the owner with finding #10 (Kaspersky shell-extension package wrongly High).
-T-010 merged (#39). Owner swapped the order (D-065): T-012 (journal + History) task file written,
-waiting for the executor session; T-011 (Cleanup page) after it.
+T-012 merged (#42). Next: T-011 (selection on Findings + Cleanup page) — write the task;
+decisions D-056…D-067 cover it. First task where the owner can really delete — plan a careful
+manual test on throw-away folders first.
 
 Lead note: manual test steps must describe only what the help/app promise. **Owner preference (2026-11-09): do not remind about `git pull` / how to start the app in test steps — only what to check in the app.** (T-004 step 5 wrongly said Calculator might be hidden by the system filter; it is a normal Store app.)
 
@@ -178,7 +179,7 @@ for CS0246 on `Stream`/`File`/`Path` first.
   `git fetch origin +refs/heads/<branch>:refs/remotes/origin/<alias>`.
 - Executor sessions have no .NET SDK either, so their first CI run may fail on compile errors;
   the lead fixes small ones directly on the branch.
-- Recurring executor mistakes: xUnit1031 (blocking `.GetAwaiter().GetResult()` in test methods),
+- Recurring executor mistakes: xUnit2029 (`Assert.Empty(x.Where(…))` → `Assert.DoesNotContain`), xUnit1031 (blocking `.GetAwaiter().GetResult()` in test methods),
   missing `using LeftoverScout.Core.Tests.Scanning;`, fixed-list tests not updated for new items.
   Mention them in every task's notes.
 - Before pushing a fix, re-run the check you just printed (T-009: a missing `using` was reported
