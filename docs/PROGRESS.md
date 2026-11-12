@@ -15,8 +15,8 @@ Owned by the lead. Updated after every merged PR.
 - T-008 (findings page) accepted by the owner (2026-11-09). Phase 2 complete except T-007 (more cache rules).
 - Phase 3 (safe cleanup): T-009 (safety guard) merged — no visible change, no owner test needed.
 - T-010 (cleanup service) merged — no visible change, no owner test needed.
-- Next task: T-012 (journal + History, before T-011 per D-065) — task file written, session not started yet.
-  Then T-011 (selection + Cleanup page), the first task where the owner can delete.
+- T-012 (journal + History) merged; owner's manual test pending (History empty state only).
+- Next: T-011 (selection on Findings + Cleanup page) — the first task where the owner can delete; write the task.
 
 ## Done
 
@@ -34,6 +34,7 @@ Owned by the lead. Updated after every merged PR.
 | 2026-11-09 | T-008 | Findings page (leftovers + caches, filters, search, details, totals without double counting, Show in Results; builder re-checks protection incl. ancestors); finding #11 fixed; 791 tests. Lead fixed a blocking-wait test (xUnit1031) and the help topic list test | #32 |
 | 2026-11-11 | T-009 | Cleanup guard: request reduction, strict path parsing (trailing dots/spaces, streams, device names, `\\?\` rejected), fixed roots + hard-coded deny list, personal/protected incl. ancestors **and descendants**, path-based rule matching, live checks (8.3 long names, junction ancestors, cloud); no deletion, no UI; 954 tests. Lead fixed two missing usings and a wrong test assumption (`GetLongPathNameW` keeps letter case) | #36 |
 | 2026-11-11 | T-010 | Cleanup service: guard re-check per item, Recycle Bin protection (settings pre-check, `PreDeleteItem` veto, `PostDeleteItem` verification), locked-file fallback, running-program warning, cancel between items; `IFileOperation` via source-generated COM on an STA thread; 1013 tests incl. junction-target-survives in both modes. Lead verified COM vtable order/GUIDs and fixed a result bug: a failed permanent whole-folder delete had already removed files, which were not counted (reported Failed instead of PartlyRemoved) | #39 |
+| 2026-11-12 | T-012 | Cleanup journal (created before the first item, atomic rewrite after each item, finalized at the end; interrupted sessions detected; failures never stop a cleanup), journaling decorator registered as the app's `ICleanupService`, History page with details, Open Recycle Bin / journal folder; help EN + RU; 1062 tests. Lead fixed one xUnit2029 analyzer error | #42 |
 
 ## Collected for the next session task
 
