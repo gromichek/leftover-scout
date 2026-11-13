@@ -66,9 +66,8 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 See `docs/PROGRESS.md`. At the time of writing: T-004 accepted by the owner (finding #7 collected).
 T-006 accepted by the owner with finding #10 (Kaspersky shell-extension package wrongly High).
-T-012 merged (#42). Next: T-011 (selection on Findings + Cleanup page) — write the task;
-decisions D-056…D-067 cover it. First task where the owner can really delete — plan a careful
-manual test on throw-away folders first.
+T-012 accepted by the owner. T-011 (selection + Cleanup page) task file written with a safe manual
+test on throw-away folders (`ZzzScoutTest…`); waiting for the executor session.
 
 Lead note: manual test steps must describe only what the help/app promise. **Owner preference (2026-11-09): do not remind about `git pull` / how to start the app in test steps — only what to check in the app.** (T-004 step 5 wrongly said Calculator might be hidden by the system filter; it is a normal Store app.)
 
@@ -164,6 +163,8 @@ for CS0246 on `Stream`/`File`/`Path` first.
 | D-065 | 2026-11-11 | **T-012 (journal + History) before T-011** (Cleanup page), so the first real cleanup is already recorded | Owner, changes the order in D-061 |
 | D-066 | 2026-11-11 | Journal file created before the first item, rewritten atomically after each item, finalized at the end; not finalized → shown as Interrupted | Lead |
 | D-067 | 2026-11-11 | The app never deletes journals | Lead |
+| D-068 | 2026-11-13 | After a cleanup the scan result is out of date: banner on Results/Findings, Clean up selected… disabled until a new scan | Lead |
+| D-069 | 2026-11-13 | Findings: filter changes deselect items that become hidden; a new scan clears the selection | Lead, so nothing hidden is cleaned by accident |
 
 ## Notes for the next lead
 
