@@ -13,5 +13,9 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         DataContext = viewModel;
+
+        // A running cleanup is never cut off: the user is asked, and the window closes after the current item.
+        Closing += (_, e) => e.Cancel = !viewModel.CanCloseNow();
+        viewModel.CloseRequested += (_, _) => Close();
     }
 }

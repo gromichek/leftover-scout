@@ -17,6 +17,11 @@
                 Content="Cancel" />
       </StackPanel>
 
+      <TextBlock Margin="0,8,0,0"
+                 Text="{Binding CleanupRunningNote}"
+                 TextWrapping="Wrap"
+                 Visibility="{Binding IsCleanupRunning, Converter={StaticResource BooleanToVisibility}}" />
+
       <!-- Progress while a scan runs -->
       <StackPanel Margin="0,16,0,0" Visibility="{Binding IsScanning, Converter={StaticResource BooleanToVisibility}}">
         <ProgressBar Height="6" IsIndeterminate="True" />

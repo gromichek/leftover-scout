@@ -1,5 +1,6 @@
 using LeftoverScout.App.ViewModels;
 using LeftoverScout.Core.Classification;
+using LeftoverScout.Core.Cleanup;
 using LeftoverScout.Core.Evidence;
 using LeftoverScout.Core.Formatting;
 using LeftoverScout.Core.Rules;
@@ -411,5 +412,259 @@ public class FindingsPageViewModelTests
         findings.GoToScanCommand.Execute(null);
 
         Assert.Same(scanPage, main.CurrentPage);
+    }
+
+    // ---- Selection and "Clean up selected…" (decisions D-056, D-068, D-069) ----
+
+    private static (FindingsPageViewModel ViewModel, StubScanService Service, CleanupState State) CreateWithState(ScanResult last)
+    {
+        var service = new StubScanService { LastResult = last };
+        var state = new CleanupState();
+        return (new FindingsPageViewModel(service, new RecordingShell(), new FakeClipboard(), state), service, state);
+    }
+
+    [Fact]
+    public void Selection_Default_NothingIsSelected()
+    {
+        var (viewModel, _, _) = CreateWithState(Result());
+
+        Assert.All(viewModel.Rows, row => Assert.False(row.IsSelected));
+        Assert.Equal(0, viewModel.SelectedCount);
+        Assert.Equal("Selected: 0 items · 0 B", viewModel.SelectionText);
+        Assert.False(viewModel.CleanUpSelectedCommand.CanExecute(null));
+        Assert.False(viewModel.ClearSelectionCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void Selection_TickingARow_UpdatesTheLineAndEnablesCleanUp()
+    {
+        var (viewModel, _, _) = CreateWithState(Result());
+
+        RowFor(viewModel, @"AppData\Local\Temp").IsSelected = true;
+
+        Assert.Equal(1, viewModel.SelectedCount);
+        Assert.Equal($"Selected: 1 item · {SizeFormatter.Format(300)}", viewModel.SelectionText);
+        Assert.True(viewModel.CleanUpSelectedCommand.CanExecute(null));
+        Assert.True(viewModel.ClearSelectionCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void ToggleSelectedRow_FlipsTheCheckboxOfTheSelectedRow()
+    {
+        var (viewModel, _, _) = CreateWithState(Result());
+        Assert.False(viewModel.ToggleSelectedRowCommand.CanExecute(null));
+        viewModel.SelectedRow = RowFor(viewModel, @"AppData\Local\Temp");
+
+        viewModel.ToggleSelectedRowCommand.Execute(null);
+        Assert.True(viewModel.SelectedRow.IsSelected);
+        Assert.Equal(1, viewModel.SelectedCount);
+
+        viewModel.ToggleSelectedRowCommand.Execute(null);
+        Assert.False(viewModel.SelectedRow.IsSelected);
+        Assert.Equal(0, viewModel.SelectedCount);
+    }
+
+    [Fact]
+    public void SelectAllVisible_SelectsEveryVisibleRow_AndClearSelectionClears()
+    {
+        var (viewModel, _, _) = CreateWithState(Result());
+
+        viewModel.SelectAllVisibleCommand.Execute(null);
+
+        Assert.Equal(3, viewModel.SelectedCount);
+        Assert.All(viewModel.Rows, row => Assert.True(row.IsSelected));
+
+        viewModel.ClearSelectionCommand.Execute(null);
+
+        Assert.Equal(0, viewModel.SelectedCount);
+        Assert.All(viewModel.Rows, row => Assert.False(row.IsSelected));
+        Assert.Equal("Selected: 0 items · 0 B", viewModel.SelectionText);
+    }
+
+    [Fact]
+    public void SelectionLine_NestedSelectedItems_AreNotCountedTwice()
+    {
+        var (viewModel, _, _) = CreateWithState(Result());
+
+        RowFor(viewModel, @"AppData\Roaming\FooSoft").IsSelected = true;
+        RowFor(viewModel, @"AppData\Roaming\FooSoft\Cache").IsSelected = true;
+
+        Assert.Equal(2, viewModel.SelectedCount);
+        Assert.Equal($"Selected: 2 items · {SizeFormatter.Format(1400)}", viewModel.SelectionText);
+    }
+
+    [Fact]
+    public void FilterChange_DeselectsItemsThatBecomeHidden()
+    {
+        var (viewModel, _, _) = CreateWithState(Result());
+        viewModel.ShowLow = true;
+        RowFor(viewModel, @"AppData\Local\BarTool").IsSelected = true;
+        RowFor(viewModel, @"AppData\Local\Temp").IsSelected = true;
+        Assert.Equal(2, viewModel.SelectedCount);
+
+        viewModel.ShowLow = false;
+
+        Assert.Equal(1, viewModel.SelectedCount);
+        Assert.True(RowFor(viewModel, @"AppData\Local\Temp").IsSelected);
+
+        viewModel.ShowLow = true;
+
+        Assert.False(RowFor(viewModel, @"AppData\Local\BarTool").IsSelected);
+        Assert.Equal(1, viewModel.SelectedCount);
+    }
+
+    [Fact]
+    public void FilterChange_KeepsSelectedItemsThatStayVisible()
+    {
+        var (viewModel, _, _) = CreateWithState(Result());
+        RowFor(viewModel, @"AppData\Local\Temp").IsSelected = true;
+
+        viewModel.SearchText = "temp";
+
+        Assert.True(RowFor(viewModel, @"AppData\Local\Temp").IsSelected);
+        Assert.Equal(1, viewModel.SelectedCount);
+
+        viewModel.SearchText = "foo";
+
+        Assert.Equal(0, viewModel.SelectedCount);
+        Assert.False(viewModel.CleanUpSelectedCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void NewScan_ClearsTheSelection()
+    {
+        var (viewModel, service, _) = CreateWithState(Result());
+        viewModel.SelectAllVisibleCommand.Execute(null);
+
+        service.LastResult = Result();
+        service.Raise();
+
+        Assert.Equal(0, viewModel.SelectedCount);
+        Assert.All(viewModel.Rows, row => Assert.False(row.IsSelected));
+    }
+
+    [Fact]
+    public void CleanUpSelected_RaisesRequestWithTheSelectedItems()
+    {
+        ScanResult scan = Result();
+        var (viewModel, _, _) = CreateWithState(scan);
+        viewModel.ShowLow = true;
+        RowFor(viewModel, @"AppData\Roaming\FooSoft").IsSelected = true;
+        RowFor(viewModel, @"AppData\Local\BarTool").IsSelected = true;
+        CleanupRequestedEventArgs? args = null;
+        viewModel.CleanupRequested += (_, e) => args = e;
+
+        viewModel.CleanUpSelectedCommand.Execute(null);
+
+        Assert.NotNull(args);
+        Assert.Same(scan, args.SourceResult);
+        Assert.Equal(Root, args.Request.Target.ProfileRootPath);
+        Assert.Equal(
+            [Root + @"\AppData\Roaming\FooSoft", Root + @"\AppData\Local\BarTool"],
+            args.Request.Items.Select(item => item.FullPath).Order(StringComparer.Ordinal).Reverse());
+        CleanupItem bar = args.Request.Items.Single(item => item.FullPath.EndsWith("BarTool", StringComparison.Ordinal));
+        Assert.Equal(LeftoverConfidence.Low, bar.Confidence);
+        Assert.Equal(50, bar.SizeBytes);
+    }
+
+    [Fact]
+    public void CleanUpSelected_AfterACleanup_IsDisabledUntilANewScanCompletes()
+    {
+        ScanResult scan = Result();
+        var (viewModel, service, state) = CreateWithState(scan);
+        RowFor(viewModel, @"AppData\Local\Temp").IsSelected = true;
+        Assert.True(viewModel.CleanUpSelectedCommand.CanExecute(null));
+        Assert.False(viewModel.IsResultStale);
+
+        state.MarkStale(scan);
+
+        Assert.True(viewModel.IsResultStale);
+        Assert.Equal("Results are out of date after a cleanup — scan again.", viewModel.StaleMessage);
+        Assert.False(viewModel.CleanUpSelectedCommand.CanExecute(null));
+
+        service.LastResult = Result();
+        service.Raise();
+        RowFor(viewModel, @"AppData\Local\Temp").IsSelected = true;
+
+        Assert.False(viewModel.IsResultStale);
+        Assert.True(viewModel.CleanUpSelectedCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void CleanUpSelected_WhileACleanupRuns_IsDisabled()
+    {
+        var (viewModel, _, state) = CreateWithState(Result());
+        RowFor(viewModel, @"AppData\Local\Temp").IsSelected = true;
+
+        state.IsRunning = true;
+
+        Assert.False(viewModel.CleanUpSelectedCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void CleanUpSelected_ThroughMainViewModel_OpensTheCleanupPage()
+    {
+        ScanResult scan = Result();
+        var service = new StubScanService { LastResult = scan };
+        var state = new CleanupState();
+        var findings = new FindingsPageViewModel(service, new RecordingShell(), new FakeClipboard(), state);
+        var cleanup = new CleanupPageViewModel(new AllowAllGuard(), new NoRunningPrograms(), new NeverRunService(), new NoDialogs(), state, new RecordingShell());
+        var main = new MainViewModel([findings, cleanup], new AppDataLocation(@"C:\Apps\SampleApp\data", IsFallback: false));
+        main.CurrentPage = findings;
+        RowFor(findings, @"AppData\Local\Temp").IsSelected = true;
+
+        findings.CleanUpSelectedCommand.Execute(null);
+
+        Assert.Same(cleanup, main.CurrentPage);
+        Assert.False(cleanup.IsNothingSelected);
+    }
+
+    [Fact]
+    public void ResultsPage_AfterACleanup_ShowsTheOutOfDateBanner()
+    {
+        ScanResult scan = Result();
+        var service = new StubScanService { LastResult = scan };
+        var state = new CleanupState();
+        var results = new ResultsPageViewModel(service, new RecordingShell(), new FakeClipboard(), state);
+        Assert.False(results.IsResultStale);
+
+        state.MarkStale(scan);
+
+        Assert.True(results.IsResultStale);
+        Assert.Equal("Results are out of date after a cleanup — scan again.", results.StaleMessage);
+
+        service.LastResult = Result();
+        service.Raise();
+
+        Assert.False(results.IsResultStale);
+    }
+
+    private sealed class AllowAllGuard : ICleanupGuard
+    {
+        public CleanupGuardReport Check(CleanupRequest request)
+        {
+            RequestReduction reduction = RequestReducer.Reduce(request.Items);
+            return new CleanupGuardReport(reduction, [.. reduction.Items.Select(item => new GuardItemResult(item, new GuardResult([], [])))]);
+        }
+    }
+
+    private sealed class NoRunningPrograms : IRunningProgramDetector
+    {
+        public IReadOnlyList<RunningProgramWarning> Find(CleanupRequest request) => [];
+    }
+
+    private sealed class NeverRunService : ICleanupService
+    {
+        public Task<CleanupSessionResult> RunAsync(
+            CleanupRequest request,
+            CleanupMode mode,
+            IProgress<CleanupProgress>? progress,
+            CancellationToken cancellationToken,
+            Action<CleanupItemResult>? itemCompleted = null) => throw new NotSupportedException();
+    }
+
+    private sealed class NoDialogs : LeftoverScout.App.Services.IDialogService
+    {
+        public bool Confirm(string title, string message) => false;
     }
 }
