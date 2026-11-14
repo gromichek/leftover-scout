@@ -16,9 +16,11 @@ Owned by the lead. Updated after every merged PR.
 - Phase 3 (safe cleanup): T-009 (safety guard) merged — no visible change, no owner test needed.
 - T-010 (cleanup service) merged — no visible change, no owner test needed.
 - T-012 (journal + History) accepted by the owner (2026-11-13).
-- T-011 (selection + Cleanup page) merged — **cleanup is now usable from the UI**; owner's manual test
-  (safe scenario with `ZzzScoutTest…` folders) pending. Phase 3 complete after the owner's test.
-- Next: to be agreed with the owner (T-007 more rules, Phase 4 polish/release, T-013 export).
+- T-011 accepted by the owner (2026-11-14): full cleanup flow works (Recycle Bin, No in dialogs, journal,
+  out-of-date banner, permanent with two dialogs). **Phase 3 complete.** Note: test folders showed Medium,
+  not Low — copied files keep their old write time; verdict uses file times (by design, D-046).
+- Next task (owner's choice): T-007 (more rules) — task file written, session not started yet.
+  Afterwards: Phase 4 (T-015 release build, T-014 help review), T-013 export.
 
 ## Done
 
