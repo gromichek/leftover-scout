@@ -101,9 +101,27 @@ public class CleanupPageViewModelTests
         }
     }
 
+    // Runs posted callbacks inline and stays the current context while they run, so continuations after an
+    // await (and Progress<T> created in them) keep using this context instead of falling back to the thread pool.
     private sealed class ImmediateContext : SynchronizationContext
     {
-        public override void Post(SendOrPostCallback d, object? state) => d(state);
+        public override void Post(SendOrPostCallback d, object? state) => Run(d, state);
+
+        public override void Send(SendOrPostCallback d, object? state) => Run(d, state);
+
+        private void Run(SendOrPostCallback d, object? state)
+        {
+            SynchronizationContext? previous = Current;
+            SetSynchronizationContext(this);
+            try
+            {
+                d(state);
+            }
+            finally
+            {
+                SetSynchronizationContext(previous);
+            }
+        }
     }
 
     private sealed class Fixture
