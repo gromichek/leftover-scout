@@ -16,7 +16,9 @@ Owned by the lead. Updated after every merged PR.
 - Phase 3 (safe cleanup): T-009 (safety guard) merged — no visible change, no owner test needed.
 - T-010 (cleanup service) merged — no visible change, no owner test needed.
 - T-012 (journal + History) accepted by the owner (2026-11-13).
-- Next task: T-011 (selection + Cleanup page) — task file written, session not started yet.
+- T-011 (selection + Cleanup page) merged — **cleanup is now usable from the UI**; owner's manual test
+  (safe scenario with `ZzzScoutTest…` folders) pending. Phase 3 complete after the owner's test.
+- Next: to be agreed with the owner (T-007 more rules, Phase 4 polish/release, T-013 export).
 
 ## Done
 
@@ -35,6 +37,7 @@ Owned by the lead. Updated after every merged PR.
 | 2026-11-11 | T-009 | Cleanup guard: request reduction, strict path parsing (trailing dots/spaces, streams, device names, `\\?\` rejected), fixed roots + hard-coded deny list, personal/protected incl. ancestors **and descendants**, path-based rule matching, live checks (8.3 long names, junction ancestors, cloud); no deletion, no UI; 954 tests. Lead fixed two missing usings and a wrong test assumption (`GetLongPathNameW` keeps letter case) | #36 |
 | 2026-11-11 | T-010 | Cleanup service: guard re-check per item, Recycle Bin protection (settings pre-check, `PreDeleteItem` veto, `PostDeleteItem` verification), locked-file fallback, running-program warning, cancel between items; `IFileOperation` via source-generated COM on an STA thread; 1013 tests incl. junction-target-survives in both modes. Lead verified COM vtable order/GUIDs and fixed a result bug: a failed permanent whole-folder delete had already removed files, which were not counted (reported Failed instead of PartlyRemoved) | #39 |
 | 2026-11-12 | T-012 | Cleanup journal (created before the first item, atomic rewrite after each item, finalized at the end; interrupted sessions detected; failures never stop a cleanup), journaling decorator registered as the app's `ICleanupService`, History page with details, Open Recycle Bin / journal folder; help EN + RU; 1062 tests. Lead fixed one xUnit2029 analyzer error | #42 |
+| 2026-11-14 | T-011 | Selection on Findings (nothing preselected, deselect on filter change), Cleanup page (guard review, running programs, Recycle Bin / permanent with two confirmations default No, progress, cancel after current item, summary), out-of-date results after cleanup; help EN + RU; 1130 tests. Lead fixed a test synchronization context (progress test) | #45 |
 
 ## Collected for the next session task
 
