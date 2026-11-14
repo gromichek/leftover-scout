@@ -66,8 +66,9 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 See `docs/PROGRESS.md`. At the time of writing: T-004 accepted by the owner (finding #7 collected).
 T-006 accepted by the owner with finding #10 (Kaspersky shell-extension package wrongly High).
-T-012 accepted by the owner. T-011 (selection + Cleanup page) task file written with a safe manual
-test on throw-away folders (`ZzzScoutTest…`); waiting for the executor session.
+T-011 merged (#45): cleanup usable from the UI. Owner's manual test (safe scenario in the task file)
+pending. Then agree the next step with the owner: T-007 (more rules), Phase 4 (T-013 export,
+T-014 help review, T-015 release build), finding #4 (mixed DPI), #6 (exe size).
 
 Lead note: manual test steps must describe only what the help/app promise. **Owner preference (2026-11-09): do not remind about `git pull` / how to start the app in test steps — only what to check in the app.** (T-004 step 5 wrongly said Calculator might be hidden by the system filter; it is a normal Store app.)
 
