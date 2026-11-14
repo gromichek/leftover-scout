@@ -13,13 +13,12 @@ The window has a navigation list on the left:
 | **Results** | Shows where the space goes: browse folders by size and list large files. See [Results](results.md). |
 | **Programs** | Lists the programs installed on this computer, collected by every scan. See [Programs](programs.md). |
 | **Findings** | Lists what you could remove: leftovers and caches with size, confidence and reason. See [Findings](findings.md). |
-| **Cleanup** | Will move selected items to the Recycle Bin. Planned. See [Cleanup](cleanup.md). |
+| **Cleanup** | Reviews the items you selected on Findings, asks for confirmation and moves them to the Recycle Bin (or deletes them permanently). See [Cleanup](cleanup.md). |
 | **History** | Shows what earlier cleanups removed and what happened to each item. See [History](history.md). |
 | **Help** | This help. See [Using this help](help.md). |
 | **About** | Version, license, project link and the data folder. See [About](about.md). |
 
-At the moment **Scan**, **Results**, **Programs**, **Findings**, **History**, **Help** and **About** have content; **Cleanup**
-shows a short note about what it will do.
+Every section has content. The usual order of work is **Scan** → **Findings** → **Cleanup** → **History**.
 
 ## Only one window
 

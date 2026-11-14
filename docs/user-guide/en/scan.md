@@ -11,7 +11,8 @@ delete, move or rename anything, and does not change dates. The window stays usa
 
 ## Buttons
 
-- **Start scan**: starts a scan. It is disabled while a scan is running.
+- **Start scan**: starts a scan. It is disabled while a scan is running, and while a cleanup is running (the page then
+  says so). After a cleanup, scan again: the old result is out of date, and **Clean up selected…** on [Findings](findings.md) waits for a new scan.
 - **Cancel**: stops the scan, usually within about a second. A cancelled scan shows "Scan cancelled."
   and has no totals. It is disabled when no scan is running.
 

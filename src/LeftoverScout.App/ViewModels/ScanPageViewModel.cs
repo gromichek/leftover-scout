@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LeftoverScout.Core.Cleanup;
 using LeftoverScout.Core.Formatting;
 using LeftoverScout.Core.Help;
 using LeftoverScout.Core.Scanning;
@@ -16,6 +17,7 @@ public sealed partial class ScanPageViewModel : PageViewModel
     private const int CurrentFolderMaxLength = 80;
 
     private readonly IScanService _scanService;
+    private readonly CleanupState _cleanupState;
     private CancellationTokenSource? _cancellation;
 
     [ObservableProperty]
@@ -43,11 +45,25 @@ public sealed partial class ScanPageViewModel : PageViewModel
     private IReadOnlyList<SummaryItem> _largestFolders = [];
 
     /// <summary>Creates the Scan page.</summary>
-    public ScanPageViewModel(IScanService scanService)
+    /// <param name="scanService">Runs the scans.</param>
+    /// <param name="cleanupState">Shared cleanup state: no scan starts while a cleanup runs; a private one when null.</param>
+    public ScanPageViewModel(IScanService scanService, CleanupState? cleanupState = null)
         : base("Scan", HelpTopics.Scan)
     {
         _scanService = scanService;
+        _cleanupState = cleanupState ?? new CleanupState();
+        _cleanupState.Changed += (_, _) =>
+        {
+            OnPropertyChanged(nameof(IsCleanupRunning));
+            StartScanCommand.NotifyCanExecuteChanged();
+        };
     }
+
+    /// <summary>True while a cleanup runs; scanning is disabled then.</summary>
+    public bool IsCleanupRunning => _cleanupState.IsRunning;
+
+    /// <summary>The note shown while a cleanup runs.</summary>
+    public string CleanupRunningNote => "A cleanup is running. You can scan again when it has finished.";
 
     /// <summary>One-sentence explanation shown above the buttons.</summary>
     public string Description => "Measures what takes space in your user profile. Scanning is read-only: nothing is changed or deleted.";
@@ -55,7 +71,7 @@ public sealed partial class ScanPageViewModel : PageViewModel
     /// <summary>True when a summary of a completed scan is shown.</summary>
     public bool HasSummary => SummaryItems.Count > 0;
 
-    private bool CanStartScan() => !IsScanning;
+    private bool CanStartScan() => !IsScanning && !_cleanupState.IsRunning;
 
     private bool CanCancelScan() => IsScanning;
 

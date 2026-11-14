@@ -1,7 +1,7 @@
 # LeftoverScout user guide
 
 > LeftoverScout is in early development. Today it can scan your profile, let you browse what takes
-> space, show the programs installed on this computer, mark folders that probably belong to uninstalled programs and list what you could remove. Cleaning up is planned; the **History** page is ready to record it. This guide always describes what the app does now.
+> space, show the programs installed on this computer, mark folders that probably belong to uninstalled programs, list what you could remove and clean up the items you select, by default into the Recycle Bin. This guide always describes what the app does now.
 
 ## What LeftoverScout does
 
@@ -18,18 +18,20 @@ LeftoverScout is built to:
 1. Open **Scan** and press **Start scan**. See [Scan](scan.md).
 2. Open **Findings** to see what you could remove: leftovers and caches, biggest first, each with its reason. See [Findings](findings.md).
    To check an item, open **Results** (browse folders by size, see large files; look for **Leftover** and **In use** labels in the **Notes** column, see [Results](results.md)) or **Programs** (which programs are installed on this computer, see [Programs](programs.md)).
-3. **Cleanup** will remove the items you select on **Findings**. See [Cleanup](cleanup.md). *(planned)*
+3. Tick the items you want to remove on **Findings** and press **Clean up selected…**. **Cleanup** shows a review, asks for your confirmation, removes the items (by default into the Recycle Bin) and shows a summary. See [Cleanup](cleanup.md).
 4. **History** shows what each cleanup removed and what happened to every item. See [History](history.md).
 
 The navigation order is **Scan**, **Results**, **Programs**, **Findings**, **Cleanup**, **History**, **Help**, **About**.
-At the moment **Scan**, **Results**, **Programs**, **Findings**, **History**, **Help** and **About** have content.
+Every page has content: **Scan**, **Results**, **Programs**, **Findings**, **Cleanup**, **History**, **Help** and **About**.
+The order of work is **Scan** → **Findings** → **Cleanup** → **History**.
 
 ## What is safe
 
 - Scanning only reads folder listings. It does not open, change, move or delete your files.
 - Collecting the installed programs only reads: the registry is never written to, and shortcut files are never opened.
-- Nothing will be deleted without your explicit confirmation.
-- Important system and personal locations will be protected and never offered for deletion.
+- Nothing is deleted without your explicit confirmation. Permanent deletion needs two confirmations.
+- By default, items go to the Recycle Bin, so you can restore them.
+- Important system and personal locations are protected and never offered for deletion.
 
 ## Requirements
 

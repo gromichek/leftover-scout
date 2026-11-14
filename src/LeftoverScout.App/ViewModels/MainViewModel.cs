@@ -113,6 +113,55 @@ public sealed partial class MainViewModel : ObservableObject
             };
         }
 
+        foreach (CleanupPageViewModel cleanupPage in Pages.OfType<CleanupPageViewModel>())
+        {
+            foreach (FindingsPageViewModel findingsPage in Pages.OfType<FindingsPageViewModel>())
+            {
+                findingsPage.CleanupRequested += (_, args) =>
+                {
+                    CurrentPage = cleanupPage;
+                    _ = cleanupPage.BeginReviewAsync(args.Request, args.SourceResult);
+                };
+            }
+
+            cleanupPage.GoToFindingsRequested += (_, _) =>
+            {
+                FindingsPageViewModel? findingsPage = Pages.OfType<FindingsPageViewModel>().FirstOrDefault();
+                if (findingsPage is not null)
+                {
+                    CurrentPage = findingsPage;
+                }
+            };
+
+            cleanupPage.OpenHistoryRequested += (_, _) =>
+            {
+                HistoryPageViewModel? historyPage = Pages.OfType<HistoryPageViewModel>().FirstOrDefault();
+                if (historyPage is not null)
+                {
+                    CurrentPage = historyPage;
+                }
+            };
+
+            cleanupPage.ScanAgainRequested += (_, _) =>
+            {
+                ScanPageViewModel? scanPage = Pages.OfType<ScanPageViewModel>().FirstOrDefault();
+                if (scanPage is not null)
+                {
+                    CurrentPage = scanPage;
+                }
+            };
+
+            cleanupPage.ExitReady += (_, _) => CloseRequested?.Invoke(this, EventArgs.Empty);
+
+            cleanupPage.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(CleanupPageViewModel.StatusMessage) && !string.IsNullOrEmpty(cleanupPage.StatusMessage))
+                {
+                    StatusText = cleanupPage.StatusMessage;
+                }
+            };
+        }
+
         foreach (HistoryPageViewModel historyPage in Pages.OfType<HistoryPageViewModel>())
         {
             historyPage.PropertyChanged += (_, e) =>
@@ -129,6 +178,15 @@ public sealed partial class MainViewModel : ObservableObject
             _infoBarText = $"Settings are stored in {dataLocation.Path} because the program folder is not writable.";
         }
     }
+
+    /// <summary>Raised when the user asked to exit during a cleanup and the cleanup has ended; the window then closes.</summary>
+    public event EventHandler? CloseRequested;
+
+    /// <summary>
+    /// Asks whether the window may close now. During a cleanup this asks the user and, on Yes, stops the cleanup after
+    /// the current item; <see cref="CloseRequested"/> is raised when it has ended. True when nothing runs.
+    /// </summary>
+    public bool CanCloseNow() => Pages.OfType<CleanupPageViewModel>().All(page => page.CanCloseNow());
 
     /// <summary>Window title.</summary>
     public string Title => "LeftoverScout";

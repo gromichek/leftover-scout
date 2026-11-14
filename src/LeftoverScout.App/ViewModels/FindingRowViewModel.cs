@@ -1,4 +1,5 @@
 using System.Globalization;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LeftoverScout.Core.Classification;
 using LeftoverScout.Core.Findings;
 using LeftoverScout.Core.Formatting;
@@ -6,10 +7,13 @@ using LeftoverScout.Core.Formatting;
 namespace LeftoverScout.App.ViewModels;
 
 /// <summary>
-/// A row of the Findings table. Numeric and date columns expose the raw value for sorting and a formatted text for display.
+/// A row of the Findings table. <see cref="IsSelected"/> is the checkbox for cleanup (decision D-056). Numeric and date columns expose the raw value for sorting and a formatted text for display.
 /// </summary>
-public sealed class FindingRowViewModel
+public sealed partial class FindingRowViewModel : ObservableObject
 {
+    [ObservableProperty]
+    private bool _isSelected;
+
     /// <summary>Creates the row view model.</summary>
     public FindingRowViewModel(FindingEntry entry)
     {

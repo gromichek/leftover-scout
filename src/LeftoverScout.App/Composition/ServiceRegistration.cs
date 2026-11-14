@@ -55,6 +55,8 @@ public static class ServiceRegistration
             new JsonSettingsStore(dataLocation.Path, provider.GetRequiredService<ILogger<JsonSettingsStore>>()));
         services.AddSingleton<IShellLauncher, ShellLauncher>();
         services.AddSingleton<IClipboardService, WpfClipboardService>();
+        services.AddSingleton<IDialogService, WpfDialogService>();
+        services.AddSingleton<CleanupState>();
         services.AddSingleton<WindowPlacementService>();
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton(ScanTarget.ForCurrentUser());
@@ -79,7 +81,7 @@ public static class ServiceRegistration
 
         services.AddSingleton<IScanService, ScanService>();
 
-        // Cleanup (T-010) wrapped by the journal (T-012). No page starts a cleanup yet; the journal is already in place.
+        // Cleanup (T-010) wrapped by the journal (T-012). Only the Cleanup page (T-011) starts it.
         string[] appFolders = [AppContext.BaseDirectory, dataLocation.Path];
         services.AddSingleton<IPathProbe, WindowsPathProbe>();
         services.AddSingleton<IRecycleBinSettingsReader, WindowsRecycleBinSettingsReader>();
@@ -92,6 +94,8 @@ public static class ServiceRegistration
             provider.GetRequiredService<IPersonalFolderProvider>(),
             appFolders,
             provider.GetRequiredService<ILogger<CleanupGuard>>()));
+        services.AddSingleton<IProcessLister, WindowsProcessLister>();
+        services.AddSingleton<IRunningProgramDetector, RunningProgramDetector>();
         services.AddSingleton<CleanupService>();
         services.AddSingleton<ActiveJournalSessions>();
         services.AddSingleton<IJournalStorage>(new FileJournalStorage(dataLocation.Path));
@@ -117,8 +121,8 @@ public static class ServiceRegistration
         services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<ProgramsPageViewModel>());
         services.AddSingleton<FindingsPageViewModel>();
         services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<FindingsPageViewModel>());
-        services.AddSingleton<PageViewModel>(new PlaceholderPageViewModel(
-            "Cleanup", HelpTopics.Cleanup, 3, "Moves the items you select to the Recycle Bin after you confirm."));
+        services.AddSingleton<CleanupPageViewModel>();
+        services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<CleanupPageViewModel>());
         services.AddSingleton<HistoryPageViewModel>();
         services.AddSingleton<PageViewModel>(provider => provider.GetRequiredService<HistoryPageViewModel>());
         services.AddSingleton<HelpPageViewModel>();

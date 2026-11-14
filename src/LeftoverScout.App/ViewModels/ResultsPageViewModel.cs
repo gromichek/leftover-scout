@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LeftoverScout.Core.Cleanup;
 using LeftoverScout.Core.Formatting;
 using LeftoverScout.Core.Help;
 using LeftoverScout.Core.Results;
@@ -18,6 +19,7 @@ public sealed partial class ResultsPageViewModel : PageViewModel
     private readonly IScanService _scanService;
     private readonly IShellLauncher _shell;
     private readonly IClipboardService _clipboard;
+    private readonly CleanupState _cleanupState;
     private readonly SynchronizationContext? _uiContext;
     private ScanResult? _shownResult;
     private FolderNavigator? _navigator;
@@ -61,15 +63,21 @@ public sealed partial class ResultsPageViewModel : PageViewModel
     /// Create it on the UI thread: the scan service may raise <see cref="IScanService.LastResultChanged"/>
     /// on a background thread, and the page refreshes through the captured synchronization context.
     /// </remarks>
-    public ResultsPageViewModel(IScanService scanService, IShellLauncher shell, IClipboardService clipboard)
+    /// <param name="scanService">Provides the last completed scan.</param>
+    /// <param name="shell">Opens folders and files in Explorer.</param>
+    /// <param name="clipboard">Copies paths.</param>
+    /// <param name="cleanupState">Shared cleanup state (stale result); a private one when null.</param>
+    public ResultsPageViewModel(IScanService scanService, IShellLauncher shell, IClipboardService clipboard, CleanupState? cleanupState = null)
         : base("Results", HelpTopics.Results)
     {
         _scanService = scanService;
         _shell = shell;
         _clipboard = clipboard;
+        _cleanupState = cleanupState ?? new CleanupState();
         _uiContext = SynchronizationContext.Current;
 
         _scanService.LastResultChanged += OnLastResultChanged;
+        _cleanupState.Changed += (_, _) => OnPropertyChanged(nameof(IsResultStale));
         Refresh();
     }
 
@@ -87,6 +95,12 @@ public sealed partial class ResultsPageViewModel : PageViewModel
 
     /// <summary>Message of the empty Large files tab.</summary>
     public string NoLargeFilesMessage => "No files of 100 MB or more.";
+
+    /// <summary>True when a cleanup made the shown result out of date (decision D-068).</summary>
+    public bool IsResultStale => _cleanupState.IsStale(_shownResult);
+
+    /// <summary>The banner text shown when the result is out of date.</summary>
+    public string StaleMessage => CleanupText.StaleResultMessage;
 
     /// <summary>True when there is no result to show.</summary>
     public bool HasNoResult => !HasResult;
@@ -216,6 +230,7 @@ public sealed partial class ResultsPageViewModel : PageViewModel
         }
 
         _shownResult = result;
+        OnPropertyChanged(nameof(IsResultStale));
 
         if (result?.Root is not { } root)
         {

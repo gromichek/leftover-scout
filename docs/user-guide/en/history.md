@@ -3,8 +3,8 @@
 The **History** page shows every cleanup LeftoverScout has run: what was selected, what happened to each
 folder, and why. It is a record, not a control panel: nothing on this page removes, restores or changes anything.
 
-Cleaning up from the app is not available yet (see [Cleanup](cleanup.md)), so until then the page stays empty and
-shows **No cleanups yet.** Every cleanup you run later is recorded here.
+Every cleanup you run on [Cleanup](cleanup.md) is recorded here. Until you run one, the page shows **No cleanups yet.**
+The summary at the end of a cleanup has a button **Open History** that brings you here.
 
 ## What is recorded, and where
 

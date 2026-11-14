@@ -236,7 +236,10 @@ The Findings page (decisions D-052 … D-055) combines the scan tree, the rule m
   `ResultsPageViewModel.ShowFolder(node)` (`FolderNavigator.GoTo` + row selection) and switches the page.
   Actions use `IShellLauncher.OpenFolder` and `IClipboardService`; none of them writes or deletes anything.
 
-Selection for cleanup will be added to the Findings page later (*planned*); the Cleanup page will then show confirmation and progress.
+Selection for cleanup (T-011, D-056, D-069): `FindingRowViewModel.IsSelected` is the checkbox; the page keeps the selected findings by
+path, deselects the ones a filter hides and clears everything on a new scan. The selection line sums the selected items without
+double counting (`CleanupRequestBuilder.SelectedSize` uses `RequestReducer`). **Clean up selected…** raises `CleanupRequested`; `MainViewModel`
+opens the Cleanup page in the review state. The page itself never deletes anything.
 
 ### Safety guard (T-009)
 `CleanupGuard` (`LeftoverScout.Core.Cleanup`) is the one gate every deletion must pass. It deletes, moves and opens
@@ -272,7 +275,7 @@ What only **warns** (never allows a blocked item): the folder has newer direct c
 Logging writes counts per block reason, never paths.
 
 ### Cleanup service (T-010)
-No UI starts it yet (T-011 adds the Cleanup page). Code lives in `LeftoverScout.Core.Cleanup` (logic) and
+Only the Cleanup page (T-011) starts it. Code lives in `LeftoverScout.Core.Cleanup` (logic) and
 `LeftoverScout.Windows.Cleanup` (the only code that deletes). Decisions D-062 … D-064.
 
 - `ICleanupService.RunAsync(CleanupRequest, CleanupMode, IProgress<CleanupProgress>?, CancellationToken)` returns a
@@ -313,7 +316,25 @@ No UI starts it yet (T-011 adds the Cleanup page). Code lives in `LeftoverScout.
   `Process.GetProcesses()` and `QueryFullProcessImageNameW` with `PROCESS_QUERY_LIMITED_INFORMATION`; failures are ignored.
   It is a warning before the start, never a block; no process is touched.
 
-Still to come: the Cleanup page (T-011). The session journal is described below (T-012).
+The Cleanup page is described below (T-011); the session journal under "Cleanup journal and History page" (T-012).
+
+### Cleanup page (T-011)
+`CleanupPageViewModel` (App) is the **only** caller of `ICleanupService.RunAsync` (the registered service is the journaling decorator).
+States (`CleanupPageState`): nothing selected → checking → review → running → summary (decision D-059).
+- **Review:** off the UI thread it runs `ICleanupGuard.Check` and `IRunningProgramDetector.Find` (for allowed items only); the pure
+  `CleanupReviewBuilder` turns the report into a `CleanupReview` (rows with `Ready`, `Ready · <warnings>` or `Blocked: <reason>`, merged count,
+  running program names, totals). Only the **ready** items are put into the `CleanupRequest` that goes to the service; blocked items never reach it.
+- **Confirmation:** through `IDialogService` (App; `WpfDialogService` shows Yes / No message boxes with No as default). Recycle Bin: one
+  question (with a note about Low-confidence items); permanent: a second question. Any No runs nothing. Texts are in the pure `CleanupText`.
+- **Running:** progress comes from `IProgress<CleanupProgress>`; **Cancel** cancels the token (the service stops after the current item).
+  `CleanupState.IsRunning` disables **Start scan** and **Clean up selected…**. Closing the window: `MainWindow` asks
+  `MainViewModel.CanCloseNow()`; during a cleanup the user is asked, on Yes the cleanup is stopped after the current item and
+  `CloseRequested` closes the window when it has ended.
+- **Summary:** `CleanupText.SummaryLines`, a result table (`Outcome`, `Reason`), the journal warning and the unexpected-permanent warning.
+- **Out-of-date results (D-068):** after every cleanup that started (also cancelled or failed) the page calls `CleanupState.MarkStale(sourceResult)`.
+  `CleanupState` (Core, singleton) remembers that result object; a new scan produces a new object, so it is fresh. Results and Findings show a banner
+  and **Clean up selected…** is disabled while the shown result is stale.
+- The scan root of the request is `ScanTarget(result.Root.FullPath, isCurrentUser: true)`; Phase 1 scans the current user only (D-003).
 
 ### Cleanup journal and History page (T-012)
 Every cleanup session is recorded in `data\journal\cleanup-<yyyyMMdd-HHmmss>-<short id>.json` (decisions D-060, D-065 … D-067).

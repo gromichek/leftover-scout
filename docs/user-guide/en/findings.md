@@ -5,8 +5,8 @@ The **Findings** page answers one question: **what could I remove?** It gathers,
 folders that hold data a program can recreate (**caches**, **temp** files, **logs** and **crash dumps**). Every item
 comes with its size, how sure LeftoverScout is, and the reason.
 
-**Nothing is changed or deleted here.** You can only look, open a folder in Explorer and copy a path. Selecting items
-and cleaning them up is planned for this page.
+**Nothing is changed or deleted on this page.** You can look, open a folder in Explorer, copy a path and **select**
+items for cleanup. The actual removal happens on [Cleanup](cleanup.md), after a review and your confirmation.
 
 ## Before the first scan
 
@@ -41,10 +41,17 @@ Above the table you see when the scan finished, for example "Scanned 3/4/2025 12
 
 The table updates as you change a filter. If nothing passes the filters, the page says so.
 
+**Changing a filter deselects the items that become hidden**, so nothing you cannot see can be cleaned by accident. If
+you show them again, they are not selected any more. A new completed scan clears the whole selection.
+
+If a cleanup has run since the scan, a yellow banner says "Results are out of date after a cleanup — scan again."
+(with the button **Go to Scan**). The table is still shown, but **Clean up selected…** stays disabled until a new scan has completed.
+
 ## The table
 
 | Column | Meaning |
 |---|---|
+| (checkbox) | Select the item for cleanup. Nothing is selected at first. |
 | **Path** | Path of the folder below your profile folder. |
 | **Kind** | **Leftover**, **Cache**, **Temp**, **Logs** or **Crash dumps**. |
 | **Confidence** | **High**, **Medium** or **Low** for leftovers; empty for the other kinds. |
@@ -62,6 +69,18 @@ Under the table: "<n> items · <size>" for the items that pass the filters. An i
 item** (for example the `Cache` folder inside a leftover folder) is shown, but its size is **not added again**, so
 the total never counts the same bytes twice. If you hide the outer item with a filter, the inner one is counted.
 
+## Selecting items for cleanup
+
+Tick the checkbox in the first column, or select a row and press **Space**. Nothing is ticked by default, and you can
+tick **Low** items too: they are flagged as **Low confidence** on the Cleanup page and in the question you answer before the cleanup starts.
+
+- **Select all visible**: ticks every item that passes the current filters.
+- **Clear selection**: unticks everything.
+- The line **Selected: <n> items · <size>** shows how many items are ticked and how much they take. An item that lies
+  inside another ticked item is included with the outer one and is **not counted twice**.
+- **Clean up selected…**: opens [Cleanup](cleanup.md) with the ticked items. It is disabled while nothing is ticked,
+  while a cleanup is running, and after a cleanup until a new scan has completed.
+
 ## The details panel
 
 Select a row to see, below the table: the full path, the kind, the confidence, the size and the number of files, the
@@ -70,11 +89,12 @@ item, the line "Inside another finding: <path>". Without a selected row the pane
 
 ## Buttons and shortcuts
 
-The buttons are below the table and also in the right-click menu of a row. They are disabled until you select a row.
+The row buttons are below the table and also in the right-click menu of a row. They are disabled until you select a row.
 
 - **Open in Explorer**: opens the folder in Explorer.
 - **Copy path**: puts the full path on the clipboard. Shortcut: **Ctrl+C**.
 - **Show in Results**: switches to [Results](results.md), opens the parent folder of the item and selects its row.
+- **Select all visible**, **Clear selection**, **Clean up selected…**: see "Selecting items for cleanup" above.
 - **F1** or the **?** button: opens this help topic.
 
 ## Tips
@@ -84,5 +104,6 @@ The buttons are below the table and also in the right-click menu of a row. They 
 - **Low** is hidden because the program is probably still used.
 - Use **Show in Results** to see what lies around an item before you decide.
 - Cache, temp, logs and crash dumps can be recreated by the programs, but a leftover may hold settings or saves you still want.
+- Tick only what you understand. You review everything again on [Cleanup](cleanup.md), and by default items go to the Recycle Bin.
 
-Next: [Cleanup](cleanup.md) (planned).
+Next: [Cleanup](cleanup.md).

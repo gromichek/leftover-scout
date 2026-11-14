@@ -35,7 +35,9 @@
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
         <RowDefinition Height="*" MinHeight="120" />
+        <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
@@ -43,8 +45,24 @@
       <TextBlock Grid.Row="0" FontSize="24" FontWeight="SemiBold" Text="{Binding Title}" />
       <TextBlock Grid.Row="1" Margin="0,4,0,4" Text="{Binding HeaderText}" TextWrapping="Wrap" />
 
+      <Border Grid.Row="2"
+              Margin="0,0,0,8"
+              Padding="10,8"
+              Background="#FFFFF4CE"
+              BorderBrush="#FFE5CC73"
+              BorderThickness="1"
+              Visibility="{Binding IsResultStale, Converter={StaticResource BooleanToVisibility}}">
+        <DockPanel LastChildFill="True">
+          <Button DockPanel.Dock="Right"
+                  Margin="12,0,0,0"
+                  Command="{Binding GoToScanCommand}"
+                  Content="Go to Scan" />
+          <TextBlock VerticalAlignment="Center" Text="{Binding StaleMessage}" TextWrapping="Wrap" />
+        </DockPanel>
+      </Border>
+
       <!-- Filters and search -->
-      <WrapPanel Grid.Row="2" Margin="0,4,0,8">
+      <WrapPanel Grid.Row="3" Margin="0,4,0,8">
         <CheckBox Margin="0,0,12,0" VerticalAlignment="Center" Content="High" IsChecked="{Binding ShowHigh, Mode=TwoWay}" />
         <CheckBox Margin="0,0,12,0" VerticalAlignment="Center" Content="Medium" IsChecked="{Binding ShowMedium, Mode=TwoWay}" />
         <CheckBox Margin="0,0,12,0" VerticalAlignment="Center" Content="Low" IsChecked="{Binding ShowLow, Mode=TwoWay}" />
@@ -59,7 +77,7 @@
                  Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
       </WrapPanel>
 
-      <Grid Grid.Row="3">
+      <Grid Grid.Row="4">
         <DataGrid x:Name="FindingsGrid"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
@@ -88,6 +106,21 @@
             </ContextMenu>
           </DataGrid.ContextMenu>
           <DataGrid.Columns>
+            <DataGridTemplateColumn Width="36" CanUserSort="False" CanUserResize="False">
+              <DataGridTemplateColumn.Header>
+                <TextBlock Text="✓" ToolTip="Select for cleanup" />
+              </DataGridTemplateColumn.Header>
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <!-- Not focusable, so the Space key stays with the row and toggles it there. -->
+                  <CheckBox HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="Select for cleanup"
+                            Focusable="False"
+                            IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
             <DataGridTextColumn Width="3*" Header="Path" SortMemberPath="Path"
                                 Binding="{Binding Path, Mode=OneWay}" />
             <DataGridTextColumn Width="95" Header="Kind" SortMemberPath="KindText"
@@ -113,8 +146,18 @@
                    Visibility="{Binding HasEmptyMessage, Converter={StaticResource BooleanToVisibility}}" />
       </Grid>
 
+      <!-- Selection for cleanup (decision D-056) -->
+      <DockPanel Grid.Row="5" Margin="0,8,0,0" LastChildFill="False">
+        <TextBlock VerticalAlignment="Center" FontWeight="SemiBold" Text="{Binding SelectionText}" />
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+          <Button Margin="8,0,0,0" Command="{Binding SelectAllVisibleCommand}" Content="Select all visible" />
+          <Button Margin="8,0,0,0" Command="{Binding ClearSelectionCommand}" Content="Clear selection" />
+          <Button Margin="8,0,0,0" Command="{Binding CleanUpSelectedCommand}" Content="Clean up selected…" />
+        </StackPanel>
+      </DockPanel>
+
       <!-- Total and actions -->
-      <DockPanel Grid.Row="4" Margin="0,8,0,8" LastChildFill="False">
+      <DockPanel Grid.Row="6" Margin="0,8,0,8" LastChildFill="False">
         <TextBlock VerticalAlignment="Center" Text="{Binding TotalText}" />
         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
           <Button Margin="8,0,0,0" Command="{Binding OpenInExplorerCommand}" Content="Open in Explorer" />
@@ -124,7 +167,7 @@
       </DockPanel>
 
       <!-- Details of the selected row -->
-      <Border Grid.Row="5"
+      <Border Grid.Row="7"
               Height="170"
               Padding="10,8"
               BorderBrush="LightGray"

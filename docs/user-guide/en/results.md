@@ -2,7 +2,8 @@
 
 The **Results** page shows where the space in your profile goes. It uses the result of the last
 completed [Scan](scan.md). **Nothing is changed or deleted here**: you can only look, open a location in
-Explorer and copy a path.
+Explorer and copy a path. If a cleanup has run since the scan, a yellow banner says "Results are out of date after a cleanup — scan again."
+(with the button **Go to Scan**): the sizes and labels below then describe the profile as it was before the cleanup.
 
 ## Before the first scan
 
@@ -157,7 +158,7 @@ select a row.
 - A large **Files** count with a small size usually means many tiny cache files.
 - Big folders tagged **Personal** are your own documents and media. Leave them alone; they are protected.
 - Start with **Leftover: High** and **Leftover: Medium** folders, read the reason in the tooltip and ask yourself whether you really uninstalled that program. **Leftover: Low** folders are probably still used.
-- **Cache**, **Temp**, **Logs** and **Crash dumps** labels show where space is spent on data that can be recreated. This version does not delete anything.
+- **Cache**, **Temp**, **Logs** and **Crash dumps** labels show where space is spent on data that can be recreated. Cleaning up happens on [Cleanup](cleanup.md).
 - Sizes are logical file sizes and do not match Explorer to the byte, see [Scan](scan.md).
 
-Next: [Findings](findings.md) collects the leftovers and caches in one list; use **Show in Results** there to come back to a folder. [Cleanup](cleanup.md) is planned.
+Next: [Findings](findings.md) collects the leftovers and caches in one list; use **Show in Results** there to come back to a folder. Select items there and press **Clean up selected…** to continue with [Cleanup](cleanup.md).

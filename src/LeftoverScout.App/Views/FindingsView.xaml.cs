@@ -48,6 +48,19 @@ public partial class FindingsView : UserControl
     // The DataGrid handles Ctrl+C itself, so the key is forwarded before it sees it.
     private void FindingsGrid_PreviewKeyDown(object sender, KeyEventArgs e)
     {
+        // Space toggles the checkbox of the selected row (decision D-056).
+        if (ViewModel is { } spaceModel && e.Key == Key.Space && Keyboard.Modifiers == ModifierKeys.None
+            && e.OriginalSource is not TextBox)
+        {
+            if (spaceModel.ToggleSelectedRowCommand.CanExecute(null))
+            {
+                spaceModel.ToggleSelectedRowCommand.Execute(null);
+            }
+
+            e.Handled = true;
+            return;
+        }
+
         if (ViewModel is { } viewModel && e.Key == Key.C && Keyboard.Modifiers == ModifierKeys.Control)
         {
             if (viewModel.CopyPathCommand.CanExecute(null))
