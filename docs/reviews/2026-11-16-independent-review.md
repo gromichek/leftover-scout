@@ -362,3 +362,75 @@ each report to the owner with a one-line "say no if you disagree".
 
 Not verified here (marked *verify* above): the exact verdicts for the folders in R-04 on a real
 machine, and the sub-folder names proposed in R-09.
+
+---
+
+## Appendix A — Advice on the winapp2.ini database (added on the owner's request)
+
+**What it is.** A community database of cleaning rules, maintained since 2010, used by
+CCleaner, BleachBit and others (`github.com/MoscaDotTo/Winapp2`). BleachBit's documentation
+speaks of 2400+ extra cleaners from it. One entry per program part, e.g.:
+
+```
+[Example App Cache *]
+DetectFile=%LocalAppData%\ExampleApp
+Default=False
+FileKey1=%LocalAppData%\ExampleApp\Cache|*|RECURSE
+ExcludeKey1=FILE|%LocalAppData%\ExampleApp\Cache|index.db
+Warning=Signs you out of ExampleApp.
+```
+
+### A.1 Do not copy it into the repository
+
+- **License: CC BY-SA 4.0** (share-alike). It is not on the project's list (D-014: MIT,
+  Apache-2.0, BSD only), and rules derived from it would have to stay under CC BY-SA inside an
+  MIT project. Whether bare folder paths are protected at all is a legal question this review
+  cannot answer; the safe reading is: **no copying and no machine conversion without an owner
+  decision** (and that decision would change D-014).
+- **Different purpose.** A large part of the entries are privacy cleaners (history, cookies,
+  recent-file lists, sessions) and registry keys. That is outside this project (D-002: no
+  registry cleaning) and much of it is on T-007's "never add" list.
+- **Different safety bar.** The project's own README says the file is provided without warranty
+  and that cleaning is potentially irreversible; entries change often (several builds a week).
+  D-042 requires a source and a description with side effects for every rule, reviewed by the
+  lead. A bulk import cannot meet that.
+
+### A.2 Use it as a research index (recommended)
+
+For T-007 and later rule tasks:
+
+1. Use winapp2.ini to **find candidates**: which programs have cache / log / dump folders, and
+   which folder names to look for.
+2. For each candidate **confirm the path independently** (vendor documentation, or the owner's
+   machine) and write the rule from scratch in the project's format, with its own description.
+   Cite the vendor source in `source`; a candidate that cannot be confirmed goes to Follow-ups.
+3. Read the entry's `Warning=` and `ExcludeKey` lines: they record side effects and files that
+   other people already learned not to delete. They are hints for the rule's description and
+   for the "never add" tests.
+4. Sessions usually cannot reach the web, so this step belongs to the **lead** (or the owner
+   pastes the relevant entries into the task), not to the executor.
+
+### A.3 Ideas worth taking from the format (ideas, not data)
+
+| winapp2.ini | What it would give LeftoverScout | Relates to |
+|---|---|---|
+| `FileKey=path\|pattern\|RECURSE` vs `REMOVESELF` | A rule says which **files** to remove and whether the folder itself goes. "Empty it, keep the folder" becomes the default for caches | R-02 |
+| `ExcludeKey` | Keep named files inside a cleaned folder (an index, a settings file) | R-02, R-09 |
+| `Warning=` | A dedicated, always-shown side-effect text instead of prose inside `description` | finding #8 |
+| `Detect` / `DetectFile` | A rule is offered only when the program's data really exists; also usable as extra "installed" evidence | R-07 |
+| `Default=False` | Every entry is off until the user ticks it — same as D-056 | — |
+
+Changing the rule format contradicts T-007 ("no engine changes"), which is one more reason to
+do the cleanup-semantics task before T-007 (see P-05).
+
+### A.4 Optional later feature — owner decision
+
+BleachBit lets the **user** drop in a winapp2.ini file himself. LeftoverScout could offer the
+same: an optional, clearly marked "community rules (not reviewed by LeftoverScout)" source,
+file entries only, every item still passing the guard, never preselected. This keeps the
+repository free of CC BY-SA data and the app offline (the user downloads the file). It would
+revise D-040 (no user-supplied rules) and needs a parser for a second format, so it is a
+Phase 5+ idea, not a recommendation for now.
+
+Sources: MoscaDotTo/Winapp2 repository page (license, README); BleachBit documentation,
+"Winapp2.ini".
