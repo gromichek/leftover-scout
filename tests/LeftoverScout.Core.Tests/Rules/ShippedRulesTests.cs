@@ -20,9 +20,9 @@ public class ShippedRulesTests
     }
 
     [Fact]
-    public void ShippedRules_AreBetween40And60()
+    public void ShippedRules_CountIsInExpectedRange()
     {
-        Assert.InRange(Result.RuleSet.Rules.Count, 40, 60);
+        Assert.InRange(Result.RuleSet.Rules.Count, 60, 100);
     }
 
     [Fact]
@@ -36,11 +36,34 @@ public class ShippedRulesTests
     }
 
     [Fact]
-    public void ShippedRules_GradleDoesNotRequireInstallation_AndTheOthersDo()
+    public void ShippedRules_OnlyToolsWithoutInstallerEntryDoNotRequireInstallation()
     {
+        string[] withoutInstaller = ["gradle-data", "npm-global", "nuget-config"];
         Assert.All(
             Result.RuleSet.Rules.Where(rule => rule.Kind == RuleKind.Ownership),
-            rule => Assert.True(rule.Program!.RequiresInstallation == (rule.Id != "gradle-data"), rule.Id));
+            rule => Assert.True(rule.Program!.RequiresInstallation == !withoutInstaller.Contains(rule.Id), rule.Id));
+    }
+
+    [Theory]
+    [InlineData("protected-ssh", @"{Profile}\.ssh", RuleScope.Subtree)]
+    [InlineData("protected-gnupg", @"{RoamingAppData}\gnupg", RuleScope.Subtree)]
+    [InlineData("protected-aws", @"{Profile}\.aws", RuleScope.Subtree)]
+    [InlineData("protected-azure", @"{Profile}\.azure", RuleScope.Subtree)]
+    [InlineData("protected-kube", @"{Profile}\.kube", RuleScope.Subtree)]
+    [InlineData("protected-docker-config", @"{Profile}\.docker", RuleScope.Subtree)]
+    [InlineData("protected-android", @"{Profile}\.android", RuleScope.Subtree)]
+    [InlineData("protected-crypto-wallets", @"{RoamingAppData}\Exodus", RuleScope.Subtree)]
+    [InlineData("protected-package-cache", @"{LocalAppData}\Package Cache", RuleScope.Subtree)]
+    [InlineData("protected-virtual-store", @"{LocalAppData}\VirtualStore", RuleScope.Subtree)]
+    [InlineData("protected-isolated-storage", @"{LocalAppData}\IsolatedStorage", RuleScope.Subtree)]
+    [InlineData("protected-windows-local-folders", @"{LocalAppData}\Comms", RuleScope.Subtree)]
+    [InlineData("protected-d3d-shader-cache", @"{LocalAppData}\D3DSCache", RuleScope.Folder)]
+    public void ShippedRules_ProtectCredentialsWalletsAndWindowsFolders(string id, string path, RuleScope scope)
+    {
+        Rule rule = Result.RuleSet.Rules.Single(item => item.Id == id);
+        Assert.Equal(RuleKind.Protected, rule.Kind);
+        Assert.Equal(scope, rule.Scope);
+        Assert.Contains(rule.Paths, p => p.Text == path);
     }
 
     [Fact]

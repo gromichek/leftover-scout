@@ -160,6 +160,144 @@
       "scope": "subtree",
       "description": "App execution aliases and links of Microsoft Store apps.",
       "source": "Well-known Windows profile layout"
+    },
+    {
+      "id": "protected-ssh",
+      "kind": "protected",
+      "paths": [
+        "{Profile}\\.ssh"
+      ],
+      "scope": "subtree",
+      "description": "SSH private keys and known hosts. Losing a key can lock you out of servers and code hosting accounts, so it is kept.",
+      "source": "OpenSSH for Windows documentation (Microsoft Learn): user keys in %USERPROFILE%\\.ssh"
+    },
+    {
+      "id": "protected-gnupg",
+      "kind": "protected",
+      "paths": [
+        "{Profile}\\.gnupg",
+        "{RoamingAppData}\\gnupg"
+      ],
+      "scope": "subtree",
+      "description": "GnuPG keys and trust data (gnupg in Roaming is the Gpg4win location). Losing a private key means encrypted data can no longer be read.",
+      "source": "GnuPG documentation: home directory (.gnupg); Gpg4win uses %APPDATA%\\gnupg"
+    },
+    {
+      "id": "protected-aws",
+      "kind": "protected",
+      "paths": [
+        "{Profile}\\.aws"
+      ],
+      "scope": "subtree",
+      "description": "AWS CLI credentials and settings. They give access to cloud accounts, so they are kept.",
+      "source": "AWS CLI documentation: configuration and credential file settings (~/.aws)"
+    },
+    {
+      "id": "protected-azure",
+      "kind": "protected",
+      "paths": [
+        "{Profile}\\.azure"
+      ],
+      "scope": "subtree",
+      "description": "Azure CLI sign-in tokens and settings. They give access to cloud accounts, so they are kept.",
+      "source": "Azure CLI documentation (Microsoft Learn): the Azure CLI configuration folder ~/.azure"
+    },
+    {
+      "id": "protected-kube",
+      "kind": "protected",
+      "paths": [
+        "{Profile}\\.kube"
+      ],
+      "scope": "subtree",
+      "description": "Kubernetes configuration with cluster addresses and credentials.",
+      "source": "Kubernetes documentation: organizing cluster access using kubeconfig files (~/.kube/config)"
+    },
+    {
+      "id": "protected-docker-config",
+      "kind": "protected",
+      "paths": [
+        "{Profile}\\.docker"
+      ],
+      "scope": "subtree",
+      "description": "Docker CLI settings, including registry sign-ins.",
+      "source": "Docker documentation: Docker CLI configuration files (~/.docker/config.json)"
+    },
+    {
+      "id": "protected-android",
+      "kind": "protected",
+      "paths": [
+        "{Profile}\\.android"
+      ],
+      "scope": "subtree",
+      "description": "Android debug signing key and adb keys. The folder can also hold emulator images and be large; remove it by hand if you are sure you no longer need it.",
+      "source": "Android developer documentation: sign your app (debug keystore in ~/.android) and adb keys"
+    },
+    {
+      "id": "protected-crypto-wallets",
+      "kind": "protected",
+      "paths": [
+        "{RoamingAppData}\\Bitcoin",
+        "{RoamingAppData}\\Electrum",
+        "{RoamingAppData}\\Exodus",
+        "{RoamingAppData}\\Ethereum"
+      ],
+      "scope": "subtree",
+      "description": "Crypto wallets. Losing a wallet file can mean losing the money in it.",
+      "source": "Well-known location of the wallet programs' data folders (Bitcoin Core, Electrum, Exodus, Ethereum clients)"
+    },
+    {
+      "id": "protected-package-cache",
+      "kind": "protected",
+      "paths": [
+        "{LocalAppData}\\Package Cache"
+      ],
+      "scope": "subtree",
+      "description": "Installer cache. Uninstalling and repairing installed programs needs these files.",
+      "source": "Well-known location of the Windows Installer / Burn bootstrapper package cache"
+    },
+    {
+      "id": "protected-virtual-store",
+      "kind": "protected",
+      "paths": [
+        "{LocalAppData}\\VirtualStore"
+      ],
+      "scope": "subtree",
+      "description": "UAC file virtualization. Data of older programs that cannot write to protected folders lives here.",
+      "source": "Microsoft Learn: User Account Control file and registry virtualization"
+    },
+    {
+      "id": "protected-isolated-storage",
+      "kind": "protected",
+      "paths": [
+        "{LocalAppData}\\IsolatedStorage"
+      ],
+      "scope": "subtree",
+      "description": ".NET isolated storage. Settings of many small programs live here.",
+      "source": "Microsoft Learn: Isolated storage (.NET)"
+    },
+    {
+      "id": "protected-windows-local-folders",
+      "kind": "protected",
+      "paths": [
+        "{LocalAppData}\\ConnectedDevicesPlatform",
+        "{LocalAppData}\\Comms",
+        "{LocalAppData}\\Publishers",
+        "{LocalAppData}\\PeerDistRepub",
+        "{LocalAppData}\\PlaceholderTileLogoFolder"
+      ],
+      "scope": "subtree",
+      "description": "Folders of Windows components in your profile. Windows creates and uses them itself.",
+      "source": "Well-known location of Windows components in %LOCALAPPDATA% (not documented individually)"
+    },
+    {
+      "id": "protected-d3d-shader-cache",
+      "kind": "protected",
+      "paths": [
+        "{LocalAppData}\\D3DSCache"
+      ],
+      "scope": "folder",
+      "description": "DirectX shader cache. The folder itself is never offered for deletion.",
+      "source": "Well-known location of the DirectX shader cache"
     }
   ]
 }

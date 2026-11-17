@@ -70,7 +70,7 @@ matches, a label is added to **Notes**. These labels only describe the folder: *
 
 | Label | Meaning |
 |---|---|
-| **Protected** | The folder must never be offered for deletion. This covers the `AppData` folders themselves and important Windows data such as saved credentials, keys and certificates, the Start menu and the Store app links. **Personal** folders are protected too, even though they show the **Personal** tag instead. |
+| **Protected** | The folder must never be offered for deletion. This covers the `AppData` folders themselves and important Windows data such as saved credentials, keys and certificates, the Start menu and the Store app links. It also covers SSH and cloud-tool keys (`.ssh`, `.gnupg`, `.aws`, `.azure`, `.kube`, `.docker`, `.android`), crypto wallets (for example Bitcoin, Electrum, Exodus, Ethereum) and folders that Windows itself keeps in `AppData` (for example `Package Cache`, `VirtualStore`, `IsolatedStorage`, `Comms`, `ConnectedDevicesPlatform`, `Publishers`). **Personal** folders are protected too, even though they show the **Personal** tag instead. |
 | **Cache: …** | A cache of the program named after the colon (for example **Cache: Discord**). A program can download or build it again. |
 | **Temp** | Temporary files. |
 | **Logs** | Log files. |

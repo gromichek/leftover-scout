@@ -3,6 +3,7 @@
 LeftoverScout knows a list of well-known locations in the Windows user profile. The knowledge lives in JSON files in
 the `rules/` folder at the repository root. The files are embedded into the app (decisions D-040 … D-043); the app
 works fully offline and has no user-editable rules.
+Shipped today: 72 rules (29 protected, 28 cache, 15 ownership).
 
 Rules only **describe** folders. They never delete anything. Deciding whether a folder is a leftover is a separate
 step (classification, see `docs/ARCHITECTURE.md`); ownership rules feed it through `requiresInstallation` and the program hints.
