@@ -28,6 +28,12 @@ Read this file completely before you start. Then read, in this order:
    dotnet test LeftoverScout.slnx --configuration Release
    ```
    If you cannot run them (e.g. no Windows/.NET in your environment), say so in the PR.
+   **Cloud sessions (Linux with the .NET 10 SDK):** build `tests/LeftoverScout.Core.Tests` (this also builds
+   Core) and fix every compile and analyzer error before pushing. Also try
+   `dotnet build LeftoverScout.slnx --configuration Release -p:EnableWindowsTargeting=true` and report whether it works.
+   Many Core tests use Windows paths (`C:\Users\SampleUser\…`) and fail on Linux with "must be fully qualified";
+   that is expected. Run the tests once on a clean checkout and once with your changes, and report both failure
+   counts. Any new failure with a different message is a real problem. CI on Windows remains the final check.
 5. Open one PR titled `T-NNN: <short summary>` and fill in `.github/pull_request_template.md`.
    If you cannot open a PR from your environment, push the branch and finish with a message
    that contains the branch name and the filled-in PR template text; the lead opens the PR.

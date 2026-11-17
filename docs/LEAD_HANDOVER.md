@@ -176,7 +176,9 @@ for CS0246 on `Stream`/`File`/`Path` first.
 
 ## Notes for the next lead
 
-- The session environment has no .NET SDK and cannot reach nuget.org; builds are verified by CI only.
+- Since 2026-11-17 the owner's executor environment installs the .NET 10 SDK by a setup script (T-019 session:
+  `dotnet --version` 10.0.404). Core builds on Linux; about 370 Core tests fail there only because of Windows
+  paths (expected, see CLAUDE.md). The lead session still has no SDK; CI on Windows is the final check.
 - `actions/checkout@v6` and `actions/setup-dotnet@v5` are used (Node 24 based).
 - `gh pr create` fails (GraphQL is blocked in sessions). Use REST:
   `gh api repos/gromichek/leftover-scout/pulls -f title=… -f head=… -f base=main -F body=@file`;
