@@ -56,8 +56,9 @@ before more rules are added and before any release.
 | ID | Task | Status |
 |---|---|---|
 | T-019 | Mandatory protection: credential and wallet folders (rules + deny list), Windows/platform AppData folders, tools without installer → Unknown, "fresh Windows 11" golden-profile test (R-03.1, R-04) | ✅ |
-| T-020 | Classifier safety: "contains user data" class and valuable-file heuristic (R-03.2–3), High only after 6 months (R-05), partial evidence/scan failures → Unknown (R-06), system packages by publisher id (R-08), developer/gamer golden profiles | ⬜ |
+| T-020 | User data: `userData` rule field, valuable file names, LocalLow game data → Low at most with **User data** tag, skipped by Select all visible; gamer/mail golden profile (R-03.2–3, D-077) | 📝 |
 | T-021 | Cleanup semantics: Recycle Bin capacity for the whole selection (R-01), caches emptied instead of removed + minimum age (R-02), result older than 24 h needs a new scan (R-10, D-072), journal retention setting (D-073) | ⬜ |
+| T-022 | Evidence and classifier correctness: High only after 6 months (R-05), partial evidence/scan failures → Unknown (R-06), system packages by publisher id (R-08, D-078), developer golden profile | ⬜ |
 
 ## Phase 4 — Polish and release
 

@@ -22,7 +22,7 @@ Owned by the lead. Updated after every merged PR.
 - 2026-11-17: independent review merged (#48, `docs/reviews/2026-11-16-independent-review.md`). Owner decided
   (D-070 … D-073): safety hardening first — T-019 → T-020 → T-021, then T-015, T-007 (task file exists,
   to be revised), T-013, T-014.
-- T-019 (mandatory protection) merged, owner test pending. Next: T-020 (task file to be written).
+- T-019 accepted by the owner (2026-11-17). Next: T-020 (user data, task file written), then T-021, T-022 (D-076).
 
 ## Done
 
@@ -68,7 +68,7 @@ is fixed immediately.
 | 13 | 2026-11-16 | Review R-02 | **Safety:** cache rules remove the folder itself (`%TEMP%`, `INetCache`); no minimum age | T-021 |
 | 14 | 2026-11-16 | Review R-03 | **Safety:** credential folders (`.ssh`, …), wallets, browser profiles, saves can be offered as leftovers | T-019 ✅ (keys, wallets), T-020 (user-data class) |
 | 15 | 2026-11-16 | Review R-04 | **Safety:** Windows' own AppData folders (`Package Cache`, `VirtualStore`, …) and tool folders (`npm`, `NuGet`) are ordinary candidates | T-019 ✅ |
-| 16 | 2026-11-16 | Review R-05, R-06, R-08 | Ownership rule gives High without time check; partial evidence/scan failures not reported; system packages recognised by name prefix only | T-020 |
+| 16 | 2026-11-16 | Review R-05, R-06, R-08 | Ownership rule gives High without time check; partial evidence/scan failures not reported; system packages recognised by name prefix only | T-022 |
 | 17 | 2026-11-16 | Review R-07 | Vendor folder matched by a product name hides leftovers inside (low recall for big vendors) | later |
 | 18 | 2026-11-16 | Review R-09 | Rule `windows-inet-cache` covers Outlook's attachment working folder (`Content.Outlook`) | T-007 |
 | 19 | 2026-11-16 | Review R-10 | A scan result never expires | T-021 (D-072) |
