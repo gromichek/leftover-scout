@@ -34,9 +34,14 @@ Read this file completely before you start. Then read, in this order:
    Many Core tests use Windows paths (`C:\Users\SampleUser\…`) and fail on Linux with "must be fully qualified";
    that is expected. Run the tests once on a clean checkout and once with your changes, and report both failure
    counts. Any new failure with a different message is a real problem. CI on Windows remains the final check.
-5. Open one PR titled `T-NNN: <short summary>` and fill in `.github/pull_request_template.md`.
-   If you cannot open a PR from your environment, push the branch and finish with a message
-   that contains the branch name and the filled-in PR template text; the lead opens the PR.
+5. **Write the report file** `docs/reports/T-NNN-report.md` and commit it on your branch (decision D-075).
+   It contains the filled-in `.github/pull_request_template.md`, the exact build/test commands you ran
+   with their results (failure counts before and after your change), and the answer to everything the
+   task or the lead asked you to check or report. The lead reads it from the branch, so the owner does
+   not have to relay anything. Write it in English, without personal data.
+   Then open one PR titled `T-NNN: <short summary>` with the same text. If you cannot open a PR from your
+   environment, push the branch and finish with a short message: the branch name and "report in
+   docs/reports/T-NNN-report.md"; the lead opens the PR.
 6. Do not merge your own PR. Do not edit `docs/PROGRESS.md`, `docs/LEAD_HANDOVER.md` or
    `docs/ROADMAP.md` — the lead owns them.
 

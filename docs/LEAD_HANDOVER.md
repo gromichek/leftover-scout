@@ -66,7 +66,7 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 See `docs/PROGRESS.md` (the accurate, dated record). At the time of writing (2026-11-17): Phase 3 accepted;
 an independent review (PR #48) found safety gaps in detection and cleanup semantics; the owner decided to
-do T-019 → T-020 → T-021 before T-007 (D-070). T-019 task file written. T-007 task file stays as is and
+do T-019 → T-020 → T-021 → T-022 before T-007 (D-070, D-076). T-019 accepted; T-020 task file written. T-007 task file stays as is and
 must be revised before its session (rule format may gain fields in T-020/T-021; add R-09).
 
 Lead decisions: list every decision marked "Lead" in the next report to the owner, one line each, with
@@ -173,6 +173,10 @@ for CS0246 on `Stream`/`File`/`Path` first.
 | D-072 | 2026-11-17 | A scan result **older than 24 hours** cannot be cleaned; the user must scan again | Owner (R-10) |
 | D-073 | 2026-11-17 | Journal retention is a **setting**; journals are not kept forever by default. Default: delete journals older than **90 days** | Owner (setting); default value chosen by the lead — owner may change it. Supersedes D-067. Implemented in T-021 |
 | D-074 | 2026-11-17 | Winapp2.ini (CC BY-SA 4.0) is **not copied** into the repository; the lead may use it only as a research index for finding rule candidates, each rule confirmed and written independently | Lead, follows D-014; review appendix A |
+| D-075 | 2026-11-17 | Executors write a **report file** `docs/reports/T-NNN-report.md` on their branch (PR template text, build/test results, answers to requested checks); the lead reads it from the branch, the owner relays nothing | Owner |
+| D-076 | 2026-11-17 | T-020 (review P-05 item 2) is split: **T-020 user data** (R-03.2/3, LocalLow, gamer/mail golden profile) and **T-022 evidence and classifier correctness** (R-05, R-06, R-08, developer golden profile). Order: T-020 → T-021 → T-022, because T-021 fixes a High finding (R-01) | Lead |
+| D-077 | 2026-11-17 | Folders whose name matches a user-data rule, that contain a well-known valuable file name, or lie under `LocalLow` are **Leftover Low at most**, tagged **User data**, and never ticked by **Select all visible** | Lead, implements R-03.2/3 |
+| D-078 | 2026-11-17 | Windows system packages (publisher id `_cw5n1h2txyewy`) are never rated leftovers (Unknown); Microsoft packages (`_8wekyb3d8bbwe`) max Medium (extends D-051, T-022) | Lead, implements R-08 |
 
 ## Notes for the next lead
 

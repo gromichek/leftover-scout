@@ -28,6 +28,7 @@ What exists already, which documents/decisions apply (e.g. D-004), links to rele
 - [ ] New/changed logic is covered by tests.
 - [ ] Help updated in English and Russian to match the app (or "no change needed" with reason); page help links work.
 - [ ] No new package, or each new package is permissive and listed in ARCHITECTURE.md.
+- [ ] Report file `docs/reports/T-NNN-report.md` on the branch (CLAUDE.md step 5, D-075).
 
 ## Manual test steps for the owner
 
