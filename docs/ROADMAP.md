@@ -55,7 +55,7 @@ before more rules are added and before any release.
 
 | ID | Task | Status |
 |---|---|---|
-| T-019 | Mandatory protection: credential and wallet folders (rules + deny list), Windows/platform AppData folders, tools without installer → Unknown, "fresh Windows 11" golden-profile test (R-03.1, R-04) | 📝 |
+| T-019 | Mandatory protection: credential and wallet folders (rules + deny list), Windows/platform AppData folders, tools without installer → Unknown, "fresh Windows 11" golden-profile test (R-03.1, R-04) | ✅ |
 | T-020 | Classifier safety: "contains user data" class and valuable-file heuristic (R-03.2–3), High only after 6 months (R-05), partial evidence/scan failures → Unknown (R-06), system packages by publisher id (R-08), developer/gamer golden profiles | ⬜ |
 | T-021 | Cleanup semantics: Recycle Bin capacity for the whole selection (R-01), caches emptied instead of removed + minimum age (R-02), result older than 24 h needs a new scan (R-10, D-072), journal retention setting (D-073) | ⬜ |
 
