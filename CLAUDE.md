@@ -48,8 +48,9 @@ This app deletes user files. A bug can destroy someone's data.
 - **Scanning is read-only.** Scanning code never writes, moves, renames or deletes anything,
   and never changes attributes or timestamps.
 - **Only the cleanup service deletes.** All deletion goes through the single cleanup service
-  in `LeftoverScout.Windows` (see ARCHITECTURE.md). No other code calls `File.Delete`,
-  `Directory.Delete` or similar APIs on user data.
+  (`CleanupService` in Core); the only code that actually removes files is its Windows remover
+  (`ShellEntryRemover` in `LeftoverScout.Windows`, see ARCHITECTURE.md). No other code calls
+  `File.Delete`, `Directory.Delete` or similar APIs on user data.
 - **Recycle Bin by default.** Permanent deletion only through the explicit option with double
   confirmation (decision D-004).
 - **Protected list wins.** Anything matched by the protected list is never offered for deletion.

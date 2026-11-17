@@ -34,7 +34,7 @@ Goal: each suspicious item gets a category, a confidence level and an explanatio
 | T-005 | Rules: JSON format, loader/validator/matcher, 40–60 initial rules, rule labels in Results Notes; includes finding #7 | ✅ |
 | T-006 | Leftover detection: candidates, normalized name matching vs evidence, High/Medium/Low with explanations, Results labels; personal folders by name (#9), Spotify description (#8) | ✅ |
 | T-006b | Safer package verdicts: complete Store query, vendor cross-check with installed programs, Microsoft packages max Medium (finding #10) | ✅ |
-| T-007 | More rules (to ~110–130): caches/temp/logs/crash dumps and owners of popular programs, "never add" list with tests (after Phase 3) | 📝 |
+| T-007 | More rules (to ~110–130): caches/temp/logs/crash dumps and owners of popular programs, "never add" list with tests; narrow `windows-inet-cache` (R-09). **After T-019…T-021 and T-015 (D-070)** | 📝 |
 | T-008 | Findings page: leftovers + caches, filters, search, details panel, totals, Show in Results; includes finding #11 | ✅ |
 
 ## Phase 3 — Safe cleanup
@@ -47,6 +47,17 @@ Goal: the user removes chosen items safely and can see what was done.
 | T-010 | Cleanup service: Recycle Bin via Shell API (never silently permanent), permanent mode, locked files, running-program warning, per-item results, cancel | ✅ |
 | T-012 | JSON session journal in `data\journal\` + History page (sessions, details, Open Recycle Bin) | ✅ |
 | T-011 | Selection on Findings + Cleanup page: review, mode, double confirmation for permanent, progress, summary | ✅ |
+
+## Phase 3b — Safety hardening
+
+Goal: close the gaps found by the independent review (`docs/reviews/2026-11-16-independent-review.md`, D-070)
+before more rules are added and before any release.
+
+| ID | Task | Status |
+|---|---|---|
+| T-019 | Mandatory protection: credential and wallet folders (rules + deny list), Windows/platform AppData folders, tools without installer → Unknown, "fresh Windows 11" golden-profile test (R-03.1, R-04) | 📝 |
+| T-020 | Classifier safety: "contains user data" class and valuable-file heuristic (R-03.2–3), High only after 6 months (R-05), partial evidence/scan failures → Unknown (R-06), system packages by publisher id (R-08), developer/gamer golden profiles | ⬜ |
+| T-021 | Cleanup semantics: Recycle Bin capacity for the whole selection (R-01), caches emptied instead of removed + minimum age (R-02), result older than 24 h needs a new scan (R-10, D-072), journal retention setting (D-073) | ⬜ |
 
 ## Phase 4 — Polish and release
 
