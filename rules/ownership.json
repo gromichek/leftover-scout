@@ -317,6 +317,44 @@
       },
       "description": "The Gradle user home: settings, caches and wrappers.",
       "source": "Gradle documentation: Gradle user home directory"
+    },
+    {
+      "id": "npm-global",
+      "kind": "ownership",
+      "paths": [
+        "{RoamingAppData}\\npm"
+      ],
+      "program": {
+        "displayName": "Node.js",
+        "requiresInstallation": false,
+        "names": [
+          "Node.js"
+        ],
+        "publishers": [
+          "OpenJS Foundation"
+        ]
+      },
+      "description": "Global npm packages and npm settings.",
+      "source": "npm documentation: folders (global installs on Windows use %AppData%\\npm)"
+    },
+    {
+      "id": "nuget-config",
+      "kind": "ownership",
+      "paths": [
+        "{RoamingAppData}\\NuGet"
+      ],
+      "program": {
+        "displayName": "NuGet",
+        "requiresInstallation": false,
+        "names": [
+          "NuGet"
+        ],
+        "publishers": [
+          ".NET Foundation"
+        ]
+      },
+      "description": "NuGet user settings and package feeds.",
+      "source": "NuGet documentation (Microsoft Learn): configuring NuGet behavior, user-level NuGet.Config in %AppData%\\NuGet"
     }
   ]
 }

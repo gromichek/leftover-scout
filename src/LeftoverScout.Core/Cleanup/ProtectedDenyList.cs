@@ -2,7 +2,7 @@ namespace LeftoverScout.Core.Cleanup;
 
 /// <summary>
 /// A hard-coded list of folders below the profile root that must never be deleted, whatever the rule files say.
-/// It repeats the Windows security folders of <c>rules/protected.json</c> in code, so that a missing or broken rule
+/// It repeats the Windows security folders and the credential and wallet folders of <c>rules/protected.json</c> in code, so that a missing or broken rule
 /// file can never unprotect them. A folder is blocked when it is on the list, lies inside a subtree entry, or
 /// contains an entry.
 /// </summary>
@@ -32,6 +32,19 @@ internal static class ProtectedDenyList
         (["AppData", "Local", "Microsoft", "Vault"], true),
         (["AppData", "Roaming", "Microsoft", "Windows", "Start Menu"], true),
         (["AppData", "Local", "Microsoft", "WindowsApps"], true),
+        // Credential and wallet folders (T-019): losing them can lock the user out or lose money.
+        ([".ssh"], true),
+        ([".gnupg"], true),
+        ([".aws"], true),
+        ([".azure"], true),
+        ([".kube"], true),
+        ([".docker"], true),
+        ([".android"], true),
+        (["AppData", "Roaming", "gnupg"], true),
+        (["AppData", "Roaming", "Bitcoin"], true),
+        (["AppData", "Roaming", "Electrum"], true),
+        (["AppData", "Roaming", "Exodus"], true),
+        (["AppData", "Roaming", "Ethereum"], true),
     ];
 
     /// <summary>True when the profile-relative folder is one of the fixed roots.</summary>

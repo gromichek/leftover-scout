@@ -262,7 +262,7 @@ Layers of protection (an item must pass all of them):
    itself, or a folder that contains a protected rule path). Independent of the Findings builder and of the scan tree.
 4. **Hard-coded deny list** (`ProtectedDenyList`, in code, not JSON): the fixed roots and the Windows security folders
    of `rules/protected.json` (Microsoft, Packages, Programs, Protect, Credentials, SystemCertificates, Crypto, Vault,
-   Start Menu, WindowsApps), so a missing or broken rule file can never unprotect them.
+   Start Menu, WindowsApps) and the credential and wallet folders (`.ssh`, `.gnupg`, `.aws`, `.azure`, `.kube`, `.docker`, `.android`, Roaming `gnupg`, `Bitcoin`, `Electrum`, `Exodus`, `Ethereum`; T-019), so a missing or broken rule file can never unprotect them.
 5. **Live file system checks** (`IPathProbe`, Windows implementation `WindowsPathProbe`; only attribute queries with
    `FindFirstFileExW` on the item itself and `GetLongPathNameW`, `\\?\` prefix for long paths, nothing is opened or
    followed). Run only for items that passed 1-4. Block when: the path does not exist or is not a folder; the long form

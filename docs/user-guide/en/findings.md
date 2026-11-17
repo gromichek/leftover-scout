@@ -26,7 +26,7 @@ Listed:
 Never listed:
 
 - **Personal** folders (Documents, Desktop, Pictures, ...) and everything inside them.
-- **Protected** locations, for example saved credentials, keys and the Start menu.
+- **Protected** locations, for example saved credentials, SSH and cloud-tool keys, crypto wallets, folders that Windows itself keeps in `AppData`, and the Start menu.
 - Links (junctions and symbolic links), online-only cloud folders that were not read, and folders that are empty
   (no size and no files), because there is nothing to gain.
 
