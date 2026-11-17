@@ -2,10 +2,11 @@
 
 Find and safely clean up leftover data from uninstalled programs in your Windows user profile.
 
-> **Status:** early development — the app cannot scan or clean anything yet.
+> **Status:** pre-release, no published build yet. Scanning, findings, cleanup and history work,
+> but detection is still being hardened. **Test it only on data you can afford to lose.**
 > See [docs/ROADMAP.md](docs/ROADMAP.md).
 
-## What it will do
+## What it does
 
 - Scan `%USERPROFILE%` (AppData and other folders) **read-only** and show what takes space.
 - Explain which items probably belong to programs that are no longer installed, and why.

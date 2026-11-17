@@ -1,7 +1,7 @@
 # Architecture
 
-Status: updated in T-001. Sections marked *(planned)* describe agreed design that has
-no code yet. Architectural changes need the owner's decision (see `docs/LEAD_HANDOVER.md`).
+Status: describes the code up to T-012/T-011 (Phase 3). Architectural changes need the owner's
+decision (see `docs/LEAD_HANDOVER.md`).
 
 ## Goal
 

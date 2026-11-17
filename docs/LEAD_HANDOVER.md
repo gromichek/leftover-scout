@@ -64,12 +64,13 @@ Recycle Bin. The owner is a hobbyist C# developer who tests manually on Windows.
 
 ## Current state
 
-See `docs/PROGRESS.md`. At the time of writing: T-004 accepted by the owner (finding #7 collected).
-T-006 accepted by the owner with finding #10 (Kaspersky shell-extension package wrongly High).
-Phase 3 accepted by the owner. Owner chose T-007 (more rules) next; task file written. Review every
-new rule (path, description with side effects, source) — verify doubtful sources with WebSearch.
-After T-007 propose Phase 4 (T-015 release build first, then T-014 help review), T-013 export,
-finding #4 (mixed DPI).
+See `docs/PROGRESS.md` (the accurate, dated record). At the time of writing (2026-11-17): Phase 3 accepted;
+an independent review (PR #48) found safety gaps in detection and cleanup semantics; the owner decided to
+do T-019 → T-020 → T-021 before T-007 (D-070). T-019 task file written. T-007 task file stays as is and
+must be revised before its session (rule format may gain fields in T-020/T-021; add R-09).
+
+Lead decisions: list every decision marked "Lead" in the next report to the owner, one line each, with
+"say no if you disagree" (review P-08).
 
 Lead note: manual test steps must describe only what the help/app promise. **Owner preference (2026-11-09): do not remind about `git pull` / how to start the app in test steps — only what to check in the app.** (T-004 step 5 wrongly said Calculator might be hidden by the system filter; it is a normal Store app.)
 
@@ -110,7 +111,7 @@ for CS0246 on `Stream`/`File`/`Path` first.
 | D-010 | 2026-11-07 | Tests with **xUnit v3** | Apache-2.0 |
 | D-011 | 2026-11-07 | **Built-in WPF Fluent theme** | Light only — see D-016 |
 | D-012 | 2026-11-07 | Settings and journals in **`data\` next to the exe**; fallback `%LOCALAPPDATA%\LeftoverScout` with a warning to the user | Portable: no traces when the app folder is deleted |
-| D-013 | 2026-11-07 | Solution layout: `Core` (net10.0) / `Windows` / `App` + two test projects; `rules/` for JSON | See ARCHITECTURE.md |
+| D-013 | 2026-11-07 | Solution layout: `Core` (net10.0) / `Windows` / `App` + two test projects; `rules/` for JSON | See ARCHITECTURE.md. Since T-001 there are three test projects (Core, Windows, App) |
 | D-014 | 2026-11-07 | Only free permissive packages (MIT, Apache-2.0, BSD); no GPL, no commercial | |
 | D-015 | 2026-11-07 | T-000 includes a buildable solution skeleton so CI can become a required check | |
 | D-016 | 2026-11-07 | Theme: built-in Fluent, **light only** (refines D-011; no dark mode, no system following) | Use the `Fluent.Light.xaml` dictionary; `ThemeMode` is experimental (WPF0001) |
@@ -164,9 +165,14 @@ for CS0246 on `Stream`/`File`/`Path` first.
 | D-064 | 2026-11-11 | "Program running" is a warning before start (process image path inside the item, or process name matches the item's program), never a block | Lead, refines D-058 |
 | D-065 | 2026-11-11 | **T-012 (journal + History) before T-011** (Cleanup page), so the first real cleanup is already recorded | Owner, changes the order in D-061 |
 | D-066 | 2026-11-11 | Journal file created before the first item, rewritten atomically after each item, finalized at the end; not finalized → shown as Interrupted | Lead |
-| D-067 | 2026-11-11 | The app never deletes journals | Lead |
+| D-067 | 2026-11-11 | ~~The app never deletes journals~~ **Superseded by D-073** | Lead |
 | D-068 | 2026-11-13 | After a cleanup the scan result is out of date: banner on Results/Findings, Clean up selected… disabled until a new scan | Lead |
 | D-069 | 2026-11-13 | Findings: filter changes deselect items that become hidden; a new scan clears the selection | Lead, so nothing hidden is cleaned by accident |
+| D-070 | 2026-11-17 | Independent review (`docs/reviews/2026-11-16-independent-review.md`) accepted as input. **Safety tasks before T-007:** T-019 mandatory protection (keys, wallets, Windows folders, fresh-Windows golden test) → T-020 classifier safety (user-data class, valuable-file heuristic, R-05, R-06, R-08, more golden profiles) → T-021 cleanup semantics (Recycle Bin capacity per session, caches emptied instead of removed, minimum age, result expiry, journal retention) → T-015 → T-007 (incl. R-09) → T-013 → T-014 | Owner, follows the review's proposed order (P-05) |
+| D-071 | 2026-11-17 | Caches go to the **Recycle Bin by default** like everything else (D-004 unchanged); T-021 warns before cleanup when the selection does not fit into the bin | Owner |
+| D-072 | 2026-11-17 | A scan result **older than 24 hours** cannot be cleaned; the user must scan again | Owner (R-10) |
+| D-073 | 2026-11-17 | Journal retention is a **setting**; journals are not kept forever by default. Default: delete journals older than **90 days** | Owner (setting); default value chosen by the lead — owner may change it. Supersedes D-067. Implemented in T-021 |
+| D-074 | 2026-11-17 | Winapp2.ini (CC BY-SA 4.0) is **not copied** into the repository; the lead may use it only as a research index for finding rule candidates, each rule confirmed and written independently | Lead, follows D-014; review appendix A |
 
 ## Notes for the next lead
 

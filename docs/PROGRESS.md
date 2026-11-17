@@ -19,8 +19,9 @@ Owned by the lead. Updated after every merged PR.
 - T-011 accepted by the owner (2026-11-14): full cleanup flow works (Recycle Bin, No in dialogs, journal,
   out-of-date banner, permanent with two dialogs). **Phase 3 complete.** Note: test folders showed Medium,
   not Low — copied files keep their old write time; verdict uses file times (by design, D-046).
-- Next task (owner's choice): T-007 (more rules) — task file written, session not started yet.
-  Afterwards: Phase 4 (T-015 release build, T-014 help review), T-013 export.
+- 2026-11-17: independent review merged (#48, `docs/reviews/2026-11-16-independent-review.md`). Owner decided
+  (D-070 … D-073): safety hardening first — **T-019** (task file written, session not started) → T-020 → T-021,
+  then T-015, T-007 (task file exists, to be revised), T-013, T-014.
 
 ## Done
 
@@ -40,6 +41,7 @@ Owned by the lead. Updated after every merged PR.
 | 2026-11-11 | T-010 | Cleanup service: guard re-check per item, Recycle Bin protection (settings pre-check, `PreDeleteItem` veto, `PostDeleteItem` verification), locked-file fallback, running-program warning, cancel between items; `IFileOperation` via source-generated COM on an STA thread; 1013 tests incl. junction-target-survives in both modes. Lead verified COM vtable order/GUIDs and fixed a result bug: a failed permanent whole-folder delete had already removed files, which were not counted (reported Failed instead of PartlyRemoved) | #39 |
 | 2026-11-12 | T-012 | Cleanup journal (created before the first item, atomic rewrite after each item, finalized at the end; interrupted sessions detected; failures never stop a cleanup), journaling decorator registered as the app's `ICleanupService`, History page with details, Open Recycle Bin / journal folder; help EN + RU; 1062 tests. Lead fixed one xUnit2029 analyzer error | #42 |
 | 2026-11-14 | T-011 | Selection on Findings (nothing preselected, deselect on filter change), Cleanup page (guard review, running programs, Recycle Bin / permanent with two confirmations default No, progress, cancel after current item, summary), out-of-date results after cleanup; help EN + RU; 1130 tests. Lead fixed a test synchronization context (progress test) | #45 |
+| 2026-11-17 | — | Independent review of strategy, defects and process (findings R-01…R-11, P-01…P-08; owner-requested session) | #48 |
 
 ## Collected for the next session task
 
@@ -60,3 +62,13 @@ is fixed immediately.
 | 11 | 2026-11-09 | Owner test T-006b | Programs: header says "871 programs", status "476 of 871 programs" with Source = All — the difference is hidden system components/frameworks (checkbox off by default), but nothing says so. Status should explain, e.g. "476 of 871 programs · 395 hidden (system components and frameworks)"; help EN + RU accordingly | T-008 ✅ |
 | 7 | 2026-11-09 | Owner test T-004 | Programs: the first row cannot be selected with the mouse and has no context menu (keyboard works). Cause: the empty-state `TextBlock` (`Margin="4,36,0,0"`, `ProgramsView.xaml`) lies over the grid and catches mouse clicks even when empty. Fix: `IsHitTestVisible="False"` and collapse it when there is no message; add the same check to any future overlay | T-005 ✅ |
 | 5 | 2026-11-07 | Executor note #14 | Results: the default sort (Size descending) is applied by pre-sorting; the Size column header shows no sort arrow until the user clicks a header | T-004 ✅ |
+| 12 | 2026-11-16 | Review R-01 | **Safety:** Recycle Bin capacity is checked per item; a selection larger than the bin silently evicts earlier bin content | T-021 |
+| 13 | 2026-11-16 | Review R-02 | **Safety:** cache rules remove the folder itself (`%TEMP%`, `INetCache`); no minimum age | T-021 |
+| 14 | 2026-11-16 | Review R-03 | **Safety:** credential folders (`.ssh`, …), wallets, browser profiles, saves can be offered as leftovers | T-019 (keys, wallets), T-020 (user-data class) |
+| 15 | 2026-11-16 | Review R-04 | **Safety:** Windows' own AppData folders (`Package Cache`, `VirtualStore`, …) and tool folders (`npm`, `NuGet`) are ordinary candidates | T-019 |
+| 16 | 2026-11-16 | Review R-05, R-06, R-08 | Ownership rule gives High without time check; partial evidence/scan failures not reported; system packages recognised by name prefix only | T-020 |
+| 17 | 2026-11-16 | Review R-07 | Vendor folder matched by a product name hides leftovers inside (low recall for big vendors) | later |
+| 18 | 2026-11-16 | Review R-09 | Rule `windows-inet-cache` covers Outlook's attachment working folder (`Content.Outlook`) | T-007 |
+| 19 | 2026-11-16 | Review R-10 | A scan result never expires | T-021 (D-072) |
+| 20 | 2026-11-16 | Review R-11 | Running processes as evidence, more evidence roots (scoop, WinGet, App Paths), exact `BytesRemoved`, memory of `FullPath`, single-token matching, restore from History | later |
+| 21 | 2026-11-16 | Review P-04 | Release (single-file) build never exercised with the COM sink and WinRT projection | T-015 |
